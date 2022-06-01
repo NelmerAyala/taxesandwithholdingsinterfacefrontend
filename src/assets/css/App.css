@@ -1,0 +1,210 @@
+/* .bodyApp{
+  margin-top: 65px;
+} */
+
+.App {
+  /*background: #ffffff;  /* fallback for old browsers */
+  /*background: -webkit-linear-gradient(to left, #0faba8, #ffffff);  /* Chrome 10-25, Safari 5.1-6 */
+  /*background: linear-gradient(to left, #0faba8, #ffffff); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+*/
+
+  background: #ffffff;
+  min-height: 100vh;
+  flex-direction: column;
+  /* font-size: calc(10px + 2vmin); */
+  color: rgb(0, 0, 0);
+}
+
+.title{
+  color: black;
+}
+
+.clase1 {
+  position: right;
+  float:right;
+  width: 90%;
+  background-color: #ffffff;
+}
+/* .App-content {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+} */
+hr {
+  border: 0;
+}
+
+.msjGenerado{
+  color:"#00BFB3";
+}
+
+.titulos {
+margin-left: 35px;
+font-size: 24px;
+}
+
+
+.icono1{
+color: #8f8f8f;
+
+
+}
+.line2 {
+  height: 1px;
+  width: auto;
+  background-color: #E0E0E0;
+  margin-top: 10px;
+  
+}
+
+.alert-success {
+  color: #fff;
+  background-color: #0faba8;
+  border-color: #0faba8;
+}
+
+.checkbox-primary {
+  width: 15px;
+  height: 15px;
+  background-color: #0faba8;
+
+  color: #0faba8;
+}
+
+.TableBody-root {
+font-size: small;
+
+}
+.bg-primary{
+  background:#0faba8!important;
+}
+
+.text-primary{
+  color:#0faba8!important;
+}
+.btn-primary{
+  background:#0faba8!important;
+  border-color: #0faba8!important ;
+  border-radius: 50px!important;
+  width: 200px;
+  height: 35px;
+  border: 50px!important ;
+}
+
+/* .table-wrapper {
+  max-height: 60vh;
+  overflow: auto;
+  display:inline-flex;
+} */
+
+.table-responsive {
+  max-height:60vh;
+  background-color: #ffff;
+}
+
+.backgroundTable{
+  border-radius: 10px;
+  background-color: #212529;
+}
+
+.container {
+  color: #ffffff;
+  background-color: #ffff;
+}
+
+.checkbox {
+  width: 40px;
+  height: 40px;
+}
+
+.rounded-circle{
+  border-radius: 50%;
+}
+
+/* ------------------------------------------
+-------------Styles Navigation ----------------
+------------------------------------------- 
+
+.nav-link {
+  box-shadow: 0 5px 5px -5px #0faba8!important;
+} 
+.bg-dark {
+  background-color: white!important;
+  
+}
+.navbar-dark .navbar-brand {
+  color: #0faba8!important;
+} */
+
+.nav-link {
+  color: #807970!important;
+  text-decoration: none;
+}
+.nav-link-flotante {
+  color: #807970!important;
+  text-decoration: none;
+  padding: 10px;
+}
+.MuiIcon-root	 {
+  color: #20b2aa;
+
+}
+
+/* ------------------------------------------
+-------------Styles Navigation ----------------
+------------------------------------------- */
+
+
+/* ------------------------------------------
+-------------Styles Carousel ----------------
+------------------------------------------- */
+@media (max-width: 768px) {
+  .imgCarousel{
+    width: 100%!important;
+  }
+}
+.imgCarousel{
+  width: 65%;
+}
+.backgroundCarousel{
+  /* padding-top: -65px; */
+  width: 100vw!important;
+  height:100vh!important;
+}
+.carousel-caption h1{
+  color: #0faba8;
+  font-family: 'Bebas Neue', cursive;
+}
+.carousel-caption h1{
+  color: #0faba8;
+}
+.carousel-caption h4{
+  color: #000000;
+}
+
+
+.hrCarousel{
+  margin: 0!important;
+  height: 0px!important;
+  background-color: black!important;
+  box-shadow: 1px 15px 100px 15px #0faba8!important;
+  border: 0!important;
+  opacity: 1!important;
+}
+/* ------------------------------------------
+-------------Styles Carousel ----------------
+------------------------------------------- */
+
+/* ------------------------------------------
+-------------Styles SideBav ----------------
+------------------------------------------- */
+
+
+
+/* ------------------------------------------
+-------------Styles SideBav ----------------
+------------------------------------------- */

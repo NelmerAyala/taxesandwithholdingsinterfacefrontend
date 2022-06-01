@@ -1,0 +1,101 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Lato, "Lato";
+}
+
+.login,
+.image {
+  min-height: 100vh;
+}
+
+.bg-image {
+  background-image: url("/src/assets/images/portada.jpg");
+  background-size: cover;
+  background-position: center center;
+}
+
+body {
+  color: #000;
+  overflow-x: hidden;
+  height: 100%;
+  background-color: #b0bec5;
+  background-repeat: no-repeat;
+}
+
+.line {
+  height: 1px;
+  width: 45%;
+  background-color: #e0e0e0;
+  margin-top: 10px;
+}
+
+.text-black {
+  color: #000000;
+  font-weight: bold;
+}
+
+.text-sm {
+  font-size: 14px !important;
+}
+
+.text-sm {
+  font-size: 14px !important;
+}
+
+::placeholder {
+  color: #bdbdbd;
+  opacity: 1;
+  font-weight: 300;
+}
+
+:-ms-input-placeholder {
+  color: #bdbdbd;
+  font-weight: 300;
+}
+
+::-ms-input-placeholder {
+  color: #bdbdbd;
+  font-weight: 300;
+}
+
+input,
+textarea {
+  padding: 10px 12px 10px 12px;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 2px;
+  margin-bottom: 5px;
+  margin-top: 2px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #2c3e50;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.btn-primary2 {
+  font: size 14px;
+  font-family: Lato;
+  font-weight: bold;
+  color: #0faba8;
+  background: #0faba8;
+  width: 350px;
+  height: 35px;
+  background: linear-gradient(135deg, rgb(0faba8) 39%, rgb(241, 241, 241) 101%);
+  border: none;
+  border-radius: 50px;
+}
+
+.btn-primary2:focus {
+  box-shadow: none;
+  border: none;
+}
+
+small {
+  color: #ffffff;
+}
+
+.far.fa-user {
+  font-size: 13px;
+}

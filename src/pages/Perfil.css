@@ -1,0 +1,19 @@
+.perfil-body {
+    color: #ffffff;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #0faba8
+}
+
+.labels {
+    font-size: 12px
+}
+
+.avatarPerfil{
+    background-color: #000000;
+}
+.text-avatar{
+    font-size: 20px;
+}
