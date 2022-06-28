@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { Routes, Route } from "react-router-dom";
 
+import Context from "../contexts/UserContext";
 import PrivateRoute from "./PrivateRoute";
-
 import Index from "../components/Index";
 import Login from "../pages/Login";
 import Logout from "../pages/Logout";
@@ -16,20 +16,24 @@ import ListUsuarios from "../pages/ListUsuarios";
 import NewUsuarios from "../pages/NewUsuarios";
 import DetailsUsuario from "../pages/DetailsUsuario";
 import Configuraciones from "../pages/Config";
+import ListCompanias from "../pages/ListCompanias";
+import DetailsCompanias from "../pages/DetailsCompanias";
+import NewCompanias from "../pages/NewCompanias";
 
-import useUser from "../hooks/useUser";
+// import useUser from "../hooks/useUser";
 
 export default function RoutesApp() {
-  const { userGet } = useUser();
-  const [user, serUser] = useState([]);
+  const { user } = useContext(Context);
+  // const { userGet } = useUser();
+  // const [user, serUser] = useState([]);
 
-  useEffect(() => {
-    const res = async () => {
-      const resp = await userGet();
-      serUser(resp);
-    };
-    res();
-  }, [userGet]);
+  // useEffect(() => {
+  //   const res = async () => {
+  //     const resp = await userGet();
+  //     serUser(resp);
+  //   };
+  //   res();
+  // }, [userGet]);
 
   return (
     <Routes>
@@ -50,20 +54,44 @@ export default function RoutesApp() {
           <>
             <Route
               exact={true}
-              path="/usuarios"
-              element={<ListUsuarios />}
+              path="/companias"
+              element={<ListCompanias />}
             ></Route>
           </>
         ) : (
           <></>
         )}
 
-        {user.es_superadministrador === true ? (
+        {user.es_administrador === true ? (
           <>
             <Route
               exact={true}
-              path="/config"
-              element={<Configuraciones />}
+              path="/companias/nueva"
+              element={<NewCompanias />}
+            ></Route>
+          </>
+        ) : (
+          <></>
+        )}
+
+        {user.es_administrador === true ? (
+          <>
+            <Route
+              exact={true}
+              path="/companias/:id"
+              element={<DetailsCompanias />}
+            ></Route>
+          </>
+        ) : (
+          <></>
+        )}
+
+        {user.es_administrador === true ? (
+          <>
+            <Route
+              exact={true}
+              path="/usuarios"
+              element={<ListUsuarios />}
             ></Route>
           </>
         ) : (
@@ -75,13 +103,25 @@ export default function RoutesApp() {
           path="/usuarios/nuevo"
           element={<NewUsuarios />}
         ></Route>
+
+        <Route
+          exact={true}
+          path="/usuarios/:id"
+          element={<DetailsUsuario />}
+        ></Route>
       </Route>
 
-      <Route
-        exact={true}
-        path="/usuarios/:id"
-        element={<DetailsUsuario />}
-      ></Route>
+      {user.es_superadministrador === true ? (
+        <>
+          <Route
+            exact={true}
+            path="/Configuraciones"
+            element={<Configuraciones />}
+          ></Route>
+        </>
+      ) : (
+        <></>
+      )}
 
       <Route exact={true} path="/login" element={<Login />} isPrivate></Route>
 

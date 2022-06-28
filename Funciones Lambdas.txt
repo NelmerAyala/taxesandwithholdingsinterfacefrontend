@@ -1,0 +1,81 @@
+---------- Archivos ----------
+
+    # Funcion: getArchivos  
+        mave-msarchivos-lbda-getArchivos-app-gir
+
+    # Funcion: getDetallesArchivoById   
+        mave-msarchivos-lbda-getDetallesArchivoById-app-gir
+
+    # Funcion: anularTransaccionById 
+        mave-msarchivos-lbda-anularTransaccionById-app-gir      
+
+---------- Autenticacion ----------
+
+    # Funcion: getAuthState 
+        mave-msautenticacion-lbda-getAuthState-app-gir
+
+    # Funcion: Login  
+        mave-msautenticacion-lbda-login-app-gir        
+        
+---------- Compañias ----------
+
+    # Funcion: getCompaniaById
+        mave-mscompanias-lbda-getCompaniaById-app-gir
+
+    # Funcion: getCompanias
+        mave-mscompanias-lbda-getCompanias-app-gir
+
+     # Funcion: updateCompaniasbyID 
+        mave-mscompanias-lbda-updateCompaniasbyID-app-gir
+
+---------- Compras ----------
+        
+    # Funcion: getCompras
+        mave-mscompras-lbda-getCompras-app-gir
+
+---------- Configuraciones ----------
+
+    # Funcion: getConfiguraciones 
+        mave-msconfiguraciones-lbda-getConfiguraciones-app-gir
+        
+    # Funcion: updateConfiguracion 
+        mave-msconfiguraciones-lbda-updateConfiguracion-app-gir
+
+---------- Privilegios ----------
+
+    # Funcion: getPrivilegios 
+        mave-msprivilegios-lbda-getPrivilegios-app-gir 
+
+---------- Usuarios ----------
+
+    # Funcion: createUser (Admin)
+        mave-msusuarios-lbda-createUser-app-gir
+
+    # Funcion: getAdministradores (SuperAdmin)
+        mave-msusuarios-lbda-getAdministradores-app-gir
+
+    # Funcion: getUser (Perfil)
+        mave-msusuarios-lbda-getUser-app-gir
+
+    # Funcion: updateUser (Perfil)
+        mave-msusuarios-lbda-updateUser-app-gir
+
+    # Funcion: updateUserPassword (Perfil)
+        mave-msusuarios-lbda-updateUserPassword-app-gir
+
+    # Funcion: getUsersAdmin (Admin) 
+        mave-msusuarios-lbda-getUsersAdmin-app-gir  
+
+    # Funcion: getUserByIdAdmin (Admin)
+        mave-msusuarios-lbda-getUserByIdAdmin-app-gir
+
+    # Funcion: updateUserAdmin (Admin)
+        mave-msusuarios-lbda-updateUserAdmin-app-gir
+
+
+---------- Ventas ----------
+
+     # Funcion: getVentas
+        mave-msventas-lbda-getVentas-app-gir
+
+        

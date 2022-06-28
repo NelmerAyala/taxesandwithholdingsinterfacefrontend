@@ -36,6 +36,7 @@ import {
   MenuItem,
   Select,
   Stack,
+  Tooltip,
   MdOutlineTextSnippet,
 } from "../consts";
 
@@ -68,7 +69,7 @@ export default function ListVentas() {
   useEffect(() => {
     const res = async () => {
       const resp = await listCompaniasService();
-      setCompany(resp);
+      setCompany(resp.body);
     };
     res();
   }, []);
@@ -78,7 +79,7 @@ export default function ListVentas() {
     if (selectedCompany && selectedCompany !== "DEFAULT") {
       const res = async () => {
         const resp = await listVentasService(selectedCompany);
-        setList(resp);
+        setList(resp.body.ventas);
         return resp;
       };
       toast.dismiss();
@@ -337,18 +338,38 @@ export default function ListVentas() {
                 justifyContent="flex-END"
                 alignItems="flex-start"
               >
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{
-                    px: 5,
-                    borderRadius: "1rem",
-                    color: "white.main",
-                    textTransform: "none",
-                  }}
-                >
-                  Generar Archivo
-                </Button>
+                {selectedCompany === "DEFAULT" ? (
+                  <Tooltip followCursor title="Selecciona una compañia.">
+                    <span>
+                      <Button
+                        type="submit"
+                        disabled
+                        variant="contained"
+                        sx={{
+                          px: 5,
+                          borderRadius: "1rem",
+                          color: "white.main",
+                          textTransform: "none",
+                        }}
+                      >
+                        Generar Archivo
+                      </Button>
+                    </span>
+                  </Tooltip>
+                ) : (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      px: 5,
+                      borderRadius: "1rem",
+                      color: "white.main",
+                      textTransform: "none",
+                    }}
+                  >
+                    Generar Archivo
+                  </Button>
+                )}
               </Grid>
             </Stack>
           </Box>
@@ -368,16 +389,36 @@ export default function ListVentas() {
                       isChecked={isCheckAll}
                     />
                   </TableCell>
-                  <TableCell align="center">N° Doc</TableCell>
-                  <TableCell align="center">N° Control</TableCell>
-                  <TableCell align="center">N° Comprobante</TableCell>
-                  <TableCell align="center">Tipoc Doc.</TableCell>
-                  <TableCell align="center">Fecha emisión</TableCell>
-                  <TableCell align="center">Rif</TableCell>
-                  <TableCell align="center">Cliente</TableCell>
-                  <TableCell align="center">Subtotal</TableCell>
-                  <TableCell align="center">Impuesto</TableCell>
-                  <TableCell align="center">Total</TableCell>
+                  <TableCell align="center">
+                    <b>N° Doc</b>
+                  </TableCell>
+                  <TableCell align="center">
+                    <b>N° Control</b>
+                  </TableCell>
+                  <TableCell align="center">
+                    <b>N° Comprobante</b>
+                  </TableCell>
+                  <TableCell align="center">
+                    <b>Tipoc Doc.</b>
+                  </TableCell>
+                  <TableCell align="center">
+                    <b>Fecha emisión</b>
+                  </TableCell>
+                  <TableCell align="center">
+                    <b>Rif</b>
+                  </TableCell>
+                  <TableCell align="center">
+                    <b>Cliente</b>
+                  </TableCell>
+                  <TableCell align="center">
+                    <b>Subtotal</b>
+                  </TableCell>
+                  <TableCell align="center">
+                    <b>Impuesto</b>
+                  </TableCell>
+                  <TableCell align="center">
+                    <b>Total</b>
+                  </TableCell>
                 </TableRow>
               </TableHead>
 
@@ -385,12 +426,13 @@ export default function ListVentas() {
                 {ventas.length === 0 ? (
                   <TableRow>
                     <TableCell
+                      sx={{ p: 2 }}
                       component="th"
                       className="text-center"
-                      colSpan={10}
+                      colSpan={11}
                       align="center"
                     >
-                      <MdOutlineTextSnippet size={25} />
+                      <MdOutlineTextSnippet size={35} />
                       <Typography>
                         No hay resultado de transacciones de ventas.
                       </Typography>
@@ -403,15 +445,19 @@ export default function ListVentas() {
             </Table>
           </TableContainer>
 
-          <TablePagination
-            rowsPerPageOptions={[1, 10, 50, 100]}
-            component="div"
-            count={list.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          {list.length > 0 ? (
+            <TablePagination
+              rowsPerPageOptions={[10, 50, 100, 500]}
+              component="div"
+              count={list.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          ) : (
+            <></>
+          )}
         </Paper>
       </form>
     </LayoutSession>

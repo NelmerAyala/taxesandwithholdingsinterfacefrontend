@@ -1,6 +1,7 @@
 // Nuevo
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
+import Context from "../contexts/UserContext";
 
 // Estilos
 import "../assets/css/App.css";
@@ -20,6 +21,9 @@ import Checkbox from "../components/Checkbox";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Formato montos
+import CurrencyFormat from "react-currency-format";
+
 // Formato Dias
 import moment from "moment";
 
@@ -38,7 +42,9 @@ import {
   Divider,
   Typography,
   styled,
+  Stack,
   Button,
+  Tooltip,
   MdKeyboardBackspace,
   MdDeleteForever,
 } from "../consts";
@@ -49,14 +55,17 @@ export default function DetailsArchivos() {
   const [isCheck, setIsCheck] = useState([]);
   const { id } = useParams();
   const [archivos, setArchivos] = useState([]);
+  const { compra, venta } = useContext(Context);
 
   useEffect(() => {
     const res = async () => {
       const resp = await listDetallesArchivoService(id);
-      setArchivos(resp);
+      setArchivos(resp.body);
     };
     res();
   }, [id]);
+
+  // console.log(archivos);
 
   // useEffect(() => {
   //   if (archivos) {
@@ -66,10 +75,11 @@ export default function DetailsArchivos() {
   //   }
   // }, [archivos]);
 
+  //Submit anular
   const hadleSubmit = (e) => {
     e.preventDefault();
     const res = async () => {
-      const resp = await anularFileService(id);
+      const resp = await anularTransaccionService(id);
       setArchivos(resp);
     };
     toast.dismiss();
@@ -196,20 +206,39 @@ export default function DetailsArchivos() {
         }}
       >
         {/* Titulo */}
-        <Grid container spacing={6} sx={{ pt: 2, pl: 2 }}>
-          <Grid item xs={12} sm={10}>
-            <Typography variant="subtitles">Detalle de Archivo {id}</Typography>
+        <Stack direction={{ xs: "column", sm: "row" }}>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Grid item sx={{ pt: 2, pl: 2 }}>
+              <Typography variant="subtitles">
+                Detalle del Archivo: <b>{id}</b>
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={2}>
-            <Link to={`../archivos`}>
-              <MdKeyboardBackspace color="#75787B" size={35} />
-            </Link>
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="flex-end"
+          >
+            <Tooltip followCursor title="Regresar">
+              <span>
+                <Link to={`../archivos`}>
+                  <MdKeyboardBackspace color="#75787B" size={35} />
+                </Link>
+              </span>
+            </Tooltip>
           </Grid>
-        </Grid>
+        </Stack>
         <Divider variant="middle " />
-        <Box sx={{ p: 2 }}></Box>
+        <Box sx={{ p: 1 }}></Box>
 
         <form onSubmit={hadleSubmit}>
+          {/* Menu de Informacion y Botones de Anulacion */}
           {archivos.length > 0 ? (
             archivos.map((archivo) => {
               return archivo.status === 2 ? (
@@ -218,44 +247,43 @@ export default function DetailsArchivos() {
                 </Container>
               ) : (
                 <Box sx={{ flexGrow: 1 }} key={archivo.id}>
-                  <Grid container item spacing={3}>
-                    <React.Fragment>
+                  <Grid container item spacing={2}>
+                    <Grid item xs={4}>
+                      <Item>
+                        <b>Codigo:</b> {archivo.id}
+                      </Item>
+                      <Item>
+                        <b>Nombre archivo:</b> {archivo.id}
+                        {archivo.nombre_archivo}
+                      </Item>
+                      <Item>
+                        <b>Tipo archivo:</b>
+                        {archivo.TipoArchivo.descripcion_tipo_archivo}
+                      </Item>
+                      <Item>
+                        <b>Estado:</b>
+                        {archivo.status === 1 ? "Generado" : "Anulado"}
+                      </Item>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Item>
+                        <b>Fecha:</b>
+                        {moment(archivo.fecha_archivo).format("DD-MM-YYYY")}
+                      </Item>
+                      <Item sx={{ display: "flex" }}>
+                        <b>Usuario generador: </b>
+                        <Typography sx={{ textTransform: "uppercase" }}>
+                          {archivo.UserCompany.User.username}
+                        </Typography>
+                      </Item>
+                      <Item>
+                        <b>Compañia:</b>
+                        {archivo.UserCompany.Company.nombre_company}
+                      </Item>
+                    </Grid>
+                    {archivo.TipoArchivo.tipo_archivo === "COM" ? (
                       <Grid item xs={4}>
-                        <Item>
-                          <b>Codigo:</b> {archivo.id}
-                        </Item>
-                        <Item>
-                          <b>Nombre archivo:</b> {archivo.id}
-                          {archivo.nombre_archivo}
-                        </Item>
-                        <Item>
-                          <b>Tipo archivo:</b>
-                          {archivo.TipoArchivo.descripcion_tipo_archivo}
-                        </Item>
-                        <Item>
-                          <b>Estado:</b>
-                          {archivo.status === 1 ? "Generado" : "Anulado"}
-                        </Item>
-                      </Grid>
-                      <Grid item xs={4}>
-                        <Item>
-                          <b>Fecha:</b>
-                          {moment(archivo.fecha_archivo).format("DD-MM-YYYY")}
-                        </Item>
-                        <Item sx={{ display: "flex" }}>
-                          <b>Usuario generador: </b>
-                          <Typography sx={{ textTransform: "uppercase" }}>
-                            {archivo.UserCompany.User.username}
-                          </Typography>
-                        </Item>
-                        <Item>
-                          <b>Compañia:</b>
-                          {archivo.UserCompany.Company.nombre_company}
-                        </Item>
-                      </Grid>
-                      {archivo.TipoArchivo.tipo_archivo === "COM" ? (
-                        <Grid item xs={4}>
-                          {/* <Item>
+                        {/* <Item>
                             <Button
                               type="submit"
                               variant="contained"
@@ -269,41 +297,40 @@ export default function DetailsArchivos() {
                               Anular Archivo
                             </Button>
                           </Item> */}
-                          <Item>
-                            <Button
-                              onClick={hadleSelected}
-                              value={1}
-                              variant="contained"
-                              sx={{
-                                px: 5,
-                                borderRadius: "1rem",
-                                color: "white.main",
-                                textTransform: "none",
-                              }}
-                            >
-                              Anular Seleccionados
-                            </Button>
-                          </Item>
-                          <Item>
-                            <Button
-                              onClick={hadleSelected}
-                              value={2}
-                              variant="contained"
-                              sx={{
-                                px: 5,
-                                borderRadius: "1rem",
-                                color: "white.main",
-                                textTransform: "none",
-                              }}
-                            >
-                              Eliminar Seleccionados
-                            </Button>
-                          </Item>
-                        </Grid>
-                      ) : (
-                        <></>
-                      )}
-                    </React.Fragment>
+                        <Item>
+                          <Button
+                            onClick={hadleSelected}
+                            value={1}
+                            variant="contained"
+                            color="warning"
+                            sx={{
+                              px: 5,
+                              borderRadius: "1rem",
+                              textTransform: "none",
+                            }}
+                          >
+                            Anular Seleccionados
+                          </Button>
+                        </Item>
+                        <Item>
+                          <Button
+                            onClick={hadleSelected}
+                            value={2}
+                            variant="contained"
+                            color="warning"
+                            sx={{
+                              px: 5,
+                              borderRadius: "1rem",
+                              textTransform: "none",
+                            }}
+                          >
+                            Eliminar Seleccionados
+                          </Button>
+                        </Item>
+                      </Grid>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                 </Box>
               );
@@ -311,19 +338,22 @@ export default function DetailsArchivos() {
           ) : (
             <></>
           )}
+
           <TableContainer sx={{ maxHeight: 440 }}>
-            <Table stickyHeader aria-label="sticky table">
+            <Table stickyHeader aria-label="sticky table" size="small">
               <TableHead>
                 {archivos.length > 0 ? (
                   !archivos ? (
                     <TableRow>
-                      <TableCell colSpan={9}>Cargando</TableCell>
+                      <TableCell colSpan={10}>Cargando...</TableCell>
                     </TableRow>
                   ) : (
                     archivos.map((archivo) => {
-                      return archivo.TipoArchivoId === 1 ? (
+                      return archivo.TipoArchivoId === 1 &&
+                        archivo.TipoArchivo.tipo_archivo === venta ? (
+                        // Cabecera de Ventas
                         <TableRow key={archivo.id}>
-                          <TableCell align="center">
+                          {/* <TableCell align="center">
                             <Checkbox
                               color="primary"
                               type="checkbox"
@@ -332,39 +362,40 @@ export default function DetailsArchivos() {
                               handleClick={handleSelectAll}
                               isChecked={isCheckAll}
                             />
+                          </TableCell> */}
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Nº Doc.</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Nº Doc.
+                            <b>Nº Control</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Nº Control
+                            <b>Nº Comprobante</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Nº Comprobante
+                            <b>Tipo Doc.</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Tipo Doc.
+                            <b>Fecha Emisión</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Fecha Emisión
+                            <b>Rif</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Rif
+                            <b>Cliente</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Cliente
+                            <b>Subtotal</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Mto. Subtotal
+                            <b>Impuesto</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Mto. Impuesto
-                          </TableCell>
-                          <TableCell component="th" scope="row" align="center">
-                            Mto. Total
+                            <b>Total</b>
                           </TableCell>
                         </TableRow>
                       ) : (
+                        // Cabecera de Compras
                         <TableRow key={archivo.id}>
                           <TableCell align="center">
                             <Checkbox
@@ -377,31 +408,31 @@ export default function DetailsArchivos() {
                             />
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Nº Doc.
+                            <b> Nº Doc.</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Nº Control
+                            <b> Nº Control</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Tipo Doc.
+                            <b> Tipo Doc.</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Fecha Emisión
+                            <b> Fecha Emisión</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Rif
+                            <b> Rif</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Proveedor
+                            <b>Proveedor</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Mto. Subtotal
+                            <b>Subtotal</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Mto. Impuesto
+                            <b>Impuesto</b>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
-                            Mto. Total
+                            <b> Total</b>
                           </TableCell>
                         </TableRow>
                       );
@@ -411,18 +442,19 @@ export default function DetailsArchivos() {
                   <></>
                 )}
               </TableHead>
-
               <TableBody>
                 {archivos.length > 0 ? (
                   !archivos ? (
                     <TableRow>
-                      <TableCell colSpan={9}>Cargando</TableCell>
+                      <TableCell colSpan={10}>Cargando...</TableCell>
                     </TableRow>
                   ) : (
                     archivos.map((archivo) => {
                       return !archivo.Compras ? (
                         <TableRow>
-                          <TableCell colSpan={8}>Cargando Compras</TableCell>
+                          <TableCell colSpan={10}>
+                            Cargando Archivos de Compras
+                          </TableCell>
                         </TableRow>
                       ) : (
                         archivo.Compras.map((compra) => {
@@ -498,22 +530,48 @@ export default function DetailsArchivos() {
                                 scope="row"
                                 align="center"
                               >
-                                {compra.base_imponible_tasa_general}
+                                <CurrencyFormat
+                                  value={compra.base_imponible_tasa_general}
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
                               </TableCell>
                               <TableCell
                                 component="th"
                                 scope="row"
                                 align="center"
                               >
-                                {compra.monto_impuesto_tasa_general}
+                                <CurrencyFormat
+                                  value={compra.monto_impuesto_tasa_general}
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
                               </TableCell>
                               <TableCell
                                 component="th"
                                 scope="row"
                                 align="center"
                               >
-                                {compra.base_imponible_tasa_general +
-                                  compra.monto_impuesto_tasa_general}
+                                <CurrencyFormat
+                                  value={
+                                    compra.base_imponible_tasa_general +
+                                    compra.monto_impuesto_tasa_general
+                                  }
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
                               </TableCell>
                             </TableRow>
                           );
@@ -527,19 +585,21 @@ export default function DetailsArchivos() {
                 {archivos.length > 0 ? (
                   !archivos ? (
                     <TableRow>
-                      <TableCell colSpan={8}>Cargando</TableCell>
+                      <TableCell colSpan={10}>Cargando... </TableCell>
                     </TableRow>
                   ) : (
                     archivos.map((archivo) => {
                       return !archivo.Venta ? (
                         <TableRow>
-                          <TableCell colSpan={9}></TableCell>
+                          <TableCell colSpan={10}>
+                            Cargando Archivos de Ventas
+                          </TableCell>
                         </TableRow>
                       ) : (
                         archivo.Venta.map((venta) => {
                           return (
                             <TableRow key={venta.id}>
-                              <TableCell
+                              {/* <TableCell
                                 component="th"
                                 scope="row"
                                 align="center"
@@ -563,7 +623,7 @@ export default function DetailsArchivos() {
                                   venta.status_venta +
                                   "* desconocido."
                                 )}
-                              </TableCell>
+                              </TableCell> */}
                               <TableCell
                                 component="th"
                                 scope="row"
@@ -618,22 +678,48 @@ export default function DetailsArchivos() {
                                 scope="row"
                                 align="center"
                               >
-                                {venta.base_imponible_tasa_general}
+                                <CurrencyFormat
+                                  value={venta.base_imponible_tasa_general}
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
                               </TableCell>
                               <TableCell
                                 component="th"
                                 scope="row"
                                 align="center"
                               >
-                                {venta.monto_impuesto_tasa_general}
+                                <CurrencyFormat
+                                  value={venta.monto_impuesto_tasa_general}
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
                               </TableCell>
                               <TableCell
                                 component="th"
                                 scope="row"
                                 align="center"
                               >
-                                {venta.base_imponible_tasa_general +
-                                  venta.monto_impuesto_tasa_general}
+                                <CurrencyFormat
+                                  value={
+                                    venta.base_imponible_tasa_general +
+                                    venta.monto_impuesto_tasa_general
+                                  }
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
                               </TableCell>
                             </TableRow>
                           );

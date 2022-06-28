@@ -29,6 +29,14 @@ import {
   Typography,
   TextField,
   Stack,
+  IconButton,
+  InputLabel,
+  OutlinedInput,
+  FormControl,
+  Visibility,
+  VisibilityOff,
+  Tooltip,
+  InputAdornment,
 } from "../consts";
 
 export default function Perfil() {
@@ -42,14 +50,19 @@ export default function Perfil() {
   const [passwordNewConfirmed, setPasswordNewConfirmed] = useState([]);
   const { userGet, userUpdate } = useUser();
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordNew, setShowPasswordNew] = useState(false);
+  const [showPasswordNewConfirmed, setShowPasswordNewConfirmed] =
+    useState(false);
+
   // Consulta de Usuario
   useEffect(() => {
     const res = async () => {
       const res = await userGet();
-      setEmail(res.user.email);
-      setFirstname(res.user.firstname);
-      setLastname(res.user.lastname);
-      setUsername(res.user.username);
+      setEmail(res.body.email);
+      setFirstname(res.body.firstname);
+      setLastname(res.body.lastname);
+      setUsername(res.body.username);
     };
     res();
   }, [userGet]);
@@ -117,6 +130,18 @@ export default function Perfil() {
       error: "Error: Cambio de clave No exitoso.",
     });
   };
+
+  //Mostrar-Ocultar Contraseña
+  const handleChange = () => setShowPassword(!showPassword);
+  const handleChange1 = () => setShowPasswordNew(!showPasswordNew);
+  const handleChange2 = () =>
+    setShowPasswordNewConfirmed(!showPasswordNewConfirmed);
+
+  const onChange = ({ currentTarget }) => setPassword(currentTarget.value);
+  const onChangeNew = ({ currentTarget }) =>
+    setPasswordNew(currentTarget.value);
+  const onChangeNewConfirmed = ({ currentTarget }) =>
+    setPasswordNewConfirmed(currentTarget.value);
 
   return (
     <>
@@ -209,6 +234,7 @@ export default function Perfil() {
                       <Grid item xs={12} sm={12} md={2} lg={3}>
                         <Paper elevation={0}>
                           <TextField
+                            required
                             fullWidth
                             onChange={(e) => setFirstname(e.target.value)}
                             value={firstname}
@@ -221,6 +247,7 @@ export default function Perfil() {
                       <Grid item xs={12} sm={12} md={2} lg={3}>
                         <Paper elevation={0}>
                           <TextField
+                            required
                             fullWidth
                             onChange={(e) => setLastname(e.target.value)}
                             value={lastname}
@@ -233,6 +260,7 @@ export default function Perfil() {
                       <Grid item xs={12} sm={12} md={5} lg={4}>
                         <Paper elevation={0}>
                           <TextField
+                            required
                             fullWidth
                             onChange={(e) => setEmail(e.target.value)}
                             type="email"
@@ -285,51 +313,105 @@ export default function Perfil() {
                     >
                       <Grid item xs={12} sm={12} md={3} lg={4}>
                         <Paper elevation={0}>
-                          <TextField
-                            fullWidth
-                            onChange={(e) => setPassword(e.target.value)}
-                            value={password}
-                            label="Contraseña Actual"
-                            name="password"
-                            type="password"
-                            variant="outlined"
-                            autoComplete="false"
-                            required
-                          />
+                          <FormControl required fullWidth>
+                            <InputLabel>Contraseña Actual</InputLabel>
+                            <OutlinedInput
+                              label="Contraseña Actual"
+                              onChange={onChange}
+                              type={showPassword ? "text" : "password"}
+                              value={password}
+                              variant="outlined"
+                              endAdornment={
+                                <InputAdornment position="end">
+                                  <IconButton onClick={handleChange}>
+                                    {showPassword ? (
+                                      <Tooltip title="Ocultar contraseña">
+                                        <span>
+                                          <VisibilityOff />
+                                        </span>
+                                      </Tooltip>
+                                    ) : (
+                                      <Tooltip title="Mostrar contraseña">
+                                        <span>
+                                          <Visibility />
+                                        </span>
+                                      </Tooltip>
+                                    )}
+                                  </IconButton>
+                                </InputAdornment>
+                              }
+                            />
+                          </FormControl>
                         </Paper>
                       </Grid>
 
                       <Grid item xs={12} sm={12} md={3} lg={3}>
                         <Paper elevation={0}>
-                          <TextField
-                            fullWidth
-                            onChange={(e) => setPasswordNew(e.target.value)}
-                            value={passwordNew}
-                            label="Contraseña nueva"
-                            name="passwordNew"
-                            type="password"
-                            variant="outlined"
-                            autoComplete="false"
-                            required
-                          />
+                          <FormControl required fullWidth>
+                            <InputLabel>Contraseña Nueva</InputLabel>
+                            <OutlinedInput
+                              label="Contraseña Nueva"
+                              onChange={onChangeNew}
+                              type={showPasswordNew ? "text" : "password"}
+                              value={passwordNew}
+                              variant="outlined"
+                              endAdornment={
+                                <InputAdornment position="end">
+                                  <IconButton onClick={handleChange1}>
+                                    {showPasswordNew ? (
+                                      <Tooltip title="Ocultar contraseña">
+                                        <span>
+                                          <VisibilityOff />
+                                        </span>
+                                      </Tooltip>
+                                    ) : (
+                                      <Tooltip title="Mostrar contraseña">
+                                        <span>
+                                          <Visibility />
+                                        </span>
+                                      </Tooltip>
+                                    )}
+                                  </IconButton>
+                                </InputAdornment>
+                              }
+                            />
+                          </FormControl>
                         </Paper>
                       </Grid>
 
                       <Grid item xs={12} sm={12} md={3} lg={3}>
                         <Paper elevation={0}>
-                          <TextField
-                            fullWidth
-                            onChange={(e) =>
-                              setPasswordNewConfirmed(e.target.value)
-                            }
-                            value={passwordNewConfirmed}
-                            label="Confirmar contraseña nueva"
-                            name="passwordNewConfirmed"
-                            type="password"
-                            variant="outlined"
-                            autoComplete="false"
-                            required
-                          />
+                          <FormControl required fullWidth>
+                            <InputLabel>Confirmar Contraseña Nueva</InputLabel>
+                            <OutlinedInput
+                              label="Confirmar Contraseña Nueva"
+                              onChange={onChangeNewConfirmed}
+                              type={
+                                showPasswordNewConfirmed ? "text" : "password"
+                              }
+                              value={passwordNewConfirmed}
+                              variant="outlined"
+                              endAdornment={
+                                <InputAdornment position="end">
+                                  <IconButton onClick={handleChange2}>
+                                    {showPasswordNewConfirmed ? (
+                                      <Tooltip title="Ocultar contraseña">
+                                        <span>
+                                          <VisibilityOff />
+                                        </span>
+                                      </Tooltip>
+                                    ) : (
+                                      <Tooltip title="Mostrar contraseña">
+                                        <span>
+                                          <Visibility />
+                                        </span>
+                                      </Tooltip>
+                                    )}
+                                  </IconButton>
+                                </InputAdornment>
+                              }
+                            />
+                          </FormControl>
                         </Paper>
                       </Grid>
 

@@ -1,5 +1,6 @@
 // Nuevo
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
+import Context from "../contexts/UserContext";
 import { Link, useLocation } from "react-router-dom";
 
 import useUser from "../hooks/useUser";
@@ -42,6 +43,8 @@ import {
   MdPersonPin,
   MdOutlineHome,
   MdManageAccounts,
+  MdOutlineCorporateFare,
+  MenuItem,
 } from "../consts";
 
 // Constantes
@@ -113,6 +116,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const LayoutSession = ({ children, titleModule }) => {
+  const { user } = useContext(Context);
   //Constantes
   const [open, setOpen] = useState(true);
   const handleDrawerOpen = () => {
@@ -138,16 +142,16 @@ const LayoutSession = ({ children, titleModule }) => {
     setAnchorElConfiguracion(null);
   };
 
-  const { userGet } = useUser();
-  const [user, serUser] = useState([]);
+  const { logout } = useUser();
+  // const [user, serUser] = useState([]);
 
-  useEffect(() => {
-    const res = async () => {
-      const resp = await userGet();
-      serUser(resp);
-    };
-    res();
-  }, [userGet]);
+  // useEffect(() => {
+  //   const res = async () => {
+  //     const resp = await userGet();
+  //     serUser(resp);
+  //   };
+  //   res();
+  // }, [userGet]);
 
   const location = useLocation();
   return (
@@ -241,10 +245,28 @@ const LayoutSession = ({ children, titleModule }) => {
                     <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
                       <Grid container>
                         <MenuItemFlotante ruta="/" name="Inicio">
-                          <MdOutlineHome size={40} />
+                          <ListItemIcon>
+                            {"/" === location.pathname ? (
+                              <MdOutlineHome
+                                size="40"
+                                style={{ color: "#00BFB3" }}
+                              />
+                            ) : (
+                              <MdOutlineHome size="40" />
+                            )}
+                          </ListItemIcon>
                         </MenuItemFlotante>
                         <MenuItemFlotante ruta="/compras" name="Compras">
-                          <MdAddShoppingCart size={40} />
+                          <ListItemIcon>
+                            {"/compras" === location.pathname ? (
+                              <MdAddShoppingCart
+                                size="40"
+                                style={{ color: "#00BFB3" }}
+                              />
+                            ) : (
+                              <MdAddShoppingCart size="40" />
+                            )}
+                          </ListItemIcon>
                         </MenuItemFlotante>
                       </Grid>
                     </Stack>
@@ -252,10 +274,28 @@ const LayoutSession = ({ children, titleModule }) => {
                     <Stack direction={{ xs: "column", sm: "row" }} spacing={0}>
                       <Grid container>
                         <MenuItemFlotante ruta="/ventas" name="Ventas">
-                          <MdPointOfSale size={40} />
+                          <ListItemIcon>
+                            {"/ventas" === location.pathname ? (
+                              <MdPointOfSale
+                                size="40"
+                                style={{ color: "#00BFB3" }}
+                              />
+                            ) : (
+                              <MdPointOfSale size="40" />
+                            )}
+                          </ListItemIcon>
                         </MenuItemFlotante>
                         <MenuItemFlotante ruta="/archivos" name="Archivos">
-                          <MdInsertDriveFile size={40} />
+                          <ListItemIcon>
+                            {"/archivos" === location.pathname ? (
+                              <MdInsertDriveFile
+                                size="40"
+                                style={{ color: "#00BFB3" }}
+                              />
+                            ) : (
+                              <MdInsertDriveFile size="40" />
+                            )}
+                          </ListItemIcon>
                         </MenuItemFlotante>
                       </Grid>
                     </Stack>
@@ -265,16 +305,63 @@ const LayoutSession = ({ children, titleModule }) => {
                         {user.es_administrador === true ? (
                           <>
                             <MenuItemFlotante ruta="/usuarios" name="Perfiles">
-                              <MdGroups size={40} />
+                              <ListItemIcon>
+                                {"/usuarios" === location.pathname ? (
+                                  <MdGroups
+                                    size="40"
+                                    style={{ color: "#00BFB3" }}
+                                  />
+                                ) : (
+                                  <MdGroups size="40" />
+                                )}
+                              </ListItemIcon>
                             </MenuItemFlotante>
                           </>
                         ) : (
                           <></>
                         )}
+                        {user.es_administrador === true ? (
+                          <>
+                            <MenuItemFlotante
+                              ruta="/companias"
+                              name="Companias"
+                            >
+                              <ListItemIcon>
+                                {"/companias" === location.pathname ? (
+                                  <MdOutlineCorporateFare
+                                    size="40"
+                                    style={{ color: "#00BFB3" }}
+                                  />
+                                ) : (
+                                  <MdOutlineCorporateFare size="40" />
+                                )}
+                              </ListItemIcon>
+                            </MenuItemFlotante>
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </Grid>
+                    </Stack>
+
+                    <Stack direction={{ xs: "column", sm: "row" }} spacing={0}>
+                      <Grid container>
                         {user.es_superadministrador === true ? (
                           <>
-                            <MenuItemFlotante ruta="/config" name="Config">
-                              <MdManageAccounts size={40} />
+                            <MenuItemFlotante
+                              ruta="/Configuraciones"
+                              name="Configuraciones"
+                            >
+                              <ListItemIcon>
+                                {"/Configuraciones" === location.pathname ? (
+                                  <MdManageAccounts
+                                    size="40"
+                                    style={{ color: "#00BFB3" }}
+                                  />
+                                ) : (
+                                  <MdManageAccounts size="40" />
+                                )}
+                              </ListItemIcon>
                             </MenuItemFlotante>
                           </>
                         ) : (
@@ -337,9 +424,17 @@ const LayoutSession = ({ children, titleModule }) => {
                     <MenuItemDropdown ruta="/perfil" name="Perfil">
                       <Settings size="35" />
                     </MenuItemDropdown>
-                    <MenuItemDropdown ruta="/logout" name="Cerrar Sesión">
-                      <Logout sx={{ color: "error.main" }} size="35" />
-                    </MenuItemDropdown>
+
+                    <MenuItem className="nav-link" onClick={logout}>
+                      <Box
+                        sx={{
+                          display: "inline-flex",
+                        }}
+                      >
+                        <Logout sx={{ color: "error.main" }} size="35" />
+                        Cerrar Sesión
+                      </Box>
+                    </MenuItem>
                   </Menu>
                 </Box>
               </div>
@@ -588,10 +683,10 @@ const LayoutSession = ({ children, titleModule }) => {
               <></>
             )}
 
-            {user.es_superadministrador === true ? (
+            {user.es_administrador === true ? (
               <>
                 <Link
-                  to="/config"
+                  to="/companias"
                   style={{ textDecoration: "none", color: "#9D9D9C" }}
                 >
                   <ListItemButton
@@ -610,7 +705,56 @@ const LayoutSession = ({ children, titleModule }) => {
                         justifyContent: "center",
                       }}
                     >
-                      {"/config" === location.pathname ? (
+                      {"/companias" === location.pathname ? (
+                        <MdOutlineCorporateFare
+                          size="25"
+                          style={{ color: "#00BFB3" }}
+                        />
+                      ) : (
+                        <MdOutlineCorporateFare size="25" />
+                      )}
+                    </ListItemIcon>
+                    {"/companias" === location.pathname ? (
+                      <ListItemText
+                        primary="Compañias"
+                        sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                      />
+                    ) : (
+                      <ListItemText
+                        primary="Compañias"
+                        sx={{ opacity: open ? 1 : 0 }}
+                      />
+                    )}
+                  </ListItemButton>
+                </Link>
+              </>
+            ) : (
+              <></>
+            )}
+
+            {user.es_superadministrador === true ? (
+              <>
+                <Link
+                  to="/Configuraciones"
+                  style={{ textDecoration: "none", color: "#9D9D9C" }}
+                >
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                      borderBottom: 1,
+                      borderColor: "secondary.light",
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {"/Configuraciones" === location.pathname ? (
                         <MdManageAccounts
                           size="25"
                           style={{ color: "#00BFB3" }}
@@ -619,7 +763,7 @@ const LayoutSession = ({ children, titleModule }) => {
                         <MdManageAccounts size="25" />
                       )}
                     </ListItemIcon>
-                    {"/config" === location.pathname ? (
+                    {"/Configuraciones" === location.pathname ? (
                       <ListItemText
                         primary="Configuraciones"
                         sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
@@ -649,7 +793,7 @@ const LayoutSession = ({ children, titleModule }) => {
               <Divider variant="medium" />
             </Stack>
           </Box>
-          <Box sx={{ m: 4 }}>{children}</Box>
+          <Box sx={{ m: 4, pb: 5 }}>{children}</Box>
         </Box>
       </Box>
     </>

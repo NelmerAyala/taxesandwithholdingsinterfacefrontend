@@ -23,6 +23,14 @@ import {
   Typography,
   Divider,
   Container,
+  IconButton,
+  InputLabel,
+  OutlinedInput,
+  FormControl,
+  Visibility,
+  Tooltip,
+  VisibilityOff,
+  InputAdornment,
 } from "../consts";
 
 export default function Login() {
@@ -30,6 +38,8 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login, isLogged, isLoggedLoading, hasLoginError } = useUser();
+  const [shown, setShown] = React.useState(false);
+  const switchShown = () => setShown(!shown);
 
   // Navigate
   let history = useNavigate();
@@ -44,6 +54,9 @@ export default function Login() {
     e.preventDefault();
     login({ username, password });
   };
+
+  // Mostrar/Ocultar contraseña
+  const onChange = ({ currentTarget }) => setPassword(currentTarget.value);
 
   return (
     <>
@@ -171,19 +184,39 @@ export default function Login() {
                         onChange={(e) => setUsername(e.target.value)}
                         inputProps={{ style: { textTransform: "uppercase" } }}
                       />
-                      <TextField
-                        size="small"
-                        margin="normal"
+                      <FormControl
                         required
                         fullWidth
-                        name="password"
-                        label="Contraseña"
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        autoComplete="current-password"
-                      />
+                        size="small"
+                        margin="normal"
+                      >
+                        <InputLabel>Contraseña</InputLabel>
+                        <OutlinedInput
+                          label="Contraseña"
+                          onChange={onChange}
+                          type={shown ? "text" : "password"}
+                          value={password}
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton onClick={switchShown}>
+                                {shown ? (
+                                  <Tooltip title="Ocultar contraseña">
+                                    <span>
+                                      <VisibilityOff />
+                                    </span>
+                                  </Tooltip>
+                                ) : (
+                                  <Tooltip title="Mostrar contraseña">
+                                    <span>
+                                      <Visibility />
+                                    </span>
+                                  </Tooltip>
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                      </FormControl>
                       <Button
                         type="submit"
                         fullWidth

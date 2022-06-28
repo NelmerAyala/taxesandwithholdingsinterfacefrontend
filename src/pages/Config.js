@@ -28,11 +28,16 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  OutlinedInput,
+  Visibility,
+  VisibilityOff,
+  Tooltip,
+  IconButton,
+  InputAdornment,
 } from "../consts";
 
 export default function Configuraciones() {
   // Constantes
-  // const [user, setUser] = useState([]);
   const [sistemaOrigen, setSistemaOrigen] = useState([]);
   const [tipoArchivoCompras, setTipoArchivoCompras] = useState([]);
   const [tipoArchivoVentas, setTipoArchivoVentas] = useState([]);
@@ -47,13 +52,16 @@ export default function Configuraciones() {
   const [rutaPrincipalEndpoints, setRutaPrincipalEndpoints] = useState([]);
 
   const [administradores, setAdministradores] = useState([]);
-  const [selectedAdministradores, setSelectedAdministradores] = useState([]);
+  const [selectedAdministradores, setSelectedAdministradores] = useState([
+    "DEFAULT",
+  ]);
 
   // Consulta de Administradores
   useEffect(() => {
     const res = async () => {
       const resp = await listAdministradoresService();
-      setAdministradores(resp);
+      setAdministradores(resp.body);
+      console.log(resp.body);
     };
     res();
   }, []);
@@ -64,23 +72,23 @@ export default function Configuraciones() {
     setSelectedAdministradores(value);
   };
 
-  // Submit Salvar Configuraciones
+  // Consultar Configuraciones
   useEffect(() => {
     const res = async () => {
       const res = await configuracionesService();
-      setSelectedAdministradores(res.UserId);
-      setSistemaOrigen(res.sistema_origen);
-      setTipoArchivoCompras(res.tipo_archivo_compras);
-      setTipoArchivoVentas(res.tipo_archivo_ventas);
-      setCodigoPrivilegioAdmin(res.codigo_privilegio_admin);
-      setCodigoPrivilegioCompras(res.codigo_privilegio_compras);
-      setCodigoPrivilegioVentas(res.codigo_privilegio_ventas);
-      setHostDb(res.host_db);
-      setPortDb(res.port_db);
-      setNameDb(res.name_db);
-      setUsernameDb(res.username_db);
-      setPasswordUsernameDb(res.password_username_db);
-      setRutaPrincipalEndpoints(res.ruta_principal_endpoints);
+      setSelectedAdministradores(res.body.UserId);
+      setSistemaOrigen(res.body.sistema_origen);
+      setTipoArchivoCompras(res.body.tipo_archivo_compras);
+      setTipoArchivoVentas(res.body.tipo_archivo_ventas);
+      setCodigoPrivilegioAdmin(res.body.codigo_privilegio_admin);
+      setCodigoPrivilegioCompras(res.body.codigo_privilegio_compras);
+      setCodigoPrivilegioVentas(res.body.codigo_privilegio_ventas);
+      setHostDb(res.body.host_db);
+      setPortDb(res.body.port_db);
+      setNameDb(res.body.name_db);
+      setUsernameDb(res.body.username_db);
+      setPasswordUsernameDb(res.body.password_username_db);
+      setRutaPrincipalEndpoints(res.body.ruta_principal_endpoints);
     };
     res();
   }, []);
@@ -105,33 +113,33 @@ export default function Configuraciones() {
         rutaPrincipalEndpoints
       );
       if (
-        res.UserId &&
-        res.sistema_origen &&
-        res.tipo_archivo_compras &&
-        res.tipo_archivo_ventas &&
-        res.codigo_privilegio_admin &&
-        res.codigo_privilegio_compras &&
-        res.codigo_privilegio_ventas &&
-        res.host_db &&
-        res.port_db &&
-        res.name_db &&
-        res.username_db &&
-        res.password_usernamedb &&
-        res.ruta_principal_endpoints
+        res.body.UserId &&
+        res.body.sistema_origen &&
+        res.body.tipo_archivo_compras &&
+        res.body.tipo_archivo_ventas &&
+        res.body.codigo_privilegio_admin &&
+        res.body.codigo_privilegio_compras &&
+        res.body.codigo_privilegio_ventas &&
+        res.body.host_db &&
+        res.body.port_db &&
+        res.body.name_db &&
+        res.body.username_db &&
+        res.body.password_usernamedb &&
+        res.body.ruta_principal_endpoints
       ) {
-        setSelectedAdministradores(res.UserId);
-        setSistemaOrigen(res.sistema_origen);
-        setTipoArchivoCompras(res.tipo_archivo_compras);
-        setTipoArchivoVentas(res.tipo_archivo_ventas);
-        setCodigoPrivilegioAdmin(res.codigo_privilegio_admin);
-        setCodigoPrivilegioCompras(res.codigo_privilegio_compras);
-        setCodigoPrivilegioVentas(res.codigo_privilegio_ventas);
-        setHostDb(res.host_db);
-        setPortDb(res.port_db);
-        setNameDb(res.name_db);
-        setUsernameDb(res.username_db);
-        setPasswordUsernameDb(res.password_username_db);
-        setRutaPrincipalEndpoints(res.ruta_principal_endpoints);
+        setSelectedAdministradores(res.body.UserId);
+        setSistemaOrigen(res.body.sistema_origen);
+        setTipoArchivoCompras(res.body.tipo_archivo_compras);
+        setTipoArchivoVentas(res.body.tipo_archivo_ventas);
+        setCodigoPrivilegioAdmin(res.body.codigo_privilegio_admin);
+        setCodigoPrivilegioCompras(res.body.codigo_privilegio_compras);
+        setCodigoPrivilegioVentas(res.body.codigo_privilegio_ventas);
+        setHostDb(res.body.host_db);
+        setPortDb(res.body.port_db);
+        setNameDb(res.body.name_db);
+        setUsernameDb(res.body.username_db);
+        setPasswordUsernameDb(res.body.password_username_db);
+        setRutaPrincipalEndpoints(res.body.ruta_principal_endpoints);
       }
       return res;
     };
@@ -151,6 +159,13 @@ export default function Configuraciones() {
       error: "Error: Configuración No exitosa.",
     });
   };
+
+  //Mostrar-Ocultar Contraseña
+  const [shown, setShown] = React.useState(false);
+  const switchShown = () => setShown(!shown);
+  // Mostrar/Ocultar contraseña
+  const onChange = ({ currentTarget }) =>
+    setPasswordUsernameDb(currentTarget.value);
 
   return (
     <LayoutSession titleModule="Configuraciones">
@@ -227,64 +242,49 @@ export default function Configuraciones() {
               <Typography variant="subtitles">Características</Typography>
             </Grid>
             <Divider />
-            <Grid container columns={12}>
-              <Grid item xs={6}>
-                <Stack sx={{ m: 2 }}>
-                  <TextField
-                    size="small"
-                    label="Nomenclatura para Nombre de Archivos"
-                    variant="outlined"
-                    fullWidth
-                    onChange={(e) => setSistemaOrigen(e.target.value)}
-                    value={sistemaOrigen}
-                  />
-                </Stack>
-              </Grid>
-              <Grid item xs={6}>
-                <Stack sx={{ m: 2 }}>
-                  {/* <TextField
-                  label="Administrador para Procesos Automático"
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setUser(e.target.value)}
-                  value={user}
-                /> */}
-
-                  <FormControl size="small">
-                    <InputLabel id="labelSelectCompany">
-                      Administrador para Procesos Automático
-                    </InputLabel>
-                    <Select
-                      labelId="labelSelectAdministrador"
-                      id="selectAdministrador"
-                      value={selectedAdministradores}
-                      onChange={handleChange}
-                      label="Administrador para Procesos Automático"
-                    >
-                      <MenuItem value="DEFAULT">
-                        <em> Seleccione un Administrador ...</em>
-                      </MenuItem>
-                      {administradores.map((admin, index) => {
-                        return index === 0 ? (
-                          <MenuItem key={admin.id} value={admin.id}>
-                            {admin.username} - {admin.firstname}
-                            {admin.lastname}
-                          </MenuItem>
-                        ) : (
-                          <MenuItem key={admin.id} value={admin.id}>
-                            {admin.username} - {admin.firstname}
-                            {admin.lastname}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                </Stack>
-              </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              columns={12}
+            >
+              <Stack sx={{ m: 2 }}>
+                <FormControl size="small">
+                  <InputLabel id="labelSelectCompany">
+                    Administrador para Procesos Automático
+                  </InputLabel>
+                  <Select
+                    labelId="labelSelectAdministrador"
+                    id="selectAdministrador"
+                    defaultValue={"DEFAULT"}
+                    value={selectedAdministradores}
+                    onChange={handleChange}
+                    label="Administrador para Procesos Automático"
+                  >
+                    <MenuItem value="DEFAULT">
+                      <em> Seleccione un Administrador ...</em>
+                    </MenuItem>
+                    {administradores.map((admin, index) => {
+                      return index === 0 ? (
+                        <MenuItem key={admin.id} value={admin.id}>
+                          {admin.username} - {admin.firstname}
+                          {admin.lastname}
+                        </MenuItem>
+                      ) : (
+                        <MenuItem key={admin.id} value={admin.id}>
+                          {admin.username} - {admin.firstname}
+                          {admin.lastname}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Stack>
             </Grid>
           </Paper>
 
-          {/* Segunda y Tercera Fila, Base de datos */}
+          {/* Segunda & Tercera Fila, Base de datos */}
           <Paper
             elevation={3}
             sx={{
@@ -325,18 +325,39 @@ export default function Configuraciones() {
               </Grid>
               <Grid item xs={4}>
                 <Stack sx={{ m: 2 }}>
-                  <TextField
-                    size="small"
-                    label="Clave usuario de Base de Datos"
-                    variant="outlined"
-                    fullWidth
-                    // onChange={(e) => setPasswordUsernameDb(e.target.value)}
-                    value={passwordUsernameDb}
-                    type="password"
-                  />
+                  <FormControl required fullWidth size="small">
+                    <InputLabel>Clave usuario de Base de Datos</InputLabel>
+                    <OutlinedInput
+                      readOnly
+                      label="Clave usuario de Base de Datos"
+                      onChange={onChange}
+                      type={shown ? "text" : "password"}
+                      value={passwordUsernameDb}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton onClick={switchShown}>
+                            {shown ? (
+                              <Tooltip title="Ocultar contraseña">
+                                <span>
+                                  <VisibilityOff />
+                                </span>
+                              </Tooltip>
+                            ) : (
+                              <Tooltip title="Mostrar contraseña">
+                                <span>
+                                  <Visibility />
+                                </span>
+                              </Tooltip>
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  </FormControl>
                 </Stack>
               </Grid>
             </Grid>
+
             <Grid container columns={12}>
               <Grid item xs={4}>
                 <Stack sx={{ m: 2 }}>
@@ -385,11 +406,13 @@ export default function Configuraciones() {
               <Grid item xs={4}>
                 <Stack sx={{ m: 2 }}>
                   <TextField
+                    required
                     size="small"
                     label="Código Privilegio de Compras"
                     variant="outlined"
                     fullWidth
-                    onChange={(e) => setCodigoPrivilegioCompras(e.target.value)}
+                    // onChange={(e) => setCodigoPrivilegioCompras(e.target.value)}
+                    // inputProps={{ maxLength: 3 }}
                     value={codigoPrivilegioCompras}
                   />
                 </Stack>
@@ -397,11 +420,13 @@ export default function Configuraciones() {
               <Grid item xs={4}>
                 <Stack sx={{ m: 2 }}>
                   <TextField
+                    required
                     size="small"
                     label="Código Privilegio de Ventas"
                     variant="outlined"
                     fullWidth
-                    onChange={(e) => setCodigoPrivilegioVentas(e.target.value)}
+                    // onChange={(e) => setCodigoPrivilegioVentas(e.target.value)}
+                    // inputProps={{ maxLength: 3 }}
                     value={codigoPrivilegioVentas}
                   />
                 </Stack>
@@ -409,11 +434,13 @@ export default function Configuraciones() {
               <Grid item xs={4}>
                 <Stack sx={{ m: 2 }}>
                   <TextField
+                    required
                     size="small"
                     label="Código Privilegio de Administrador"
                     variant="outlined"
                     fullWidth
-                    onChange={(e) => setCodigoPrivilegioAdmin(e.target.value)}
+                    // onChange={(e) => setCodigoPrivilegioAdmin(e.target.value)}
+                    // inputProps={{ maxLength: 3 }}
                     value={codigoPrivilegioAdmin}
                   />
                 </Stack>
@@ -441,11 +468,13 @@ export default function Configuraciones() {
               <Grid item xs={6}>
                 <Stack sx={{ m: 2 }}>
                   <TextField
+                    required
                     size="small"
                     label="Código Archivo de Compras"
                     variant="outlined"
                     fullWidth
-                    onChange={(e) => setTipoArchivoCompras(e.target.value)}
+                    // onChange={(e) => setTipoArchivoCompras(e.target.value)}
+                    // inputProps={{ maxLength: 3 }}
                     value={tipoArchivoCompras}
                   />
                 </Stack>
@@ -453,11 +482,13 @@ export default function Configuraciones() {
               <Grid item xs={6}>
                 <Stack sx={{ m: 2 }}>
                   <TextField
+                    required
                     size="small"
                     label="Código Archivo de Ventas"
                     variant="outlined"
                     fullWidth
-                    onChange={(e) => setTipoArchivoVentas(e.target.value)}
+                    // onChange={(e) => setTipoArchivoVentas(e.target.value)}
+                    // inputProps={{ maxLength: 3 }}
                     value={tipoArchivoVentas}
                   />
                 </Stack>

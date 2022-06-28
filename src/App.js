@@ -8,8 +8,8 @@ import RoutesApp from "./routes/RoutesApp";
 function App() {
   return (
     <>
-      <UserContextProvider>
         <Router>
+      <UserContextProvider>
           <Fragment>
             <Layout>
               <div className="App">
@@ -19,8 +19,8 @@ function App() {
               </div>
             </Layout>
           </Fragment>
-        </Router>
       </UserContextProvider>
+        </Router>
     </>
   );
 }
