@@ -1,6 +1,4 @@
-// const ENDPOINT = process.env.REACT_APP_BASE_URL;
-const ENDPOINT =
-    "https://xddr3e2ar9.execute-api.us-east-1.amazonaws.com/api-app-gir";
+const ENDPOINT = process.env.REACT_APP_BASE_URL;
 
 const loginService = async ({ username, password }) => {
     let resLogin = await fetch(`${ENDPOINT}/login`, {
