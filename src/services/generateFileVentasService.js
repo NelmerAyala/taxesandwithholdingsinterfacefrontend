@@ -4,7 +4,7 @@ const status_venta = "0";
 const generateFileVentasService = async ({ ids }, selectedCompany) => {
     let token = window.sessionStorage.getItem("token");
 
-    let generateFileVentas = await fetch(`${ENDPOINT}/ventas/generateTxt`, {
+    let generateFileVentas = await fetch(`${ENDPOINT}/ventas/generartxt`, {
         method: "POST",
         headers: {
             "x-token": `${token}`,

@@ -11,7 +11,7 @@ import LayoutSession from "../layout/LayoutSession";
 
 // Services
 import listDetallesArchivoService from "../services/listDetallesArchivoService";
-import anularFileService from "../services/anularFileService";
+// import anularFileService from "../services/";
 import anularTransaccionService from "../services/anularTransaccionService";
 
 // Componentes
@@ -64,16 +64,6 @@ export default function DetailsArchivos() {
     };
     res();
   }, [id]);
-
-  // console.log(archivos);
-
-  // useEffect(() => {
-  //   if (archivos) {
-  //     setInterval(() => {
-  //       navigate("/archivos");
-  //     }, 5000);
-  //   }
-  // }, [archivos]);
 
   //Submit anular
   const hadleSubmit = (e) => {
@@ -154,8 +144,8 @@ export default function DetailsArchivos() {
       toast.promise(res, {
         pending:
           anulacion === "1"
-            ? "Anulando Transacciones seleccionadas."
-            : "Eliminando Transacciones seleccionadas.",
+            ? "Anulando Transacciones seleccionadas.."
+            : "Eliminando Transacciones seleccionadas..",
         success: {
           render(data) {
             let msg;
@@ -172,8 +162,8 @@ export default function DetailsArchivos() {
         },
         error:
           anulacion === "1"
-            ? "Error: Transacciones seleccionadas No Anuladas."
-            : "Error: Transacciones seleccionadas No Eliminadas.",
+            ? "Error: Transacciones seleccionadas NO Anuladas."
+            : "Error: Transacciones seleccionadas NO Eliminadas.",
       });
     } else {
       toast.info("No ha seleccionado ninguna transacción.");
@@ -265,6 +255,7 @@ export default function DetailsArchivos() {
                         {archivo.status === 1 ? "Generado" : "Anulado"}
                       </Item>
                     </Grid>
+
                     <Grid item xs={4}>
                       <Item>
                         <b>Fecha:</b>
@@ -272,7 +263,11 @@ export default function DetailsArchivos() {
                       </Item>
                       <Item sx={{ display: "flex" }}>
                         <b>Usuario generador: </b>
-                        <Typography sx={{ textTransform: "uppercase" }}>
+                        <Typography
+                          sx={{
+                            textTransform: "uppercase",
+                          }}
+                        >
                           {archivo.UserCompany.User.username}
                         </Typography>
                       </Item>
@@ -281,7 +276,7 @@ export default function DetailsArchivos() {
                         {archivo.UserCompany.Company.nombre_company}
                       </Item>
                     </Grid>
-                    {archivo.TipoArchivo.tipo_archivo === "COM" ? (
+                    {archivo.TipoArchivo.tipo_archivo === compra ? (
                       <Grid item xs={4}>
                         {/* <Item>
                             <Button

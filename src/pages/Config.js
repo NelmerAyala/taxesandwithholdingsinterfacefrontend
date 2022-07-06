@@ -61,7 +61,6 @@ export default function Configuraciones() {
     const res = async () => {
       const resp = await listAdministradoresService();
       setAdministradores(resp.body);
-      console.log(resp.body);
     };
     res();
   }, []);
@@ -144,19 +143,19 @@ export default function Configuraciones() {
       return res;
     };
     toast.promise(res, {
-      pending: "Guardando configuración.",
+      pending: "Guardando configuración..",
       success: {
-        render(data) {
+        render({ data }) {
           let msg;
-          if (data.data.errors) {
-            msg = `Error: ` + data.data.errors[0].msg;
+          if (data.errors) {
+            msg = `Error: ` + data.errors.msg;
           } else {
-            msg = "Configuración exitosa.";
+            msg = "Configuración Guardada..!!";
           }
           return msg;
         },
       },
-      error: "Error: Configuración No exitosa.",
+      error: "Error: Configuración NO Guardada..",
     });
   };
 
@@ -173,7 +172,7 @@ export default function Configuraciones() {
       <Container>
         <ToastContainer
           position="top-right"
-          autoClose={5000}
+          autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick

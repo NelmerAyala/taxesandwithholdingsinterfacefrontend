@@ -67,7 +67,7 @@ export default function NuevoUsuario() {
     useEffect(() => {
         const res = async () => {
             const resp = await listCompaniasService();
-            setCompanias(resp);
+            setCompanias(resp.companias);
         };
         res();
     }, []);
@@ -146,8 +146,8 @@ export default function NuevoUsuario() {
             success: {
                 render(data) {
                     let msg;
-                    if (data.data.errors) {
-                        msg = `Error: ` + data.data.errors[0].msg;
+                    if (data.data.body.errors) {
+                        msg = `Error: ` + data.data.body.errors[0].msg;
                     } else if (data.data.error) {
                         msg = `Error: ` + data.data.error;
                     } else if (data.data.msg) {

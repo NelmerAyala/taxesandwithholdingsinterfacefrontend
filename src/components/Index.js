@@ -58,8 +58,7 @@ function Index() {
   useEffect(() => {
     const res = async () => {
       const resp = await userGet();
-      setBody(resp.body);
-      console.log(resp.body);
+      setBody(resp.body.user);
     };
     res();
   }, [userGet]);

@@ -39,19 +39,15 @@ export default function DetailsUser() {
   const [ruta_archivo_compra, setRuta_archivo_compra] = useState([]);
   const [ruta_archivo_venta, setRuta_archivo_venta] = useState([]);
 
-  // Consulta detalles del usuario
+  // Consulta detalles compañia
   useEffect(() => {
     const res = async () => {
       const res = await companiaDetailsService(id);
       setNombre_company(res.body.nombre_company);
       setCodigo_company(res.body.codigo_company);
       setOrigen(res.body.origen);
-      // res.origen_company
-      //   ? setOrigen_company(res.origen_company)
-      //   : setOrigen_company([]);
       setRuta_archivo_compra(res.body.ruta_archivo_compra);
       setRuta_archivo_venta(res.body.ruta_archivo_venta);
-      // console.log(res)
     };
     res();
   }, [id]);
@@ -59,41 +55,66 @@ export default function DetailsUser() {
   // Submit Actualizar Usuario
   const hadleSubmit = (e) => {
     e.preventDefault();
-    const res = async () => {
-      const res = await companiaUpdateService({
-        id,
-        codigo_company,
-        origen,
-        ruta_archivo_compra,
-        ruta_archivo_venta,
-      });
-      if (
-        res.codigo_company &&
-        res.origen &&
-        res.ruta_archivo_venta &&
-        res.ruta_archivo_venta
-      ) {
-        setCodigo_company(res.codigo_company);
-        setOrigen(res.origen);
-        setRuta_archivo_compra(res.ruta_archivo_venta);
-        setRuta_archivo_venta(res.ruta_archivo_venta);
-      }
-      return res;
-    };
-    toast.promise(res, {
-      pending: "Guardando Empresa.",
-      success: {
-        render(data) {
-          let msg;
-          if (data.data.errors) {
-            msg = `Error: ` + data.data.errors[0].msg;
+    const res = () => {
+      return new Promise((resolve, reject) => {
+        const respuesta = async () => {
+          const resp = await companiaUpdateService({
+            id,
+            codigo_company,
+            origen,
+            ruta_archivo_compra,
+            ruta_archivo_venta,
+          });
+          if (resp.body) {
+            if (
+              resp.codigo_company &&
+              resp.origen &&
+              resp.ruta_archivo_venta &&
+              resp.ruta_archivo_venta
+            ) {
+              setCodigo_company(resp.codigo_company);
+              setOrigen(resp.origen);
+              setRuta_archivo_compra(resp.ruta_archivo_venta);
+              setRuta_archivo_venta(resp.ruta_archivo_venta);
+            }
+            resolve(resp);
           } else {
-            msg = "Configuración exitosa.";
+            setCodigo_company(codigo_company);
+            setOrigen(origen);
+            setRuta_archivo_compra(ruta_archivo_venta);
+            setRuta_archivo_venta(ruta_archivo_venta);
+            reject(resp);
+          }
+          return res;
+        };
+        respuesta();
+      });
+    };
+    toast.dismiss();
+    toast.promise(res, {
+      pending: "Guardando actualizacion de Compañia..",
+      success: {
+        render({ data }) {
+          let msg;
+          if (data.body.msg) {
+            msg = data.body.msg;
+          } else {
+            msg = "Actualizacion de compañia Exitosa..!!";
           }
           return msg;
         },
       },
-      error: "Error: Configuración No exitosa.",
+      error: {
+        render({ data }) {
+          let msg;
+          if (data.errors.msg) {
+            msg = `Error: ` + data.errors.msg;
+          } else {
+            msg = "Error: En la actualizacion de la compañia.";
+          }
+          return msg;
+        },
+      },
     });
   };
 
@@ -231,10 +252,11 @@ export default function DetailsUser() {
                         label="Nombreclatura del TXT"
                         value={origen}
                         onChange={(e) => setOrigen(e.target.value)}
-                        inputProps={{
-                          style: { textTransform: "uppercase" },
-                          maxLength: 10,
-                        }}
+
+                        // inputProps={{
+                        //   style: { textTransform: "uppercase" },
+                        //   maxLength: 10,
+                        // }}
                       />
                     </Paper>
                   </Grid>

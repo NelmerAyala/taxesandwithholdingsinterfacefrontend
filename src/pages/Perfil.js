@@ -59,10 +59,10 @@ export default function Perfil() {
   useEffect(() => {
     const res = async () => {
       const res = await userGet();
-      setEmail(res.body.email);
-      setFirstname(res.body.firstname);
-      setLastname(res.body.lastname);
-      setUsername(res.body.username);
+      setEmail(res.body.user.email);
+      setFirstname(res.body.user.firstname);
+      setLastname(res.body.user.lastname);
+      setUsername(res.body.user.username);
     };
     res();
   }, [userGet]);
@@ -70,56 +70,87 @@ export default function Perfil() {
   // Submit Actualizar Usuario
   const hadleSubmit = (e) => {
     e.preventDefault();
-    const res = async () => {
-      const res = await userUpdate(email, firstname, lastname);
-      if (res.firstname && res.lastname && res.email) {
-        setEmail(res.email);
-        setFirstname(res.firstname);
-        setLastname(res.lastname);
-      }
-      return res;
-    };
-    toast.promise(res, {
-      pending: "Guardando configuración.",
-      success: {
-        render(data) {
-          let msg;
-          if (data.data.errors) {
-            msg = `Error: ` + data.data.errors[0].msg;
+    const res = () => {
+      return new Promise((resolve, reject) => {
+        const respuesta = async () => {
+          const resp = await userUpdate(email, firstname, lastname);
+          if (resp.body) {
+            if (resp.firstname && resp.lastname && resp.email) {
+              setEmail(resp.email);
+              setFirstname(resp.firstname);
+              setLastname(resp.lastname);
+            }
+            resolve(resp);
           } else {
-            msg = "Configuración de usuario exitosa.";
+            setEmail(email);
+            setFirstname(firstname);
+            setLastname(lastname);
+            reject(resp);
+          }
+          return res;
+        };
+        respuesta();
+      });
+    };
+    toast.dismiss();
+    toast.promise(res, {
+      pending: "Guardando actualizacion de perfil..",
+      success: {
+        render({ data }) {
+          let msg;
+          if (data.body.msg) {
+            msg = data.body.msg;
+          } else {
+            msg = "Actualizacion de perfil exitosa.!!";
           }
           return msg;
         },
       },
-      error: "Error: Configuración de usuario No exitosa.",
+      error: {
+        render({ data }) {
+          let msg;
+          if (data.errors.msg) {
+            msg = `Error: ` + data.errors.msg;
+          } else {
+            msg = "Error: En la actualizacion del perfil.";
+          }
+          return msg;
+        },
+      },
     });
   };
 
   // Submit Actualizar Contraseña
   const hadleSubmitPassword = (e) => {
     e.preventDefault();
-    const res = async () => {
-      if (passwordNew === passwordNewConfirmed) {
-        const resp = await changePasswordService({ password, passwordNew });
-        return resp;
-      } else {
-        return { error: "Las claves No son iguales, verifique!" };
-      }
-    };
-    toast.promise(res, {
-      pending: "Guardando clave nueva.",
-      success: {
-        render(data) {
-          let msg;
-          if (data.data.errors) {
-            msg = `Error: ` + data.data.errors[0].msg;
-          } else if (data.data.error) {
-            msg = `Error: ` + data.data.error;
-          } else if (data.data.msg) {
-            msg = `Error: ` + data.data.msg;
+    const res = () => {
+      return new Promise((resolve, reject) => {
+        const respuesta = async () => {
+          const resp = await changePasswordService({
+            password,
+            passwordNew,
+          });
+          if (resp.body) {
+            resolve(resp);
+            return resp;
           } else {
-            msg = "Cambio de clave exitoso.";
+            reject(resp);
+          }
+          return resp;
+        };
+        respuesta();
+      });
+    };
+    toast.dismiss();
+    toast.promise(res, {
+      pending: "Guardando actualizacion de contraseña..",
+      success: {
+        render({ data }) {
+          let msg;
+          if (data.body.msg) {
+            msg = data.body.msg;
+          } else {
+            msg = "Actualizacion de contraseña Exitoso.!!";
             setPassword("");
             setPasswordNew("");
             setPasswordNewConfirmed("");
@@ -127,7 +158,20 @@ export default function Perfil() {
           return msg;
         },
       },
-      error: "Error: Cambio de clave No exitoso.",
+      error: {
+        render({ data }) {
+          let msg;
+          if (data.errors.msg) {
+            msg = `Error: ` + data.errors.msg;
+            // } else if (data.error.msg) {
+            //     msg = `Error: ` + data.error.msg;
+            // }
+          } else {
+            msg = "Error: En la actualizacion de contraseña.";
+          }
+          return msg;
+        },
+      },
     });
   };
 
@@ -150,7 +194,7 @@ export default function Perfil() {
         <Container>
           <ToastContainer
             position="top-right"
-            autoClose={5000}
+            autoClose={3000}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick
@@ -177,8 +221,17 @@ export default function Perfil() {
               sm={2}
               md={2}
               lg={2}
-              sx={{ mt: 2, borderRight: 1, borderColor: "secondary.light" }}
-              display={{ xs: "none", sm: "none", md: "block", lg: "block" }}
+              sx={{
+                mt: 2,
+                borderRight: 1,
+                borderColor: "secondary.light",
+              }}
+              display={{
+                xs: "none",
+                sm: "none",
+                md: "block",
+                lg: "block",
+              }}
             >
               <Stack
                 direction="column"
@@ -192,7 +245,12 @@ export default function Perfil() {
                   alt="avatar"
                   src={imageIsotipoIntelix}
                   sx={{
-                    maxWidth: { xs: 100, sm: 100, md: 100, lg: 140 },
+                    maxWidth: {
+                      xs: 100,
+                      sm: 100,
+                      md: 100,
+                      lg: 140,
+                    },
                   }}
                 />
               </Stack>
@@ -417,21 +475,47 @@ export default function Perfil() {
 
                       <Grid item xs={12} sm={12} md={3} lg={2}>
                         <Paper elevation={0} align="center">
-                          <Button
-                            type="submit"
-                            align="center"
-                            variant="contained"
-                            sx={{
-                              px: 5,
-                              mt: 1,
-                              mb: 1,
-                              borderRadius: "1rem",
-                              color: "white.main",
-                              textTransform: "none",
-                            }}
-                          >
-                            Guardar
-                          </Button>
+                          {passwordNew === passwordNewConfirmed ? (
+                            <Button
+                              type="submit"
+                              align="center"
+                              variant="contained"
+                              sx={{
+                                px: 5,
+                                mt: 1,
+                                mb: 1,
+                                borderRadius: "1rem",
+                                color: "white.main",
+                                textTransform: "none",
+                              }}
+                            >
+                              Guardar
+                            </Button>
+                          ) : (
+                            <Tooltip
+                              followCursor
+                              title="Verifica las contraseñas"
+                            >
+                              <span>
+                                <Button
+                                  type="submit"
+                                  align="center"
+                                  variant="contained"
+                                  disabled
+                                  sx={{
+                                    px: 5,
+                                    mt: 1,
+                                    mb: 1,
+                                    borderRadius: "1rem",
+                                    color: "white.main",
+                                    textTransform: "none",
+                                  }}
+                                >
+                                  Guardar
+                                </Button>
+                              </span>
+                            </Tooltip>
+                          )}
                         </Paper>
                       </Grid>
                     </Grid>

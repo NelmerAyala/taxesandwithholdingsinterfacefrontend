@@ -69,7 +69,7 @@ export default function ListVentas() {
   useEffect(() => {
     const res = async () => {
       const resp = await listCompaniasService();
-      setCompany(resp.body);
+      setCompany(resp.body.companias);
     };
     res();
   }, []);
@@ -77,26 +77,46 @@ export default function ListVentas() {
   // Consulta de ventas
   useEffect(() => {
     if (selectedCompany && selectedCompany !== "DEFAULT") {
-      const res = async () => {
-        const resp = await listVentasService(selectedCompany);
-        setList(resp.body.ventas);
-        return resp;
-      };
-      toast.dismiss();
-      toast.promise(res, {
-        pending: "Consultando Transacciones de Ventas.",
-        success: {
-          render(data) {
-            let msg;
-            if (data.data.msg) {
-              msg = `Error: ` + data.data.msg;
+      const res = () => {
+        return new Promise((resolve, reject) => {
+          const respuesta = async () => {
+            const resp = await listVentasService(selectedCompany);
+
+            if (resp.body) {
+              setList(resp.body.ventas);
+              resolve(resp);
             } else {
-              msg = "Consulta Ventas exitosa.";
+              setList([]);
+              reject(resp);
+            }
+          };
+          respuesta();
+        });
+      };
+
+      toast.dismiss();
+
+      toast.promise(res, {
+        pending: "Consultando Transacciones de Ventas..",
+        success: {
+          render({ data }) {
+            let msg = "Consulta de Transacciones de Ventas Exitosa.!!";
+            if (data.body.msg) {
+              msg = data.body.msg;
             }
             return msg;
           },
         },
-        error: "Error: Consulta de Transacciones de Ventas No realizada.",
+        error: {
+          render({ data }) {
+            let msg =
+              "Error: Consulta de Transacciones de Ventas NO realizada.";
+            if (data.errors.msg) {
+              msg = `Error: ` + data.errors.msg;
+            }
+            return msg;
+          },
+        },
       });
     } else {
       if (selectedCompany === "DEFAULT") {
@@ -114,7 +134,7 @@ export default function ListVentas() {
           { ids: isCheck },
           selectedCompany
         );
-        setList(resp);
+        setList(resp.body);
         setIsCheckAll(false);
         setSelectedCompany("DEFAULT");
         return resp;
@@ -123,17 +143,24 @@ export default function ListVentas() {
       toast.promise(res, {
         pending: "Generando Archivo de Ventas.",
         success: {
-          render(data) {
-            let msg;
-            if (data.data.msg) {
-              msg = `Error: ` + data.data.msg;
-            } else {
-              msg = "Archivo de Ventas Generado Exitosamente.";
+          render({ data }) {
+            let msg = "Archivo de Ventas Generado Exitosamente.!!";
+            if (data.body.msg) {
+              msg = data.body.msg;
             }
             return msg;
           },
         },
-        error: "Error: Archivo de Ventas No Generado.",
+        // error: "Error: Archivo de Ventas No Generado.",
+        error: {
+          render({ data }) {
+            let msg = "Error: Archivo de Ventas No Generado.!!";
+            if (data.errors.msg) {
+              msg = `Error: ` + data.errors.msg;
+            }
+            return msg;
+          },
+        },
       });
     } else {
       e.preventDefault();
@@ -268,7 +295,7 @@ export default function ListVentas() {
       <Container>
         <ToastContainer
           position="top-right"
-          autoClose={5000}
+          autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick

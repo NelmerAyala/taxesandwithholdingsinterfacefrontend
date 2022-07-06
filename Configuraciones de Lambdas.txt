@@ -8,26 +8,21 @@
     DB_USERNAME	            tigalacadmin
     SECRETORPRIVATEKEY	    jllgshllWEUJHGHYJkjsfjds90
 
-        --- VPC ---
+         --- VPC ---
 
-    VPC                     vpc-06a0aeeb48dadc175 (10.57.232.0/21) | VPC_MayoresServiciosComunes      
+    VPC                     vpc-06a0aeeb48dadc175 (10.57.128.0/21) | VPC_MayoresServiciosComunes      
 
     Subredes                subnet-07e92315ed3de5369 (10.57.129.0/24) | us-east-1a, SUB_Inside
                             subnet-00531be5ea17a31f0 (10.57.130.0/24) | us-east-1b, SUB-Inside2
 
     Grupos de seguridad     sg-024f6cadbf5102e36 (SG-DB-SQL) | SG-DB-SQL
-                            sg-055006abad9f72a20 (SG-MAY-WEB) | SG-MAY-WEB
 
         --- Capas ---
 
     mave-layer-modules-app-gir	
 
-    mave-layer-resources-app-gir
-
-    mave-layer-db_config_models-app-gir		 
+    mave-layer-resources-app-gir 
 
         --- Pruebas ---
-        
-    x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers,Access-Control-Allow-Methods'
-
-    'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token, x-token
+    modificar api y colocar al final x-token
+    'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token, x-token'

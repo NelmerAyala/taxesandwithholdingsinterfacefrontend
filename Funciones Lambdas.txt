@@ -1,81 +1,108 @@
----------- Archivos ----------
+---------- ARCHIVOS ----------
 
-    # Funcion: getArchivos  
+    #1. Funcion: getArchivos  
         mave-msarchivos-lbda-getArchivos-app-gir
 
-    # Funcion: getDetallesArchivoById   
+    #2. Funcion: getDetallesArchivoById   
         mave-msarchivos-lbda-getDetallesArchivoById-app-gir
 
-    # Funcion: anularTransaccionById 
-        mave-msarchivos-lbda-anularTransaccionById-app-gir      
+    #3. Funcion: anularTransaccionById 
+        mave-msarchivos-lbda-anularTransaccionById-app-gir
 
----------- Autenticacion ----------
+    #4. Funcion: createArchivoInGenerate 
+        mave-msarchivos-lbda-createArchivoInGenerate-app-gir      
 
-    # Funcion: getAuthState 
+---------- AUTENTICACION ----------
+
+    #1. Funcion: getAuthState 
         mave-msautenticacion-lbda-getAuthState-app-gir
 
-    # Funcion: Login  
+    #2. Funcion: Login  
         mave-msautenticacion-lbda-login-app-gir        
         
----------- Compañias ----------
+---------- COMPAÑIAS ----------
 
-    # Funcion: getCompaniaById
+    #1. Funcion: getCompaniaById
         mave-mscompanias-lbda-getCompaniaById-app-gir
 
-    # Funcion: getCompanias
+    #2. Funcion: getCompanias
         mave-mscompanias-lbda-getCompanias-app-gir
 
-     # Funcion: updateCompaniasbyID 
+    #3. Funcion: updateCompaniasbyID 
         mave-mscompanias-lbda-updateCompaniasbyID-app-gir
 
----------- Compras ----------
+    #4. Funcion: createCompania 
+        mave-mscompanias-lbda-createCompania-app-gir
+
+---------- COMPRAS ----------
         
-    # Funcion: getCompras
+    #1. Funcion: getCompras
         mave-mscompras-lbda-getCompras-app-gir
 
----------- Configuraciones ----------
+    #2. Funcion: generateTxtCompras (Asistido)
+        mave-mscompras-lbda-generateTxtCompras-app-gir
 
-    # Funcion: getConfiguraciones 
+    #3. Funcion: generateTxtComprasAll (Automatico)
+        mave-mscompras-lbda-generateTxtComprasAll-app-gir
+        
+---------- CONFIGURACIONES ----------
+
+    #1. Funcion: getConfiguraciones 
         mave-msconfiguraciones-lbda-getConfiguraciones-app-gir
         
-    # Funcion: updateConfiguracion 
+    #2. Funcion: updateConfiguracion 
         mave-msconfiguraciones-lbda-updateConfiguracion-app-gir
 
----------- Privilegios ----------
+---------- PRIVILEGIOS ----------
 
-    # Funcion: getPrivilegios 
+    #1. Funcion: getPrivilegios 
         mave-msprivilegios-lbda-getPrivilegios-app-gir 
 
----------- Usuarios ----------
+---------- USUARIOS ----------
 
-    # Funcion: createUser (Admin)
+    #1. Funcion: createUser (Admin)
         mave-msusuarios-lbda-createUser-app-gir
 
-    # Funcion: getAdministradores (SuperAdmin)
+    #2. Funcion: getAdministradores (SuperAdmin)
         mave-msusuarios-lbda-getAdministradores-app-gir
 
-    # Funcion: getUser (Perfil)
+    #3. Funcion: getUser (Perfil)
         mave-msusuarios-lbda-getUser-app-gir
 
-    # Funcion: updateUser (Perfil)
+    #4. Funcion: updateUser (Perfil)
         mave-msusuarios-lbda-updateUser-app-gir
 
-    # Funcion: updateUserPassword (Perfil)
+    #5. Funcion: updateUserPassword (Perfil)
         mave-msusuarios-lbda-updateUserPassword-app-gir
 
-    # Funcion: getUsersAdmin (Admin) 
+    #6. Funcion: getUsersAdmin (Admin) 
         mave-msusuarios-lbda-getUsersAdmin-app-gir  
 
-    # Funcion: getUserByIdAdmin (Admin)
+    #7. Funcion: getUserByIdAdmin (Admin)
         mave-msusuarios-lbda-getUserByIdAdmin-app-gir
 
-    # Funcion: updateUserAdmin (Admin)
+    #8. Funcion: updateUserAdmin (Admin)
         mave-msusuarios-lbda-updateUserAdmin-app-gir
 
+---------- VENTAS ----------
 
----------- Ventas ----------
-
-     # Funcion: getVentas
+    #1. Funcion: getVentas
         mave-msventas-lbda-getVentas-app-gir
 
+    #2. Funcion: generateTxtVentas (Asistido)
+        mave-msventas-lbda-generateTxtVentas-app-gir
+
+    #3. Funcion: generateTxtVentasAll (Automatico)
+        mave-msventas-lbda-generateTxtVentasAll-app-gir
+
+---------- GENERAR TXT S3 ----------
+
+    mave-mstxt-lbda-addObjectBucket-app-gir
+
+---------- BUCKET S3 ----------
+    mave-bucket-s3-txt-app-gir
+
+TOTAL: 
+    28  FUNCIONES LAMBDAS 
+    1   BUCKET
         

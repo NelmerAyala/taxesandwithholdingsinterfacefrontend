@@ -105,7 +105,7 @@ export default function DetailsUser() {
   useEffect(() => {
     const res = async () => {
       const resp = await listCompaniasService();
-      setCompanias(resp.body);
+      setCompanias(resp.body.companias);
     };
     res();
   }, []);
@@ -149,41 +149,68 @@ export default function DetailsUser() {
   // Submit editar usuario
   const hadleSubmit = (e) => {
     e.preventDefault();
-    const res = async () => {
-      const res = await userUpdateAdmin(
-        id,
-        email,
-        firstname,
-        lastname,
-        companiasPrivilegios
-      );
-
-      if (!res.errors) {
-        res.body.email ? setEmail(res.body.email) : setEmail([]);
-        res.body.lastname ? setFirstname(res.body.firstname) : setFirstname([]);
-        res.body.lastname ? setLastname(res.body.lastname) : setLastname([]);
-        res.body.username ? setUsername(res.body.username) : setUsername([]);
-        res.body.UserCompanies
-          ? setUserCompanies(res.body.UserCompanies)
-          : setUserCompanies([]);
-      }
-      return res;
-    };
-    // res()
-    toast.promise(res, {
-      pending: "Guardando configuración.",
-      success: {
-        render(data) {
-          let msg;
-          if (data.data.errors) {
-            msg = `Error: ` + data.data.errors[0].msg;
+    const res = () => {
+      return new Promise((resolve, reject) => {
+        const respuesta = async () => {
+          const res = await userUpdateAdmin(
+            id,
+            email,
+            firstname,
+            lastname,
+            companiasPrivilegios
+          );
+          if (res.body) {
+            if (
+              res.email &&
+              res.firstname &&
+              res.lastname &&
+              res.companiasPrivilegios
+            ) {
+              setEmail(res.email);
+              setFirstname(res.firstname);
+              setLastname(res.lastname);
+              setUsername(res.username);
+              setUserCompanies(res.UserCompanies);
+            }
+            resolve(res);
           } else {
-            msg = "Configuración de usuario exitosa.";
+            setEmail(email);
+            setFirstname(firstname);
+            setLastname(lastname);
+            setUsername(username);
+            setUserCompanies([]);
+            reject(res);
+          }
+          return res;
+        };
+        respuesta();
+      });
+    };
+    toast.dismiss();
+    toast.promise(res, {
+      pending: "Guardando actualizacion de usuario..",
+      success: {
+        render({ data }) {
+          let msg;
+          if (data.body.msg) {
+            msg = data.body.msg;
+          } else {
+            msg = "Actualizacion de usuario exitosa..!!";
           }
           return msg;
         },
       },
-      error: "Error: Configuración de usuario No exitosa.",
+      error: {
+        render({ data }) {
+          let msg;
+          if (data.errors.msg) {
+            msg = `Error: ` + data.errors.msg;
+          } else {
+            msg = "Error: En la actualizacion de usuario.";
+          }
+          return msg;
+        },
+      },
     });
   };
 

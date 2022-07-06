@@ -101,29 +101,49 @@ export default function ListArchivos() {
   // Variables
   let archivos = [];
 
-  // Consulta de compras
+  // Consulta de archivos
   useEffect(() => {
     if (selectedCompany && selectedCompany !== "DEFAULT") {
-      const res = async () => {
-        const resp = await listArchivosService(selectedCompany);
-        setList(resp.body.archivos);
-        return resp;
+      const res = () => {
+        return new Promise((resolve, reject) => {
+          const respuesta = async () => {
+            const resp = await listArchivosService(selectedCompany);
+            if (resp.body) {
+              setList(resp.body.archivos);
+              resolve(resp);
+            } else {
+              setList([]);
+              reject(resp);
+            }
+          };
+          respuesta();
+        });
       };
       toast.dismiss();
       toast.promise(res, {
-        pending: "Consultando Archivos",
+        pending: "Consultando Archivos..",
         success: {
-          render(data) {
+          render({ data }) {
             let msg;
-            if (data.data.msg) {
-              msg = `Error: ` + data.data.msg;
+            if (data.body.msg) {
+              msg = data.body.msg;
             } else {
-              msg = "Consulta Archivos exitosa.";
+              msg = "Consulta Archivos exitosa..!!";
             }
             return msg;
           },
         },
-        error: "Error: Consulta de Archivos No realizada.",
+        error: {
+          render({ data }) {
+            let msg;
+            if (data.errors.msg) {
+              msg = `Error: ` + data.errors.msg;
+            } else {
+              msg = "Error: Consulta de Archivos NO realizada.";
+            }
+            return msg;
+          },
+        },
       });
     } else {
       if (selectedCompany === "DEFAULT") {
@@ -138,7 +158,7 @@ export default function ListArchivos() {
   useEffect(() => {
     const res = async () => {
       const resp = await listCompaniasService();
-      setCompany(resp.body);
+      setCompany(resp.body.companias);
     };
     res();
   }, []);
@@ -292,7 +312,7 @@ export default function ListArchivos() {
       <Container>
         <ToastContainer
           position="top-right"
-          autoClose={5000}
+          autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick

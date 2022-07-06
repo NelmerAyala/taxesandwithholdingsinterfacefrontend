@@ -51,30 +51,26 @@ export default function NuevoUsuario() {
         ruta_archivo_compra,
         ruta_archivo_venta
       );
-      // setUserCreado(resp);
       if (!resp.errors) {
-        navigate(`/companias/`);
+        navigate(`/companias`);
       }
       return resp;
     };
+    toast.dismiss();
     toast.promise(res, {
       pending: "Registrando compañia..",
       success: {
-        render(data) {
+        render({ data }) {
           let msg;
-          if (data.data.errors) {
-            msg = `Error: ` + data.data.errors[0].msg;
-          } else if (data.data.error) {
-            msg = `Error: ` + data.data.error;
-          } else if (data.data.msg) {
-            msg = data.data.msg;
+          if (data.errors) {
+            msg = `Error: ` + data.errors.msg;
           } else {
-            msg = "Registro de compañia exitosa.";
+            msg = "Registro de compañia exitosa..!!";
           }
           return msg;
         },
       },
-      error: "Error: Registro de compañia No Exitoso.",
+      error: "Error: Registro de compañia NO Exitoso.",
     });
   };
 
@@ -203,7 +199,9 @@ export default function NuevoUsuario() {
                         onChange={(e) => setOrigen(e.target.value)}
                         value={origen}
                         inputProps={{
-                          style: { textTransform: "uppercase" },
+                          style: {
+                            textTransform: "uppercase",
+                          },
                           maxLength: 10,
                         }}
                       />
