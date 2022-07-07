@@ -80,7 +80,6 @@ export default function DetailsArchivos() {
   //   });
   // };
 
-
   // Anular Seleccionado
   const hadleSubmit = (e) => {
     const { value } = e.target;
@@ -235,49 +234,49 @@ export default function DetailsArchivos() {
                   <Navigate to={"/archivos"} replace />
                 </Container>
               ) : (
-                  <Box sx={{ flexGrow: 1 }} key={archivo.id}>
-                    <Grid container item spacing={2}>
-                      <Grid item xs={4}>
-                        <Item>
-                          <b>Codigo:</b> {archivo.id}
-                        </Item>
-                        <Item>
-                          <b>Nombre archivo:</b> {archivo.id}
-                          {archivo.nombre_archivo}
-                        </Item>
-                        <Item>
-                          <b>Tipo archivo:</b>
-                          {archivo.TipoArchivo.descripcion_tipo_archivo}
-                        </Item>
-                        <Item>
-                          <b>Estado:</b>
-                          {archivo.status === 1 ? "Generado" : "Anulado"}
-                        </Item>
-                      </Grid>
+                <Box sx={{ flexGrow: 1 }} key={archivo.id}>
+                  <Grid container item spacing={2}>
+                    <Grid item xs={4}>
+                      <Item>
+                        <b>Codigo:</b> {archivo.id}
+                      </Item>
+                      <Item>
+                        <b>Nombre archivo:</b> {archivo.id}
+                        {archivo.nombre_archivo}
+                      </Item>
+                      <Item>
+                        <b>Tipo archivo:</b>
+                        {archivo.TipoArchivo.descripcion_tipo_archivo}
+                      </Item>
+                      <Item>
+                        <b>Estado:</b>
+                        {archivo.status === 1 ? "Generado" : "Anulado"}
+                      </Item>
+                    </Grid>
 
+                    <Grid item xs={4}>
+                      <Item>
+                        <b>Fecha:</b>
+                        {moment(archivo.fecha_archivo).format("DD-MM-YYYY")}
+                      </Item>
+                      <Item sx={{ display: "flex" }}>
+                        <b>Usuario generador: </b>
+                        <Typography
+                          sx={{
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {archivo.UserCompany.User.username}
+                        </Typography>
+                      </Item>
+                      <Item>
+                        <b>Compañia:</b>
+                        {archivo.UserCompany.Company.nombre_company}
+                      </Item>
+                    </Grid>
+                    {archivo.TipoArchivo.tipo_archivo === compra ? (
                       <Grid item xs={4}>
-                        <Item>
-                          <b>Fecha:</b>
-                          {moment(archivo.fecha_archivo).format("DD-MM-YYYY")}
-                        </Item>
-                        <Item sx={{ display: "flex" }}>
-                          <b>Usuario generador: </b>
-                          <Typography
-                            sx={{
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            {archivo.UserCompany.User.username}
-                          </Typography>
-                        </Item>
-                        <Item>
-                          <b>Compañia:</b>
-                          {archivo.UserCompany.Company.nombre_company}
-                        </Item>
-                      </Grid>
-                      {archivo.TipoArchivo.tipo_archivo === compra ? (
-                        <Grid item xs={4}>
-                          {/* <Item>
+                        {/* <Item>
                             <Button
                               type="submit"
                               variant="contained"
@@ -291,22 +290,22 @@ export default function DetailsArchivos() {
                               Anular Archivo
                             </Button>
                           </Item> */}
-                          <Item>
-                            <Button
-                              onClick={hadleSubmit}
-                              value={1}
-                              variant="contained"
-                              color="warning"
-                              sx={{
-                                px: 5,
-                                borderRadius: "1rem",
-                                textTransform: "none",
-                              }}
-                            >
-                              Anular Seleccionados
+                        <Item>
+                          <Button
+                            onClick={hadleSubmit}
+                            value={1}
+                            variant="contained"
+                            color="warning"
+                            sx={{
+                              px: 5,
+                              borderRadius: "1rem",
+                              textTransform: "none",
+                            }}
+                          >
+                            Desvincular Seleccionados
                           </Button>
-                          </Item>
-                          <Item>
+                        </Item>
+                        {/* <Item>
                             <Button
                               onClick={hadleSubmit}
                               value={2}
@@ -320,18 +319,18 @@ export default function DetailsArchivos() {
                             >
                               Eliminar Seleccionados
                           </Button>
-                          </Item>
-                        </Grid>
-                      ) : (
-                          <></>
-                        )}
-                    </Grid>
-                  </Box>
-                );
+                          </Item> */}
+                      </Grid>
+                    ) : (
+                      <></>
+                    )}
+                  </Grid>
+                </Box>
+              );
             })
           ) : (
-              <></>
-            )}
+            <></>
+          )}
 
           <TableContainer sx={{ maxHeight: 440 }}>
             <Table stickyHeader aria-label="sticky table" size="small">
@@ -342,12 +341,12 @@ export default function DetailsArchivos() {
                       <TableCell colSpan={10}>Cargando...</TableCell>
                     </TableRow>
                   ) : (
-                      archivos.map((archivo) => {
-                        return archivo.TipoArchivoId === 1 &&
-                          archivo.TipoArchivo.tipo_archivo === venta ? (
-                            // Cabecera de Ventas
-                            <TableRow key={archivo.id}>
-                              {/* <TableCell align="center">
+                    archivos.map((archivo) => {
+                      return archivo.TipoArchivoId === 1 &&
+                        archivo.TipoArchivo.tipo_archivo === venta ? (
+                        // Cabecera de Ventas
+                        <TableRow key={archivo.id}>
+                          {/* <TableCell align="center">
                             <Checkbox
                               color="primary"
                               type="checkbox"
@@ -357,84 +356,84 @@ export default function DetailsArchivos() {
                               isChecked={isCheckAll}
                             />
                           </TableCell> */}
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Nº Doc.</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Nº Control</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Nº Comprobante</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Tipo Doc.</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Fecha Emisión</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Rif</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Cliente</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Subtotal</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Impuesto</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Total</b>
-                              </TableCell>
-                            </TableRow>
-                          ) : (
-                            // Cabecera de Compras
-                            <TableRow key={archivo.id}>
-                              <TableCell align="center">
-                                <Checkbox
-                                  color="primary"
-                                  type="checkbox"
-                                  name="selectAll"
-                                  id="selectAll"
-                                  handleClick={handleSelectAll}
-                                  isChecked={isCheckAll}
-                                />
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b> Nº Doc.</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b> Nº Control</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b> Tipo Doc.</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b> Fecha Emisión</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b> Rif</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Proveedor</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Subtotal</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b>Impuesto</b>
-                              </TableCell>
-                              <TableCell component="th" scope="row" align="center">
-                                <b> Total</b>
-                              </TableCell>
-                            </TableRow>
-                          );
-                      })
-                    )
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Nº Doc.</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Nº Control</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Nº Comprobante</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Tipo Doc.</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Fecha Emisión</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Rif</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Cliente</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Subtotal</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Impuesto</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Total</b>
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        // Cabecera de Compras
+                        <TableRow key={archivo.id}>
+                          <TableCell align="center">
+                            <Checkbox
+                              color="primary"
+                              type="checkbox"
+                              name="selectAll"
+                              id="selectAll"
+                              handleClick={handleSelectAll}
+                              isChecked={isCheckAll}
+                            />
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b> Nº Doc.</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b> Nº Control</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b> Tipo Doc.</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b> Fecha Emisión</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b> Rif</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Proveedor</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Subtotal</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b>Impuesto</b>
+                          </TableCell>
+                          <TableCell component="th" scope="row" align="center">
+                            <b> Total</b>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )
                 ) : (
-                    <></>
-                  )}
+                  <></>
+                )}
               </TableHead>
               <TableBody>
                 {archivos.length > 0 ? (
@@ -443,157 +442,157 @@ export default function DetailsArchivos() {
                       <TableCell colSpan={10}>Cargando...</TableCell>
                     </TableRow>
                   ) : (
-                      archivos.map((archivo) => {
-                        return !archivo.Compras ? (
-                          <TableRow>
-                            <TableCell colSpan={10}>
-                              Cargando Archivos de Compras
+                    archivos.map((archivo) => {
+                      return !archivo.Compras ? (
+                        <TableRow>
+                          <TableCell colSpan={10}>
+                            Cargando Archivos de Compras
                           </TableCell>
-                          </TableRow>
-                        ) : (
-                            archivo.Compras.map((compra) => {
-                              return (
-                                <TableRow key={compra.id}>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {compra.status_compra === 0 ? (
-                                      <Checkbox
-                                        id={compra.id}
-                                        name={compra.numero_comprobante}
-                                        type="checkbox"
-                                        handleClick={handleClick}
-                                        isChecked={isCheck.includes(compra.id)}
-                                      />
-                                    ) : compra.status_compra === 2 ? (
-                                      <MdDeleteForever
-                                        size={26}
-                                        color="#E20613"
-                                        name={"Eliminado"}
-                                      />
-                                    ) : (
-                                          "Estatus desconocido"
-                                        )}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {compra.numero_doc}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {compra.numero_control}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {archivo.TipoArchivo.descripcion_tipo_archivo}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {moment(compra.fecha_doc).format("DD-MM-YYYY")}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {compra.numero_rif}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {compra.nombre_proveedor}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    <CurrencyFormat
-                                      value={compra.base_imponible_tasa_general}
-                                      thousandSeparator="."
-                                      decimalSeparator=","
-                                      decimalScale={2}
-                                      fixedDecimalScale={true}
-                                      displayType={"text"}
-                                      prefix={""}
-                                    />
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    <CurrencyFormat
-                                      value={compra.monto_impuesto_tasa_general}
-                                      thousandSeparator="."
-                                      decimalSeparator=","
-                                      decimalScale={2}
-                                      fixedDecimalScale={true}
-                                      displayType={"text"}
-                                      prefix={""}
-                                    />
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    <CurrencyFormat
-                                      value={
-                                        compra.base_imponible_tasa_general +
-                                        compra.monto_impuesto_tasa_general
-                                      }
-                                      thousandSeparator="."
-                                      decimalSeparator=","
-                                      decimalScale={2}
-                                      fixedDecimalScale={true}
-                                      displayType={"text"}
-                                      prefix={""}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-                              );
-                            })
+                        </TableRow>
+                      ) : (
+                        archivo.Compras.map((compra) => {
+                          return (
+                            <TableRow key={compra.id}>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {compra.status_compra === 0 ? (
+                                  <Checkbox
+                                    id={compra.id}
+                                    name={compra.numero_comprobante}
+                                    type="checkbox"
+                                    handleClick={handleClick}
+                                    isChecked={isCheck.includes(compra.id)}
+                                  />
+                                ) : compra.status_compra === 2 ? (
+                                  <MdDeleteForever
+                                    size={26}
+                                    color="#E20613"
+                                    name={"Eliminado"}
+                                  />
+                                ) : (
+                                  "Estatus desconocido"
+                                )}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {compra.numero_doc}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {compra.numero_control}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {archivo.TipoArchivo.descripcion_tipo_archivo}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {moment(compra.fecha_doc).format("DD-MM-YYYY")}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {compra.numero_rif}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {compra.nombre_proveedor}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                <CurrencyFormat
+                                  value={compra.base_imponible_tasa_general}
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                <CurrencyFormat
+                                  value={compra.monto_impuesto_tasa_general}
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                <CurrencyFormat
+                                  value={
+                                    compra.base_imponible_tasa_general +
+                                    compra.monto_impuesto_tasa_general
+                                  }
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
+                              </TableCell>
+                            </TableRow>
                           );
-                      })
-                    )
+                        })
+                      );
+                    })
+                  )
                 ) : (
-                    <></>
-                  )}
+                  <></>
+                )}
                 {archivos.length > 0 ? (
                   !archivos ? (
                     <TableRow>
                       <TableCell colSpan={10}>Cargando... </TableCell>
                     </TableRow>
                   ) : (
-                      archivos.map((archivo) => {
-                        return !archivo.Venta ? (
-                          <TableRow>
-                            <TableCell colSpan={10}>
-                              Cargando Archivos de Ventas
+                    archivos.map((archivo) => {
+                      return !archivo.Venta ? (
+                        <TableRow>
+                          <TableCell colSpan={10}>
+                            Cargando Archivos de Ventas
                           </TableCell>
-                          </TableRow>
-                        ) : (
-                            archivo.Venta.map((venta) => {
-                              return (
-                                <TableRow key={venta.id}>
-                                  {/* <TableCell
+                        </TableRow>
+                      ) : (
+                        archivo.Venta.map((venta) => {
+                          return (
+                            <TableRow key={venta.id}>
+                              {/* <TableCell
                                 component="th"
                                 scope="row"
                                 align="center"
@@ -618,112 +617,112 @@ export default function DetailsArchivos() {
                                   "* desconocido."
                                 )}
                               </TableCell> */}
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {venta.numero_doc}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {venta.numero_control}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {venta.numero_comprobante}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {archivo.TipoArchivo.descripcion_tipo_archivo}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {moment(venta.fecha_doc).format("DD-MM-YYYY")}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {venta.numero_rif}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {venta.nombre_cliente}
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    <CurrencyFormat
-                                      value={venta.base_imponible_tasa_general}
-                                      thousandSeparator="."
-                                      decimalSeparator=","
-                                      decimalScale={2}
-                                      fixedDecimalScale={true}
-                                      displayType={"text"}
-                                      prefix={""}
-                                    />
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    <CurrencyFormat
-                                      value={venta.monto_impuesto_tasa_general}
-                                      thousandSeparator="."
-                                      decimalSeparator=","
-                                      decimalScale={2}
-                                      fixedDecimalScale={true}
-                                      displayType={"text"}
-                                      prefix={""}
-                                    />
-                                  </TableCell>
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    <CurrencyFormat
-                                      value={
-                                        venta.base_imponible_tasa_general +
-                                        venta.monto_impuesto_tasa_general
-                                      }
-                                      thousandSeparator="."
-                                      decimalSeparator=","
-                                      decimalScale={2}
-                                      fixedDecimalScale={true}
-                                      displayType={"text"}
-                                      prefix={""}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-                              );
-                            })
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {venta.numero_doc}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {venta.numero_control}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {venta.numero_comprobante}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {archivo.TipoArchivo.descripcion_tipo_archivo}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {moment(venta.fecha_doc).format("DD-MM-YYYY")}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {venta.numero_rif}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                {venta.nombre_cliente}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                <CurrencyFormat
+                                  value={venta.base_imponible_tasa_general}
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                <CurrencyFormat
+                                  value={venta.monto_impuesto_tasa_general}
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="center"
+                              >
+                                <CurrencyFormat
+                                  value={
+                                    venta.base_imponible_tasa_general +
+                                    venta.monto_impuesto_tasa_general
+                                  }
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  decimalScale={2}
+                                  fixedDecimalScale={true}
+                                  displayType={"text"}
+                                  prefix={""}
+                                />
+                              </TableCell>
+                            </TableRow>
                           );
-                      })
-                    )
+                        })
+                      );
+                    })
+                  )
                 ) : (
-                    <></>
-                  )}
+                  <></>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
