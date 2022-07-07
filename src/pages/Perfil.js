@@ -146,6 +146,7 @@ export default function Perfil() {
       pending: "Guardando actualizacion de contraseña..",
       success: {
         render({ data }) {
+          console.log(data);
           let msg;
           if (data.body.msg) {
             msg = data.body.msg;
@@ -160,12 +161,10 @@ export default function Perfil() {
       },
       error: {
         render({ data }) {
+          console.log(data);
           let msg;
           if (data.errors.msg) {
             msg = `Error: ` + data.errors.msg;
-            // } else if (data.error.msg) {
-            //     msg = `Error: ` + data.error.msg;
-            // }
           } else {
             msg = "Error: En la actualizacion de contraseña.";
           }

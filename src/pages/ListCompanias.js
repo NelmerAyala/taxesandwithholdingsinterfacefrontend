@@ -7,6 +7,7 @@ import listCompaniasService from "../services/listCompaniasService";
 
 // Layout
 import LayoutSession from "../layout/LayoutSession";
+import LinearProgress from '@mui/material/LinearProgress';
 
 // External components
 import {
@@ -186,19 +187,21 @@ export default function Configuraciones() {
                 {listcompany.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      sx={{ p: 2 }}
+                      sx={{ p: 2}}
                       component="th"
                       className="text-center"
                       colSpan={6}
                       align="center"
                     >
-                      <MdSync size={35} />
-                      <Typography>Cargando Compañias ... </Typography>
+                    <MdSync size={35}  />
+                    <br/>                    
+                    <LinearProgress />       
+                    <Typography>Cargando Compañias ... </Typography>
                     </TableCell>
                   </TableRow>
                 ) : (
-                  listcompany
-                )}
+                    listcompany
+                  )}
               </TableBody>
             </Table>
           </TableContainer>

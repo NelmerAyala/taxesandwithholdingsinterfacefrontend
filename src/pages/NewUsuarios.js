@@ -34,7 +34,12 @@ import {
   Chip,
   OutlinedInput,
   Stack,
+  Tooltip,
   MdKeyboardBackspace,
+  Visibility,
+  VisibilityOff,
+  IconButton,
+  InputAdornment,
 } from "../consts";
 
 export default function NuevoUsuario() {
@@ -57,6 +62,10 @@ export default function NuevoUsuario() {
   const [companiasPrivilegios, setCompaniasPrivilegios] = useState([]);
 
   const privilegiosObjeto = [];
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmed, setShowPasswordConfirmed] = useState(false);
+
 
   // Navigate
   let navigate = useNavigate();
@@ -100,62 +109,80 @@ export default function NuevoUsuario() {
       },
     ]);
   }, [
-    privilegiosSelected_1,
-    privilegiosSelected_2,
-    privilegiosSelected_3,
-    privilegiosSelected_4,
-  ]);
+      privilegiosSelected_1,
+      privilegiosSelected_2,
+      privilegiosSelected_3,
+      privilegiosSelected_4,
+    ]);
 
   // Submit Crear Usuario
   const hadleSubmit = (e) => {
     e.preventDefault();
-    const res = async () => {
-      if (password === passwordConfirmed && email === emailConfirmed) {
-        const resp = await userCreateService(
-          username,
-          firstname,
-          lastname,
-          email,
-          password,
-          companiasPrivilegios
-        );
-        // setUserCreado(resp);
-        if (!resp.errors) {
-          navigate(`/usuarios/${resp.user.user.id}`);
-        }
-        return resp;
-      } else {
-        if (email !== emailConfirmed) {
-          return {
-            error: "Las correos electrónicos NO son iguales, verifique!",
-          };
-        } else if (password !== passwordConfirmed) {
-          return {
-            error: "Las contraseñas NO son iguales, verifique!",
-          };
-        } else {
-          return { msg: "¡Verifica tus datos!" };
-        }
-      }
+    const res = () => {
+      return new Promise((resolve, reject) => {
+        const respuesta = async () => {
+          if (password === passwordConfirmed && email === emailConfirmed) {
+            const resp = await userCreateService(
+              username,
+              firstname,
+              lastname,
+              email,
+              password,
+              companiasPrivilegios
+            );
+            if (!resp.errors) {
+              console.log(resp)
+              resolve(resp);
+              navigate(`/usuarios/${resp.body.user.id}`);
+            } else {
+              reject(resp);
+            }
+            // } else {
+            //   if (email !== emailConfirmed) {
+            //     return {
+            //       error: "Las correos electrónicos NO son iguales, verifique!",
+            //     };
+            //   } else if (password !== passwordConfirmed) {
+            //     return {
+            //       error: "Las contraseñas NO son iguales, verifique!",
+            //     };
+            //   } else {
+            //     return { msg: "¡Verifica tus datos!" };
+            //   }
+          }
+        };
+        respuesta();
+      });
     };
+    toast.dismiss();
     toast.promise(res, {
       pending: "Creando usuario..",
       success: {
         render({ data }) {
+          console.log(data)
           let msg;
-          if (data.errors) {
-            msg = `Error: ` + data.errors.msg;
-          } else if (data.error) {
-            msg = `Error: ` + data.error;
-          } else if (data.msg) {
-            msg = data.msg;
+          if (data.body) {
+            msg = data.body.msg;
           } else {
             msg = "Creación de usuario exitosa.";
           }
           return msg;
         },
       },
-      error: "Error: Configuración de usuario No Exitosa.",
+      error: {
+        render({ data }) {
+          console.log(data)
+          let msg;
+          if (data.errors.msg) {
+            msg = `Error: ` + data.errors.msg;
+          } else if (data.errors.errors) {
+            msg = `Error: ` + data.errors.errors[0].msg;
+          } else {
+            msg = "Error: Configuración de usuario No Exitosa.";
+          }
+          return msg;
+        },
+      },
     });
   };
 
@@ -182,6 +209,12 @@ export default function NuevoUsuario() {
     privilegiosObjeto[privilegio.id] = privilegio.nombre_privilegio;
     return "";
   });
+
+  //Mostrar-Ocultar Contraseña
+  const handleChange = () => setShowPassword(!showPassword);
+  const handleChange1 = () => setShowPasswordConfirmed(!showPasswordConfirmed);
+  const onChange = ({ currentTarget }) => setPassword(currentTarget.value);
+  const onChangeNew = ({ currentTarget }) => setPasswordConfirmed(currentTarget.value);
 
   return (
     <LayoutSession titleModule="Usuarios">
@@ -211,7 +244,7 @@ export default function NuevoUsuario() {
             pb: 5,
           }}
         >
-          <Box sx={{}}>
+          <Box>
             <Stack direction={{ xs: "column", sm: "row" }}>
               {/* Titulo */}
               <Grid
@@ -249,7 +282,42 @@ export default function NuevoUsuario() {
                 justifyContent="flex-END"
                 alignItems="flex-start"
               >
-                <Button
+                {password === passwordConfirmed && email === emailConfirmed ? (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      px: 5,
+                      borderRadius: "1rem",
+                      color: "white.main",
+                      textTransform: "none",
+                    }}
+                  >
+                    Crear Usuario
+                    </Button>
+                ) : (
+                    <Tooltip
+                      followCursor
+                      title="Completa el formulario."
+                    >
+                      <span>
+                        <Button
+                          disabled
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                            px: 5,
+                            borderRadius: "1rem",
+                            color: "white.main",
+                            textTransform: "none",
+                          }}
+                        >
+                          Crear Usuario
+                                </Button>
+                      </span>
+                    </Tooltip>
+                  )}
+                {/* <Button
                   type="submit"
                   variant="contained"
                   sx={{
@@ -260,7 +328,7 @@ export default function NuevoUsuario() {
                   }}
                 >
                   Crear Usuario
-                </Button>
+                </Button> */}
               </Grid>
             </Stack>
           </Box>
@@ -281,6 +349,7 @@ export default function NuevoUsuario() {
                   <Grid item xs={12} sm={12} md={4} lg={4}>
                     <Paper elevation={0}>
                       <TextField
+                        required
                         fullWidth
                         onChange={(e) => setUsername(e.target.value)}
                         value={username}
@@ -292,6 +361,7 @@ export default function NuevoUsuario() {
                   <Grid item xs={12} sm={12} md={4} lg={4}>
                     <Paper elevation={0}>
                       <TextField
+                        required
                         fullWidth
                         onChange={(e) => setFirstname(e.target.value)}
                         value={firstname}
@@ -303,6 +373,7 @@ export default function NuevoUsuario() {
                   <Grid item xs={12} sm={12} md={4} lg={4}>
                     <Paper elevation={0}>
                       <TextField
+                        required
                         fullWidth
                         onChange={(e) => setLastname(e.target.value)}
                         value={lastname}
@@ -311,7 +382,6 @@ export default function NuevoUsuario() {
                       />
                     </Paper>
                   </Grid>
-
                   <Grid item xs={12} sm={12} md={6} lg={6}>
                     <Paper elevation={0}>
                       <TextField
@@ -321,40 +391,152 @@ export default function NuevoUsuario() {
                         value={email}
                         label="Correo electronico"
                       />
+                      {/* {email === emailConfirmed ? (
+                        <TextField
+                          fullWidth
+                          onChange={(e) => setEmail(e.target.value)}
+                          type="email"
+                          value={email}
+                          label="Correo electronico"
+                        />
+                      ) : (
+                          <TextField
+                            error
+                            required
+                            fullWidth
+                            onChange={(e) => setEmail(e.target.value)}
+                            type="email"
+                            value={email}
+                            label="Correo electronico"
+                          />
+                        )} */}
                     </Paper>
                   </Grid>
                   <Grid item xs={12} sm={12} md={6} lg={6}>
                     <Paper elevation={0}>
-                      <TextField
-                        fullWidth
-                        onChange={(e) => setEmailConfirmed(e.target.value)}
-                        type="email"
-                        value={emailConfirmed}
-                        label="Confirmar Correo electronico"
-                      />
+                      {email === emailConfirmed ? (
+                        <TextField
+                          fullWidth
+                          onChange={(e) => setEmailConfirmed(e.target.value)}
+                          type="email"
+                          value={emailConfirmed}
+                          label="Confirmar Correo electronico"
+                        />
+                      ) : (
+                          <TextField
+                            error
+                            required
+                            fullWidth
+                            onChange={(e) => setEmailConfirmed(e.target.value)}
+                            type="email"
+                            value={emailConfirmed}
+                            label="Confirmar Correo electronico"
+                          // helperText="Los correos no coinciden."
+                          />
+                        )}
                     </Paper>
                   </Grid>
 
                   <Grid item xs={12} sm={12} md={6} lg={6}>
                     <Paper elevation={0}>
-                      <TextField
-                        fullWidth
-                        onChange={(e) => setPassword(e.target.value)}
-                        type="password"
-                        label="Contraseña"
-                        required
-                      />
+                      <FormControl required fullWidth>
+                        <InputLabel>Contraseña</InputLabel>
+                        <OutlinedInput
+                          label="Contraseña"
+                          onChange={onChange}
+                          type={showPassword ? "text" : "password"}
+                          value={password}
+                          variant="outlined"
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton onClick={handleChange}>
+                                {showPassword ? (
+                                  <Tooltip title="Ocultar contraseña">
+                                    <span>
+                                      <VisibilityOff />
+                                    </span>
+                                  </Tooltip>
+                                ) : (
+                                    <Tooltip title="Mostrar contraseña">
+                                      <span>
+                                        <Visibility />
+                                      </span>
+                                    </Tooltip>
+                                  )}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                      </FormControl>
                     </Paper>
                   </Grid>
+
                   <Grid item xs={12} sm={12} md={6} lg={6}>
                     <Paper elevation={0}>
-                      <TextField
-                        fullWidth
-                        onChange={(e) => setPasswordConfirmed(e.target.value)}
-                        type="password"
-                        label="Confirmar contraseña"
-                        required
-                      />
+                      {password === passwordConfirmed ? (
+                        <FormControl required fullWidth>
+                          <InputLabel>Confirmar Contraseña </InputLabel>
+                          <OutlinedInput
+                            label="Confirmar Contraseña"
+                            onChange={onChangeNew}
+                            type={showPasswordConfirmed ? "text" : "password"}
+                            value={passwordConfirmed}
+                            variant="outlined"
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <IconButton onClick={handleChange1}>
+                                  {showPasswordConfirmed ? (
+                                    <Tooltip title="Ocultar contraseña">
+                                      <span>
+                                        <VisibilityOff />
+                                      </span>
+                                    </Tooltip>
+                                  ) : (
+                                      <Tooltip title="Mostrar contraseña">
+                                        <span>
+                                          <Visibility />
+                                        </span>
+                                      </Tooltip>
+                                    )}
+                                </IconButton>
+                              </InputAdornment>
+                            }
+                          />
+                        </FormControl>
+                      ) : (
+                          <FormControl required fullWidth>
+                            <InputLabel>Confirmar Contraseña </InputLabel>
+                            <OutlinedInput
+                              label="Confirmar Contraseña"
+                              error
+                              onChange={onChangeNew}
+                              type={showPasswordConfirmed ? "text" : "password"}
+                              value={passwordConfirmed}
+                              variant="outlined"
+                              endAdornment={
+                                <InputAdornment position="end">
+                                  <IconButton onClick={handleChange1}>
+                                    {showPasswordConfirmed ? (
+                                      <Tooltip title="Ocultar contraseña">
+                                        <span>
+                                          <VisibilityOff />
+                                        </span>
+                                      </Tooltip>
+                                    ) : (
+                                        <Tooltip title="Mostrar contraseña">
+                                          <span>
+                                            <Visibility />
+                                          </span>
+                                        </Tooltip>
+                                      )}
+                                  </IconButton>
+                                </InputAdornment>
+                              }
+                            />
+                          </FormControl>
+                        )}
+
+
                     </Paper>
                   </Grid>
                 </Grid>
@@ -419,9 +601,9 @@ export default function NuevoUsuario() {
                           </FormControl>
                         </Paper>
                       ) : (
-                        // </Grid>
-                        <></>
-                      )}
+                          // </Grid>
+                          <></>
+                        )}
 
                       {company.id === 2 ? (
                         // <Grid
@@ -472,9 +654,9 @@ export default function NuevoUsuario() {
                           </FormControl>
                         </Paper>
                       ) : (
-                        // </Grid>
-                        <></>
-                      )}
+                          // </Grid>
+                          <></>
+                        )}
 
                       {company.id === 3 ? (
                         // <Grid
@@ -525,9 +707,9 @@ export default function NuevoUsuario() {
                           </FormControl>
                         </Paper>
                       ) : (
-                        // </Grid>
-                        <></>
-                      )}
+                          // </Grid>
+                          <></>
+                        )}
 
                       {company.id === 4 ? (
                         // <Grid
@@ -578,9 +760,9 @@ export default function NuevoUsuario() {
                           </FormControl>
                         </Paper>
                       ) : (
-                        // </Grid>
-                        <></>
-                      )}
+                          // </Grid>
+                          <></>
+                        )}
                       {/* </div> */}
                     </Grid>
                   ))}

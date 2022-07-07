@@ -76,7 +76,7 @@ export default function ListUsuarios() {
           render({ data }) {
             let msg;
             if (data.body.msg) {
-              msg = +data.body.msg;
+              msg = data.body.msg;
             } else {
               msg = "Consulta de Usuarios Exitosa..!!";
             }

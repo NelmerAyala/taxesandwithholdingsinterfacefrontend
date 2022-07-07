@@ -142,6 +142,7 @@ export default function Configuraciones() {
       }
       return res;
     };
+    toast.dismiss();
     toast.promise(res, {
       pending: "Guardando configuración..",
       success: {
@@ -271,11 +272,11 @@ export default function Configuraciones() {
                           {admin.lastname}
                         </MenuItem>
                       ) : (
-                        <MenuItem key={admin.id} value={admin.id}>
-                          {admin.username} - {admin.firstname}
-                          {admin.lastname}
-                        </MenuItem>
-                      );
+                          <MenuItem key={admin.id} value={admin.id}>
+                            {admin.username} - {admin.firstname}
+                            {admin.lastname}
+                          </MenuItem>
+                        );
                     })}
                   </Select>
                 </FormControl>
@@ -342,12 +343,12 @@ export default function Configuraciones() {
                                 </span>
                               </Tooltip>
                             ) : (
-                              <Tooltip title="Mostrar contraseña">
-                                <span>
-                                  <Visibility />
-                                </span>
-                              </Tooltip>
-                            )}
+                                <Tooltip title="Mostrar contraseña">
+                                  <span>
+                                    <Visibility />
+                                  </span>
+                                </Tooltip>
+                              )}
                           </IconButton>
                         </InputAdornment>
                       }

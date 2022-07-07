@@ -93,9 +93,7 @@ export default function ListVentas() {
           respuesta();
         });
       };
-
       toast.dismiss();
-
       toast.promise(res, {
         pending: "Consultando Transacciones de Ventas..",
         success: {
@@ -141,7 +139,7 @@ export default function ListVentas() {
       };
       toast.dismiss();
       toast.promise(res, {
-        pending: "Generando Archivo de Ventas.",
+        pending: "Generando Archivo de Ventas..",
         success: {
           render({ data }) {
             let msg = "Archivo de Ventas Generado Exitosamente.!!";
@@ -351,10 +349,10 @@ export default function ListVentas() {
                           {comp.nombre_company}
                         </MenuItem>
                       ) : (
-                        <MenuItem key={comp.id} value={comp.id}>
-                          {comp.nombre_company}
-                        </MenuItem>
-                      );
+                          <MenuItem key={comp.id} value={comp.id}>
+                            {comp.nombre_company}
+                          </MenuItem>
+                        );
                     })}
                   </Select>
                 </FormControl>
@@ -384,19 +382,19 @@ export default function ListVentas() {
                     </span>
                   </Tooltip>
                 ) : (
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{
-                      px: 5,
-                      borderRadius: "1rem",
-                      color: "white.main",
-                      textTransform: "none",
-                    }}
-                  >
-                    Generar Archivo
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{
+                        px: 5,
+                        borderRadius: "1rem",
+                        color: "white.main",
+                        textTransform: "none",
+                      }}
+                    >
+                      Generar Archivo
                   </Button>
-                )}
+                  )}
               </Grid>
             </Stack>
           </Box>
@@ -466,8 +464,8 @@ export default function ListVentas() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  ventas
-                )}
+                    ventas
+                  )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -483,8 +481,8 @@ export default function ListVentas() {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           ) : (
-            <></>
-          )}
+              <></>
+            )}
         </Paper>
       </form>
     </LayoutSession>

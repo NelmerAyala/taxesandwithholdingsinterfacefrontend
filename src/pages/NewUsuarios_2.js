@@ -141,6 +141,7 @@ export default function NuevoUsuario() {
                 }
             }
         };
+        toast.dismiss();
         toast.promise(res, {
             pending: "Creando usuario..",
             success: {

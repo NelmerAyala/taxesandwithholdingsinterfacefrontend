@@ -43,34 +43,55 @@ export default function NuevoUsuario() {
   // Submit Crear Usuario
   const hadleSubmit = (e) => {
     e.preventDefault();
-    const res = async () => {
-      const resp = await companiaCreateService(
-        nombre_company,
-        codigo_company,
-        origen,
-        ruta_archivo_compra,
-        ruta_archivo_venta
-      );
-      if (!resp.errors) {
-        navigate(`/companias`);
-      }
-      return resp;
+    const res = () => {
+      return new Promise((resolve, reject) => {
+        const respuesta = async () => {
+          const resp = await companiaCreateService(
+            nombre_company,
+            codigo_company,
+            origen,
+            ruta_archivo_compra,
+            ruta_archivo_venta
+          );
+          if (!resp.errors) {
+            resolve(resp);
+            navigate(`/companias`);
+          } else {
+            reject(resp);
+          }
+        };
+        respuesta();
+      });
     };
     toast.dismiss();
     toast.promise(res, {
       pending: "Registrando compañia..",
       success: {
         render({ data }) {
+          console.log(data)
           let msg;
-          if (data.errors) {
-            msg = `Error: ` + data.errors.msg;
+          if (data.body) {
+            msg = data.body.msg;
           } else {
             msg = "Registro de compañia exitosa..!!";
           }
           return msg;
         },
       },
-      error: "Error: Registro de compañia NO Exitoso.",
+      error: {
+        render({ data }) {
+          console.log(data)
+          let msg;
+          if (data.errors.msg) {
+            msg = `Error: ` + data.errors.msg;
+          } else if (data.errors.errors) {
+            msg = `Error: ` + data.errors.errors[0].msg;
+          } else {
+            msg = "Error: Registro de compañia NO Exitoso.";
+          }
+          return msg;
+        },
+      },
     });
   };
 
@@ -170,6 +191,7 @@ export default function NuevoUsuario() {
                   <Grid item xs={12} sm={12} md={4} lg={4}>
                     <Paper elevation={0}>
                       <TextField
+                        required
                         fullWidth
                         label="Nombre de la Compañia"
                         variant="outlined"
@@ -181,6 +203,7 @@ export default function NuevoUsuario() {
                   <Grid item xs={12} sm={12} md={4} lg={4}>
                     <Paper elevation={0}>
                       <TextField
+                        required
                         fullWidth
                         label="Codigo de la Compañia"
                         variant="outlined"
@@ -193,6 +216,7 @@ export default function NuevoUsuario() {
                   <Grid item xs={12} sm={12} md={4} lg={4}>
                     <Paper elevation={0}>
                       <TextField
+                        required
                         fullWidth
                         label="Origen de la Compañia"
                         variant="outlined"
@@ -217,6 +241,7 @@ export default function NuevoUsuario() {
                   <Grid item xs={12} sm={12} md={6} lg={6}>
                     <Paper elevation={0}>
                       <TextField
+                        required
                         fullWidth
                         label="Ruta de archivos de Compra"
                         variant="outlined"
@@ -228,6 +253,7 @@ export default function NuevoUsuario() {
                   <Grid item xs={12} sm={12} md={6} lg={6}>
                     <Paper elevation={0}>
                       <TextField
+                        required
                         fullWidth
                         label="Ruta de archivos de Venta"
                         variant="outlined"
