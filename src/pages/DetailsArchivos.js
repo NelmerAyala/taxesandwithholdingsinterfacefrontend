@@ -99,7 +99,7 @@ export default function DetailsArchivos() {
       toast.promise(res, {
         pending:
           anulacion === "1"
-            ? "Anulando Transacciones seleccionadas.."
+            ? "Desvinculando Transacciones seleccionadas.."
             : "Eliminando Transacciones seleccionadas..",
         success: {
           render({ data }) {
@@ -109,16 +109,16 @@ export default function DetailsArchivos() {
             } else {
               msg =
                 anulacion === "1"
-                  ? "Transacciones seleccionadas Anuladas Exitosamente."
-                  : "Transacciones seleccionadas Eliminadas Exitosamente.";
+                  ? "Transacciones seleccionadas desvinculada Exitosamente.!!"
+                  : "Transacciones seleccionadas Eliminadas Exitosamente.!!";
             }
             return msg;
           },
         },
         error:
           anulacion === "1"
-            ? "Error: Transacciones seleccionadas NO Anuladas."
-            : "Error: Transacciones seleccionadas NO Eliminadas.",
+            ? "Error: Transacciones seleccionadas NO desvinculada.!!"
+            : "Error: Transacciones seleccionadas NO Eliminadas.!!",
       });
     } else {
       toast.info("No ha seleccionado ninguna transacción.");
