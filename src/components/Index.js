@@ -122,10 +122,9 @@ function Index() {
                       ref={descriptionElementRef}
                       tabIndex={-1}
                     >
-                      Aplicación diseñada para - Lorem ipsum dolor sit amet,
-                      consectetur adipiscing elit. Donec aliquet, augue eget
-                      efficitur placerat, velit sem ultrices eros, quis
-                      scelerisque augue augue non odio.
+                      Aplicación diseñada para la gestión de transacciones de
+                      compras y ventas que sirve de insumo para la generación de
+                      retenciones en el Sistema Galac.
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
