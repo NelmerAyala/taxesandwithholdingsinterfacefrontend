@@ -66,7 +66,6 @@ export default function NuevoUsuario() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirmed, setShowPasswordConfirmed] = useState(false);
 
-
   // Navigate
   let navigate = useNavigate();
 
@@ -109,11 +108,11 @@ export default function NuevoUsuario() {
       },
     ]);
   }, [
-      privilegiosSelected_1,
-      privilegiosSelected_2,
-      privilegiosSelected_3,
-      privilegiosSelected_4,
-    ]);
+    privilegiosSelected_1,
+    privilegiosSelected_2,
+    privilegiosSelected_3,
+    privilegiosSelected_4,
+  ]);
 
   // Submit Crear Usuario
   const hadleSubmit = (e) => {
@@ -131,24 +130,27 @@ export default function NuevoUsuario() {
               companiasPrivilegios
             );
             if (!resp.errors) {
-              console.log(resp)
               resolve(resp);
               navigate(`/usuarios/${resp.body.user.id}`);
             } else {
               reject(resp);
             }
-            // } else {
-            //   if (email !== emailConfirmed) {
-            //     return {
-            //       error: "Las correos electrónicos NO son iguales, verifique!",
-            //     };
-            //   } else if (password !== passwordConfirmed) {
-            //     return {
-            //       error: "Las contraseñas NO son iguales, verifique!",
-            //     };
-            //   } else {
-            //     return { msg: "¡Verifica tus datos!" };
-            //   }
+          } else {
+            let msg;
+            if (email !== emailConfirmed) {
+              reject({
+                errors: {
+                  msg: "Las correos electrónicos NO son iguales, verifique!",
+                },
+              });
+            } else if (password !== passwordConfirmed) {
+              reject({
+                errors: { msg: "Las contraseñas NO son iguales, verifique!" },
+              });
+            } else {
+              reject({ errors: { msg: "¡Verifica tus datos!" } });
+            }
+            return msg;
           }
         };
         respuesta();
@@ -159,7 +161,6 @@ export default function NuevoUsuario() {
       pending: "Creando usuario..",
       success: {
         render({ data }) {
-          console.log(data)
           let msg;
           if (data.body) {
             msg = data.body.msg;
@@ -171,7 +172,6 @@ export default function NuevoUsuario() {
       },
       error: {
         render({ data }) {
-          console.log(data)
           let msg;
           if (data.errors.msg) {
             msg = `Error: ` + data.errors.msg;
@@ -214,7 +214,8 @@ export default function NuevoUsuario() {
   const handleChange = () => setShowPassword(!showPassword);
   const handleChange1 = () => setShowPasswordConfirmed(!showPasswordConfirmed);
   const onChange = ({ currentTarget }) => setPassword(currentTarget.value);
-  const onChangeNew = ({ currentTarget }) => setPasswordConfirmed(currentTarget.value);
+  const onChangeNew = ({ currentTarget }) =>
+    setPasswordConfirmed(currentTarget.value);
 
   return (
     <LayoutSession titleModule="Usuarios">
@@ -282,42 +283,7 @@ export default function NuevoUsuario() {
                 justifyContent="flex-END"
                 alignItems="flex-start"
               >
-                {password === passwordConfirmed && email === emailConfirmed ? (
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{
-                      px: 5,
-                      borderRadius: "1rem",
-                      color: "white.main",
-                      textTransform: "none",
-                    }}
-                  >
-                    Crear Usuario
-                    </Button>
-                ) : (
-                    <Tooltip
-                      followCursor
-                      title="Completa el formulario."
-                    >
-                      <span>
-                        <Button
-                          disabled
-                          type="submit"
-                          variant="contained"
-                          sx={{
-                            px: 5,
-                            borderRadius: "1rem",
-                            color: "white.main",
-                            textTransform: "none",
-                          }}
-                        >
-                          Crear Usuario
-                                </Button>
-                      </span>
-                    </Tooltip>
-                  )}
-                {/* <Button
+                <Button
                   type="submit"
                   variant="contained"
                   sx={{
@@ -328,19 +294,14 @@ export default function NuevoUsuario() {
                   }}
                 >
                   Crear Usuario
-                </Button> */}
+                </Button>
               </Grid>
             </Stack>
           </Box>
 
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <Stack sx={{ mx: 2 }}>
-              <Box
-                // sx={{ "& > :not(style)": { m: 2 } }}
-                sx={{ flexGrow: 1, m: 2 }}
-                noValidate
-                autoComplete="off"
-              >
+              <Box sx={{ flexGrow: 1, m: 2 }} noValidate autoComplete="off">
                 <Grid align="center" item sx={{ mt: 1 }}>
                   <Typography variant="subtitles">Datos Personales</Typography>
                 </Grid>
@@ -391,49 +352,17 @@ export default function NuevoUsuario() {
                         value={email}
                         label="Correo electronico"
                       />
-                      {/* {email === emailConfirmed ? (
-                        <TextField
-                          fullWidth
-                          onChange={(e) => setEmail(e.target.value)}
-                          type="email"
-                          value={email}
-                          label="Correo electronico"
-                        />
-                      ) : (
-                          <TextField
-                            error
-                            required
-                            fullWidth
-                            onChange={(e) => setEmail(e.target.value)}
-                            type="email"
-                            value={email}
-                            label="Correo electronico"
-                          />
-                        )} */}
                     </Paper>
                   </Grid>
                   <Grid item xs={12} sm={12} md={6} lg={6}>
                     <Paper elevation={0}>
-                      {email === emailConfirmed ? (
-                        <TextField
-                          fullWidth
-                          onChange={(e) => setEmailConfirmed(e.target.value)}
-                          type="email"
-                          value={emailConfirmed}
-                          label="Confirmar Correo electronico"
-                        />
-                      ) : (
-                          <TextField
-                            error
-                            required
-                            fullWidth
-                            onChange={(e) => setEmailConfirmed(e.target.value)}
-                            type="email"
-                            value={emailConfirmed}
-                            label="Confirmar Correo electronico"
-                          // helperText="Los correos no coinciden."
-                          />
-                        )}
+                      <TextField
+                        fullWidth
+                        onChange={(e) => setEmailConfirmed(e.target.value)}
+                        type="email"
+                        value={emailConfirmed}
+                        label="Confirmar Correo electronico"
+                      />
                     </Paper>
                   </Grid>
 
@@ -457,12 +386,12 @@ export default function NuevoUsuario() {
                                     </span>
                                   </Tooltip>
                                 ) : (
-                                    <Tooltip title="Mostrar contraseña">
-                                      <span>
-                                        <Visibility />
-                                      </span>
-                                    </Tooltip>
-                                  )}
+                                  <Tooltip title="Mostrar contraseña">
+                                    <span>
+                                      <Visibility />
+                                    </span>
+                                  </Tooltip>
+                                )}
                               </IconButton>
                             </InputAdornment>
                           }
@@ -473,70 +402,35 @@ export default function NuevoUsuario() {
 
                   <Grid item xs={12} sm={12} md={6} lg={6}>
                     <Paper elevation={0}>
-                      {password === passwordConfirmed ? (
-                        <FormControl required fullWidth>
-                          <InputLabel>Confirmar Contraseña </InputLabel>
-                          <OutlinedInput
-                            label="Confirmar Contraseña"
-                            onChange={onChangeNew}
-                            type={showPasswordConfirmed ? "text" : "password"}
-                            value={passwordConfirmed}
-                            variant="outlined"
-                            endAdornment={
-                              <InputAdornment position="end">
-                                <IconButton onClick={handleChange1}>
-                                  {showPasswordConfirmed ? (
-                                    <Tooltip title="Ocultar contraseña">
-                                      <span>
-                                        <VisibilityOff />
-                                      </span>
-                                    </Tooltip>
-                                  ) : (
-                                      <Tooltip title="Mostrar contraseña">
-                                        <span>
-                                          <Visibility />
-                                        </span>
-                                      </Tooltip>
-                                    )}
-                                </IconButton>
-                              </InputAdornment>
-                            }
-                          />
-                        </FormControl>
-                      ) : (
-                          <FormControl required fullWidth>
-                            <InputLabel>Confirmar Contraseña </InputLabel>
-                            <OutlinedInput
-                              label="Confirmar Contraseña"
-                              error
-                              onChange={onChangeNew}
-                              type={showPasswordConfirmed ? "text" : "password"}
-                              value={passwordConfirmed}
-                              variant="outlined"
-                              endAdornment={
-                                <InputAdornment position="end">
-                                  <IconButton onClick={handleChange1}>
-                                    {showPasswordConfirmed ? (
-                                      <Tooltip title="Ocultar contraseña">
-                                        <span>
-                                          <VisibilityOff />
-                                        </span>
-                                      </Tooltip>
-                                    ) : (
-                                        <Tooltip title="Mostrar contraseña">
-                                          <span>
-                                            <Visibility />
-                                          </span>
-                                        </Tooltip>
-                                      )}
-                                  </IconButton>
-                                </InputAdornment>
-                              }
-                            />
-                          </FormControl>
-                        )}
-
-
+                      <FormControl required fullWidth>
+                        <InputLabel>Confirmar Contraseña </InputLabel>
+                        <OutlinedInput
+                          label="Confirmar Contraseña"
+                          onChange={onChangeNew}
+                          type={showPasswordConfirmed ? "text" : "password"}
+                          value={passwordConfirmed}
+                          variant="outlined"
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton onClick={handleChange1}>
+                                {showPasswordConfirmed ? (
+                                  <Tooltip title="Ocultar contraseña">
+                                    <span>
+                                      <VisibilityOff />
+                                    </span>
+                                  </Tooltip>
+                                ) : (
+                                  <Tooltip title="Mostrar contraseña">
+                                    <span>
+                                      <Visibility />
+                                    </span>
+                                  </Tooltip>
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                      </FormControl>
                     </Paper>
                   </Grid>
                 </Grid>
@@ -601,9 +495,9 @@ export default function NuevoUsuario() {
                           </FormControl>
                         </Paper>
                       ) : (
-                          // </Grid>
-                          <></>
-                        )}
+                        // </Grid>
+                        <></>
+                      )}
 
                       {company.id === 2 ? (
                         // <Grid
@@ -654,9 +548,9 @@ export default function NuevoUsuario() {
                           </FormControl>
                         </Paper>
                       ) : (
-                          // </Grid>
-                          <></>
-                        )}
+                        // </Grid>
+                        <></>
+                      )}
 
                       {company.id === 3 ? (
                         // <Grid
@@ -707,9 +601,9 @@ export default function NuevoUsuario() {
                           </FormControl>
                         </Paper>
                       ) : (
-                          // </Grid>
-                          <></>
-                        )}
+                        // </Grid>
+                        <></>
+                      )}
 
                       {company.id === 4 ? (
                         // <Grid
@@ -760,9 +654,9 @@ export default function NuevoUsuario() {
                           </FormControl>
                         </Paper>
                       ) : (
-                          // </Grid>
-                          <></>
-                        )}
+                        // </Grid>
+                        <></>
+                      )}
                       {/* </div> */}
                     </Grid>
                   ))}

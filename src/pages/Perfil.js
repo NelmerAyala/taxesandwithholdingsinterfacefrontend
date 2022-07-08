@@ -126,17 +126,25 @@ export default function Perfil() {
     const res = () => {
       return new Promise((resolve, reject) => {
         const respuesta = async () => {
-          const resp = await changePasswordService({
-            password,
-            passwordNew,
-          });
-          if (resp.body) {
-            resolve(resp);
+          if (passwordNew === passwordNewConfirmed) {
+            const resp = await changePasswordService({
+              password,
+              passwordNew,
+            });
+            if (resp.body) {
+              resolve(resp);
+              return resp;
+            } else {
+              reject(resp);
+            }
             return resp;
           } else {
-            reject(resp);
+            reject({
+              errors: {
+                msg: "Las contraseñas NO son iguales, ¡Verifique!",
+              },
+            });
           }
-          return resp;
         };
         respuesta();
       });
@@ -146,7 +154,6 @@ export default function Perfil() {
       pending: "Guardando actualizacion de contraseña..",
       success: {
         render({ data }) {
-          console.log(data);
           let msg;
           if (data.body.msg) {
             msg = data.body.msg;
@@ -161,7 +168,6 @@ export default function Perfil() {
       },
       error: {
         render({ data }) {
-          console.log(data);
           let msg;
           if (data.errors.msg) {
             msg = `Error: ` + data.errors.msg;
@@ -474,47 +480,21 @@ export default function Perfil() {
 
                       <Grid item xs={12} sm={12} md={3} lg={2}>
                         <Paper elevation={0} align="center">
-                          {passwordNew === passwordNewConfirmed ? (
-                            <Button
-                              type="submit"
-                              align="center"
-                              variant="contained"
-                              sx={{
-                                px: 5,
-                                mt: 1,
-                                mb: 1,
-                                borderRadius: "1rem",
-                                color: "white.main",
-                                textTransform: "none",
-                              }}
-                            >
-                              Guardar
-                            </Button>
-                          ) : (
-                            <Tooltip
-                              followCursor
-                              title="Verifica las contraseñas"
-                            >
-                              <span>
-                                <Button
-                                  type="submit"
-                                  align="center"
-                                  variant="contained"
-                                  disabled
-                                  sx={{
-                                    px: 5,
-                                    mt: 1,
-                                    mb: 1,
-                                    borderRadius: "1rem",
-                                    color: "white.main",
-                                    textTransform: "none",
-                                  }}
-                                >
-                                  Guardar
-                                </Button>
-                              </span>
-                            </Tooltip>
-                          )}
+                          <Button
+                            type="submit"
+                            align="center"
+                            variant="contained"
+                            sx={{
+                              px: 5,
+                              mt: 1,
+                              mb: 1,
+                              borderRadius: "1rem",
+                              color: "white.main",
+                              textTransform: "none",
+                            }}
+                          >
+                            Guardar
+                          </Button>
                         </Paper>
                       </Grid>
                     </Grid>

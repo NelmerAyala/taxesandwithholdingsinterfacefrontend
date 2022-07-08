@@ -1,13 +1,14 @@
 // Nuevo
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 // Services
 import listCompaniasService from "../services/listCompaniasService";
 
 // Layout
 import LayoutSession from "../layout/LayoutSession";
-import LinearProgress from '@mui/material/LinearProgress';
+import LinearProgress from "@mui/material/LinearProgress";
 
 // External components
 import {
@@ -16,8 +17,8 @@ import {
   Grid,
   Divider,
   Typography,
-  Stack,
-  Button,
+  // Stack,
+  // Button,
   Tooltip,
   Table,
   TableBody,
@@ -25,14 +26,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  MdOutlineAdd,
+  // MdOutlineAdd,
   MdOutlineModeEditOutline,
   MdSync,
 } from "../consts";
 
 export default function Configuraciones() {
   // Constantes
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [list, setList] = useState([]);
 
   // Consulta de Compañía
@@ -109,8 +110,9 @@ export default function Configuraciones() {
           </Grid>
           <Divider variant="middle " />
 
+          <Box sx={{ p: 2 }} />
           {/*  Boton */}
-          <Box sx={{ p: 2 }}>
+          {/* <Box sx={{ p: 2 }}>
             <Stack direction={{ xs: "column", sm: "row" }}>
               <Grid
                 container
@@ -133,7 +135,7 @@ export default function Configuraciones() {
                 </Button>
               </Grid>
             </Stack>
-          </Box>
+          </Box> */}
           {/* Tabla */}
           <TableContainer sx={{ maxHeight: 440 }}>
             <Table stickyHeader aria-label="sticky table" size="small">
@@ -187,21 +189,21 @@ export default function Configuraciones() {
                 {listcompany.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      sx={{ p: 2}}
+                      sx={{ p: 2 }}
                       component="th"
                       className="text-center"
                       colSpan={6}
                       align="center"
                     >
-                    <MdSync size={35}  />
-                    <br/>                    
-                    <LinearProgress />       
-                    <Typography>Cargando Compañias ... </Typography>
+                      <MdSync size={35} />
+                      <br />
+                      <LinearProgress />
+                      <Typography>Cargando Compañias ... </Typography>
                     </TableCell>
                   </TableRow>
                 ) : (
-                    listcompany
-                  )}
+                  listcompany
+                )}
               </TableBody>
             </Table>
           </TableContainer>

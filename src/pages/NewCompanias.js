@@ -68,7 +68,6 @@ export default function NuevoUsuario() {
       pending: "Registrando compañia..",
       success: {
         render({ data }) {
-          console.log(data)
           let msg;
           if (data.body) {
             msg = data.body.msg;
@@ -80,7 +79,6 @@ export default function NuevoUsuario() {
       },
       error: {
         render({ data }) {
-          console.log(data)
           let msg;
           if (data.errors.msg) {
             msg = `Error: ` + data.errors.msg;
