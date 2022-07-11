@@ -38,7 +38,6 @@ import {
 
 export default function Configuraciones() {
   // Constantes
-  const [sistemaOrigen, setSistemaOrigen] = useState([]);
   const [tipoArchivoCompras, setTipoArchivoCompras] = useState([]);
   const [tipoArchivoVentas, setTipoArchivoVentas] = useState([]);
   const [codigoPrivilegioAdmin, setCodigoPrivilegioAdmin] = useState([]);
@@ -52,9 +51,8 @@ export default function Configuraciones() {
   const [rutaPrincipalEndpoints, setRutaPrincipalEndpoints] = useState([]);
 
   const [administradores, setAdministradores] = useState([]);
-  const [selectedAdministradores, setSelectedAdministradores] = useState([
-    "DEFAULT",
-  ]);
+  const [selectedAdministradores, setSelectedAdministradores] =
+    useState("DEFAULT");
 
   // Consulta de Administradores
   useEffect(() => {
@@ -76,7 +74,6 @@ export default function Configuraciones() {
     const res = async () => {
       const res = await configuracionesService();
       setSelectedAdministradores(res.body.UserId);
-      setSistemaOrigen(res.body.sistema_origen);
       setTipoArchivoCompras(res.body.tipo_archivo_compras);
       setTipoArchivoVentas(res.body.tipo_archivo_ventas);
       setCodigoPrivilegioAdmin(res.body.codigo_privilegio_admin);
@@ -96,67 +93,68 @@ export default function Configuraciones() {
   const hadleSubmit = (e) => {
     e.preventDefault();
     const res = async () => {
-      const res = await updateConfiguracionService(
-        selectedAdministradores,
-        sistemaOrigen,
-        tipoArchivoCompras,
-        tipoArchivoVentas,
-        codigoPrivilegioAdmin,
-        codigoPrivilegioCompras,
-        codigoPrivilegioVentas,
-        hostDb,
-        portDb,
-        nameDb,
-        usernameDb,
-        passwordUsernameDb,
-        rutaPrincipalEndpoints
-      );
-      if (
-        res.body.UserId &&
-        res.body.sistema_origen &&
-        res.body.tipo_archivo_compras &&
-        res.body.tipo_archivo_ventas &&
-        res.body.codigo_privilegio_admin &&
-        res.body.codigo_privilegio_compras &&
-        res.body.codigo_privilegio_ventas &&
-        res.body.host_db &&
-        res.body.port_db &&
-        res.body.name_db &&
-        res.body.username_db &&
-        res.body.password_usernamedb &&
-        res.body.ruta_principal_endpoints
-      ) {
-        setSelectedAdministradores(res.body.UserId);
-        setSistemaOrigen(res.body.sistema_origen);
-        setTipoArchivoCompras(res.body.tipo_archivo_compras);
-        setTipoArchivoVentas(res.body.tipo_archivo_ventas);
-        setCodigoPrivilegioAdmin(res.body.codigo_privilegio_admin);
-        setCodigoPrivilegioCompras(res.body.codigo_privilegio_compras);
-        setCodigoPrivilegioVentas(res.body.codigo_privilegio_ventas);
-        setHostDb(res.body.host_db);
-        setPortDb(res.body.port_db);
-        setNameDb(res.body.name_db);
-        setUsernameDb(res.body.username_db);
-        setPasswordUsernameDb(res.body.password_username_db);
-        setRutaPrincipalEndpoints(res.body.ruta_principal_endpoints);
-      }
-      return res;
+      return new Promise((resolve, reject) => {
+        const respuesta = async () => {
+          const res = await updateConfiguracionService(
+            selectedAdministradores,
+            tipoArchivoCompras,
+            tipoArchivoVentas,
+            codigoPrivilegioAdmin,
+            codigoPrivilegioCompras,
+            codigoPrivilegioVentas,
+            hostDb,
+            portDb,
+            nameDb,
+            usernameDb,
+            passwordUsernameDb,
+            rutaPrincipalEndpoints
+          );
+          if (res.body.configuracion) {
+            const { configuracion } = res.body;
+            setSelectedAdministradores(configuracion.UserId);
+            setTipoArchivoCompras(configuracion.tipo_archivo_compras);
+            setTipoArchivoVentas(configuracion.tipo_archivo_ventas);
+            setCodigoPrivilegioAdmin(configuracion.codigo_privilegio_admin);
+            setCodigoPrivilegioCompras(configuracion.codigo_privilegio_compras);
+            setCodigoPrivilegioVentas(configuracion.codigo_privilegio_ventas);
+            setHostDb(configuracion.host_db);
+            setPortDb(configuracion.port_db);
+            setNameDb(configuracion.name_db);
+            setUsernameDb(configuracion.username_db);
+            setPasswordUsernameDb(configuracion.password_username_db);
+            setRutaPrincipalEndpoints(configuracion.ruta_principal_endpoints);
+
+            resolve(res);
+          } else {
+            reject(res);
+          }
+        };
+
+        respuesta();
+      });
     };
+
     toast.dismiss();
     toast.promise(res, {
       pending: "Guardando configuración..",
       success: {
         render({ data }) {
-          let msg;
-          if (data.errors) {
-            msg = `Error: ` + data.errors.msg;
-          } else {
-            msg = "Configuración Guardada..!!";
+          let msg = "Configuración Guardada..!!";
+          if (data.body) {
+            msg = data.body.msg;
           }
           return msg;
         },
       },
-      error: "Error: Configuración NO Guardada..",
+      error: {
+        render({ data }) {
+          let msg = "Error: Configuración NO Guardada...!!";
+          if (data.errors) {
+            msg = data.errors.msg;
+          }
+          return msg;
+        },
+      },
     });
   };
 
@@ -272,15 +270,27 @@ export default function Configuraciones() {
                           {admin.lastname}
                         </MenuItem>
                       ) : (
-                          <MenuItem key={admin.id} value={admin.id}>
-                            {admin.username} - {admin.firstname}
-                            {admin.lastname}
-                          </MenuItem>
-                        );
+                        <MenuItem key={admin.id} value={admin.id}>
+                          {admin.username} - {admin.firstname}
+                          {admin.lastname}
+                        </MenuItem>
+                      );
                     })}
                   </Select>
                 </FormControl>
               </Stack>
+
+              <Grid item xs={4}>
+                <Stack sx={{ m: 2 }}>
+                  <TextField
+                    size="small"
+                    label="Ruta de endpoints"
+                    variant="outlined"
+                    fullWidth
+                    value={rutaPrincipalEndpoints}
+                  />
+                </Stack>
+              </Grid>
             </Grid>
           </Paper>
 
@@ -343,12 +353,12 @@ export default function Configuraciones() {
                                 </span>
                               </Tooltip>
                             ) : (
-                                <Tooltip title="Mostrar contraseña">
-                                  <span>
-                                    <Visibility />
-                                  </span>
-                                </Tooltip>
-                              )}
+                              <Tooltip title="Mostrar contraseña">
+                                <span>
+                                  <Visibility />
+                                </span>
+                              </Tooltip>
+                            )}
                           </IconButton>
                         </InputAdornment>
                       }

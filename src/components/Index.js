@@ -128,7 +128,6 @@ function Index() {
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={handleClose}>Compartir</Button>
                     <Button onClick={handleClose}>Cerrar</Button>
                   </DialogActions>
                 </Dialog>

@@ -153,7 +153,7 @@ export default function Configuraciones() {
                     className="text-center"
                     align="center"
                   >
-                    <b>Origen</b>
+                    <b>Nomenclatura del TXT</b>
                   </TableCell>
                   <TableCell
                     component="th"
