@@ -22,6 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // External components
 import {
+  Tooltip,
   Box,
   Button,
   Paper,
@@ -51,14 +52,11 @@ export default function DetailsUser() {
 
   const [companias, setCompanias] = useState([]);
   const [privilegios, setPrivilegios] = useState([]);
-  const [privilegiosSelected_1, setPrivilegiosSelected_1] = useState([]);
-  const [privilegiosSelected_2, setPrivilegiosSelected_2] = useState([]);
-  const [privilegiosSelected_3, setPrivilegiosSelected_3] = useState([]);
-  const [privilegiosSelected_4, setPrivilegiosSelected_4] = useState([]);
+  const [privilegiosSelected, setPrivilegiosSelected] = useState([]);
 
   const [companiasPrivilegios, setCompaniasPrivilegios] = useState([]);
 
-  const privilegiosObjeto = [];
+  // const privilegiosObjeto = [];
 
   const { userUpdateAdmin } = useUser();
 
@@ -79,30 +77,6 @@ export default function DetailsUser() {
 
   //Consulta Compañias
   useEffect(() => {
-    for (let userCompany of userCompanies) {
-      // for (const company in userCompany) {
-      let privilegios = [];
-      for (const UserCompanyPrivilegio of userCompany.UserCompanyPrivilegios) {
-        privilegios.push(UserCompanyPrivilegio.PrivilegioId.toString());
-      }
-
-      if (userCompany.CompanyId === 1) {
-        setPrivilegiosSelected_1(privilegios);
-      }
-      if (userCompany.CompanyId === 2) {
-        setPrivilegiosSelected_2(privilegios);
-      }
-      if (userCompany.CompanyId === 3) {
-        setPrivilegiosSelected_3(privilegios);
-      }
-      if (userCompany.CompanyId === 4) {
-        setPrivilegiosSelected_4(privilegios);
-      }
-    }
-  }, [userCompanies]);
-
-  //Consulta Compañias
-  useEffect(() => {
     const res = async () => {
       const resp = await listCompaniasService();
       setCompanias(resp.body.companias);
@@ -119,32 +93,29 @@ export default function DetailsUser() {
     res();
   }, []);
 
-  //Asignando Privilegios por compañías
+  //Seleccionando Privilegios para el Usuario
   useEffect(() => {
-    setCompaniasPrivilegios([
-      {
-        id: 1,
-        privilegios: privilegiosSelected_1,
-      },
-      {
-        id: 2,
-        privilegios: privilegiosSelected_2,
-      },
-      {
-        id: 3,
-        privilegios: privilegiosSelected_3,
-      },
-      {
-        id: 4,
-        privilegios: privilegiosSelected_4,
-      },
-    ]);
-  }, [
-    privilegiosSelected_1,
-    privilegiosSelected_2,
-    privilegiosSelected_3,
-    privilegiosSelected_4,
-  ]);
+    let companiasPrivilegiosArray = [];
+    let selectedCompaniaActual = [];
+
+    for (let compania of companias) {
+      for (let objetoSelected of privilegiosSelected) {
+        let objetoSelectedCompleto =
+          companiasPrivilegiosData[objetoSelected - 1];
+        if (objetoSelectedCompleto.idCompania === compania.id) {
+          selectedCompaniaActual.push(objetoSelectedCompleto.idPrivilegio);
+        }
+      }
+
+      companiasPrivilegiosArray.push({
+        id: compania.id,
+        privilegios: selectedCompaniaActual,
+      });
+      selectedCompaniaActual = [];
+    }
+
+    setCompaniasPrivilegios(companiasPrivilegiosArray);
+  }, [privilegiosSelected, companias]);
 
   // Submit editar usuario
   const hadleSubmit = (e) => {
@@ -214,29 +185,51 @@ export default function DetailsUser() {
     });
   };
 
-  // Select Chip
+  // Al cambiar seleccionados
   const handleChangePrivilege = (e) => {
-    // let company = e.target.company;
-    // let privilegios = e.target.value;
-
-    if (e.target.company === 1) {
-      setPrivilegiosSelected_1(e.target.value);
-    }
-    if (e.target.company === 2) {
-      setPrivilegiosSelected_2(e.target.value);
-    }
-    if (e.target.company === 3) {
-      setPrivilegiosSelected_3(e.target.value);
-    }
-    if (e.target.company === 4) {
-      setPrivilegiosSelected_4(e.target.value);
-    }
+    setPrivilegiosSelected(e.target.value);
   };
 
-  privilegios.map((privilegio) => {
-    privilegiosObjeto[privilegio.id] = privilegio.nombre_privilegio;
-    return "";
-  });
+  // Creando array con todos los privilegios para cada una de las compañias
+  let companiasPrivilegiosData = [];
+  let idObjeto = 1;
+  for (let compania of companias) {
+    for (let privilegio of privilegios) {
+      companiasPrivilegiosData.push({
+        id: idObjeto,
+        idCompania: compania.id,
+        compania: compania.nombre_company,
+        idPrivilegio: privilegio.id,
+        privilegio: privilegio.nombre_privilegio,
+      });
+      idObjeto = idObjeto + 1;
+    }
+  }
+
+  // Creando Array con opciones para el select (compañia - privilegio)
+  let companiasPrivilegiosOptions = [];
+  for (let companiaPrivilegio of companiasPrivilegiosData) {
+    companiasPrivilegiosOptions[companiaPrivilegio.id] =
+      companiaPrivilegio.compania + " - " + companiaPrivilegio.privilegio;
+  }
+
+  //Seleccionando por defecto los privilegios que ya tiene el usuario asociados
+  useEffect(() => {
+    let privilegiosArray = [];
+    for (let userCompany of userCompanies) {
+      for (const UserCompanyPrivilegio of userCompany.UserCompanyPrivilegios) {
+        for (let ObjetoCompleto of companiasPrivilegiosData) {
+          if (
+            ObjetoCompleto.idCompania === userCompany.CompanyId &&
+            ObjetoCompleto.idPrivilegio === UserCompanyPrivilegio.PrivilegioId
+          ) {
+            privilegiosArray.push(ObjetoCompleto.id.toString());
+          }
+        }
+      }
+    }
+    setPrivilegiosSelected(privilegiosArray);
+  }, [userCompanies]);
 
   return (
     <LayoutSession titleModule="Detalle de usuario ">
@@ -287,9 +280,13 @@ export default function DetailsUser() {
                 justifyContent="flex-end"
                 alignItems="flex-end"
               >
-                <Link to={`../usuarios`}>
-                  <MdKeyboardBackspace color="#75787B" size={35} />{" "}
-                </Link>
+                <Tooltip followCursor title="Regresar">
+                  <span>
+                    <Link to={`../usuarios`}>
+                      <MdKeyboardBackspace color="#75787B" size={35} />
+                    </Link>
+                  </span>
+                </Tooltip>
               </Grid>
             </Stack>
           </Box>
@@ -375,570 +372,53 @@ export default function DetailsUser() {
                 </Grid>
 
                 <Grid align="center" item sx={{ mt: 4 }}>
-                  <Typography variant="subtitles">
-                    Privilegios por Compañías
-                  </Typography>
+                  <Typography variant="subtitles">Privilegios</Typography>
                 </Grid>
                 <Divider />
 
-                <Grid container spacing={{ xs: 1, md: 1 }} sx={{ pt: 1 }}>
-                  {companias.map((company, index) => (
-                    <Grid item xs={12} sm={12} md={6} lg={6}>
-                      {company.id === 1 ? (
-                        <Paper elevation={0}>
-                          <FormControl fullWidth>
-                            <InputLabel>Privilegios Febeca</InputLabel>
-                            <Select
-                              name="selectPrivilegios_1"
-                              multiple
-                              value={privilegiosSelected_1}
-                              onChange={(e) =>
-                                handleChangePrivilege({
-                                  target: {
-                                    company: company.id,
-                                    value: e.target.value,
-                                  },
-                                })
-                              }
-                              input={
-                                <OutlinedInput
-                                  id="select-multiple-privilegios-1"
-                                  label={"Privilegios Febeca"}
-                                />
-                              }
-                              renderValue={(selected) => (
-                                <Box>
-                                  {selected.map((value) => (
-                                    <Chip
-                                      key={value}
-                                      label={privilegiosObjeto[value]}
-                                    />
-                                  ))}
-                                </Box>
-                              )}
-                            >
-                              {Object.keys(privilegiosObjeto).map((id) => (
-                                <MenuItem key={id} value={id}>
-                                  {privilegiosObjeto[id]}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Paper>
-                      ) : (
-                        <></>
-                      )}
-
-                      {company.id === 2 ? (
-                        <Paper elevation={0}>
-                          <FormControl fullWidth>
-                            <InputLabel>Privilegios Mayor Beval</InputLabel>
-                            <Select
-                              name="selectPrivilegios_2"
-                              multiple
-                              value={privilegiosSelected_2}
-                              onChange={(e) =>
-                                handleChangePrivilege({
-                                  target: {
-                                    company: company.id,
-                                    value: e.target.value,
-                                  },
-                                })
-                              }
-                              input={
-                                <OutlinedInput
-                                  id="select-multiple-privilegios-2"
-                                  label={"Privilegios Mayor Beval"}
-                                />
-                              }
-                              renderValue={(selected) => (
-                                <Box>
-                                  {selected.map((value) => (
-                                    <Chip
-                                      key={value}
-                                      label={privilegiosObjeto[value]}
-                                    />
-                                  ))}
-                                </Box>
-                              )}
-                            >
-                              {Object.keys(privilegiosObjeto).map((id) => (
-                                <MenuItem key={id} value={id}>
-                                  {privilegiosObjeto[id]}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Paper>
-                      ) : (
-                        <></>
-                      )}
-
-                      {company.id === 3 ? (
-                        <Paper elevation={0}>
-                          <FormControl fullWidth>
-                            <InputLabel>Privilegios Sillaca</InputLabel>
-                            <Select
-                              name="selectPrivilegios_3"
-                              multiple
-                              value={privilegiosSelected_3}
-                              onChange={(e) =>
-                                handleChangePrivilege({
-                                  target: {
-                                    company: company.id,
-                                    value: e.target.value,
-                                  },
-                                })
-                              }
-                              input={
-                                <OutlinedInput
-                                  id="select-multiple-privilegios-3"
-                                  label={"Privilegios Sillaca"}
-                                />
-                              }
-                              renderValue={(selected) => (
-                                <Box>
-                                  {selected.map((value) => (
-                                    <Chip
-                                      key={value}
-                                      label={privilegiosObjeto[value]}
-                                    />
-                                  ))}
-                                </Box>
-                              )}
-                            >
-                              {Object.keys(privilegiosObjeto).map((id) => (
-                                <MenuItem key={id} value={id}>
-                                  {privilegiosObjeto[id]}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Paper>
-                      ) : (
-                        <></>
-                      )}
-
-                      {company.id === 4 ? (
-                        <Paper elevation={0}>
-                          <FormControl fullWidth>
-                            <InputLabel>Privilegios Prisma</InputLabel>
-                            <Select
-                              name="selectPrivilegios_4"
-                              multiple
-                              value={privilegiosSelected_4}
-                              onChange={(e) =>
-                                handleChangePrivilege({
-                                  target: {
-                                    company: company.id,
-                                    value: e.target.value,
-                                  },
-                                })
-                              }
-                              input={
-                                <OutlinedInput
-                                  id="select-multiple-privilegios-4"
-                                  label={"Privilegios Prisma"}
-                                />
-                              }
-                              renderValue={(selected) => (
-                                <Box>
-                                  {selected.map((value) => (
-                                    <Chip
-                                      key={value}
-                                      label={privilegiosObjeto[value]}
-                                    />
-                                  ))}
-                                </Box>
-                              )}
-                            >
-                              {Object.keys(privilegiosObjeto).map((id) => (
-                                <MenuItem key={id} value={id}>
-                                  {privilegiosObjeto[id]}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Paper>
-                      ) : (
-                        <></>
-                      )}
-                    </Grid>
-                  ))}
+                <Grid item xs={12} sm={12} md={6} lg={6}>
+                  <Paper elevation={0}>
+                    <FormControl fullWidth>
+                      <InputLabel>Privilegios</InputLabel>
+                      <Select
+                        name={"selectPrivilegios_1"}
+                        multiple
+                        value={privilegiosSelected}
+                        onChange={(e) =>
+                          handleChangePrivilege({
+                            target: {
+                              value: e.target.value,
+                            },
+                          })
+                        }
+                        input={
+                          <OutlinedInput
+                            id={"select-multiple-privilegios"}
+                            label={"Privilegios"}
+                          />
+                        }
+                        renderValue={(selected) => (
+                          <Box
+                            sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+                          >
+                            {selected.map((value) => (
+                              <Chip
+                                key={value}
+                                label={companiasPrivilegiosOptions[value]}
+                              />
+                            ))}
+                          </Box>
+                        )}
+                      >
+                        {Object.keys(companiasPrivilegiosOptions).map((id) => (
+                          <MenuItem key={id} value={id}>
+                            {companiasPrivilegiosOptions[id]}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Paper>
                 </Grid>
-
-                {/* {companias.map((company, index) => (
-                  <Grid
-                    key={index}
-                    container
-                    spacing={{ xs: 1, md: 1 }}
-                    sx={{ pt: 1 }}
-                  >
-                    {company.id === 1 ? (
-                      <Grid item xs={12} sm={12} md={6} lg={6}>
-                        <Paper elevation={0}>
-                          <FormControl fullWidth>
-                            <InputLabel>Privilegios Febeca</InputLabel>
-                            <Select
-                              name="selectPrivilegios_1"
-                              multiple
-                              value={privilegiosSelected_1}
-                              onChange={(e) =>
-                                handleChangePrivilege({
-                                  target: {
-                                    company: company.id,
-                                    value: e.target.value,
-                                  },
-                                })
-                              }
-                              input={
-                                <OutlinedInput
-                                  id="select-multiple-privilegios-1"
-                                  label={"Privilegios Febeca"}
-                                />
-                              }
-                              renderValue={(selected) => (
-                                <Box>
-                                  {selected.map((value) => (
-                                    <Chip
-                                      key={value}
-                                      label={privilegiosObjeto[value]}
-                                    />
-                                  ))}
-                                </Box>
-                              )}
-                            >
-                              {Object.keys(privilegiosObjeto).map((id) => (
-                                <MenuItem key={id} value={id}>
-                                  {privilegiosObjeto[id]}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Paper>
-                      </Grid>
-                    ) : (
-                      <></>
-                    )}
-
-                    {company.id === 2 ? (
-                      <Grid item xs={12} sm={12} md={6} lg={6}>
-                        <Paper elevation={0}>
-                          <FormControl fullWidth>
-                            <InputLabel>Privilegios Mayor Beval</InputLabel>
-                            <Select
-                              name="selectPrivilegios_2"
-                              multiple
-                              value={privilegiosSelected_2}
-                              onChange={(e) =>
-                                handleChangePrivilege({
-                                  target: {
-                                    company: company.id,
-                                    value: e.target.value,
-                                  },
-                                })
-                              }
-                              input={
-                                <OutlinedInput
-                                  id="select-multiple-privilegios-2"
-                                  label={"Privilegios Mayor Beval"}
-                                />
-                              }
-                              renderValue={(selected) => (
-                                <Box>
-                                  {selected.map((value) => (
-                                    <Chip
-                                      key={value}
-                                      label={privilegiosObjeto[value]}
-                                    />
-                                  ))}
-                                </Box>
-                              )}
-                            >
-                              {Object.keys(privilegiosObjeto).map((id) => (
-                                <MenuItem key={id} value={id}>
-                                  {privilegiosObjeto[id]}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Paper>
-                      </Grid>
-                    ) : (
-                      <></>
-                    )}
-
-                    {company.id === 3 ? (
-                      <Grid item xs={12} sm={12} md={6} lg={6}>
-                        <Paper elevation={0}>
-                          <FormControl fullWidth>
-                            <InputLabel>Privilegios Sillaca</InputLabel>
-                            <Select
-                              name="selectPrivilegios_3"
-                              multiple
-                              value={privilegiosSelected_3}
-                              onChange={(e) =>
-                                handleChangePrivilege({
-                                  target: {
-                                    company: company.id,
-                                    value: e.target.value,
-                                  },
-                                })
-                              }
-                              input={
-                                <OutlinedInput
-                                  id="select-multiple-privilegios-3"
-                                  label={"Privilegios Sillaca"}
-                                />
-                              }
-                              renderValue={(selected) => (
-                                <Box>
-                                  {selected.map((value) => (
-                                    <Chip
-                                      key={value}
-                                      label={privilegiosObjeto[value]}
-                                    />
-                                  ))}
-                                </Box>
-                              )}
-                            >
-                              {Object.keys(privilegiosObjeto).map((id) => (
-                                <MenuItem key={id} value={id}>
-                                  {privilegiosObjeto[id]}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Paper>
-                      </Grid>
-                    ) : (
-                      <></>
-                    )}
-
-                    {company.id === 4 ? (
-                      <Grid item xs={12} sm={12} md={6} lg={6}>
-                        <Paper elevation={0}>
-                          <FormControl fullWidth>
-                            <InputLabel>Privilegios Prisma</InputLabel>
-                            <Select
-                              name="selectPrivilegios_4"
-                              multiple
-                              value={privilegiosSelected_4}
-                              onChange={(e) =>
-                                handleChangePrivilege({
-                                  target: {
-                                    company: company.id,
-                                    value: e.target.value,
-                                  },
-                                })
-                              }
-                              input={
-                                <OutlinedInput
-                                  id="select-multiple-privilegios-4"
-                                  label={"Privilegios Prisma"}
-                                />
-                              }
-                              renderValue={(selected) => (
-                                <Box>
-                                  {selected.map((value) => (
-                                    <Chip
-                                      key={value}
-                                      label={privilegiosObjeto[value]}
-                                    />
-                                  ))}
-                                </Box>
-                              )}
-                            >
-                              {Object.keys(privilegiosObjeto).map((id) => (
-                                <MenuItem key={id} value={id}>
-                                  {privilegiosObjeto[id]}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Paper>
-                      </Grid>
-                    ) : (
-                      <></>
-                    )}
-                  </Grid>
-                ))} */}
-
-                {/* <Grid item xs={12} sm={12} md={6} lg={6}>
-                    <Paper elevation={0}>
-                      <FormControl fullWidth>
-                        <InputLabel>Privilegios Febeca</InputLabel>
-                        <Select
-                          name="selectPrivilegios_1"
-                          defaultValue={privilegiosSelected_1}
-                          multiple
-                          value={privilegiosSelected_1}
-                          onChange={(e) =>
-                            handleChangePrivilege({
-                              target: {
-                                company: companias[0].id,
-                                value: e.target.value,
-                              },
-                            })
-                          }
-                          input={
-                            <OutlinedInput
-                              id="select-multiple-privilegios-1"
-                              label={"Privilegios Febeca"}
-                              value={privilegiosSelected_1}
-                            />
-                          }
-                          renderValue={(selected) => (
-                            <Box>
-                              {selected.map((value) => (
-                                <Chip
-                                  key={value}
-                                  label={privilegiosObjeto[value]}
-                                  value={privilegiosSelected_1}
-                                  defaultValue={privilegiosSelected_1}
-                                />
-                              ))}
-                            </Box>
-                          )}
-                        >
-                          {Object.keys(privilegiosObjeto).map((id) => (
-                            <MenuItem key={id} value={id}>
-                              {privilegiosObjeto[id]}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Paper>
-                  </Grid>
-
-                  <Grid item xs={12} sm={12} md={6} lg={6}>
-                    <Paper elevation={0}>
-                      <FormControl fullWidth>
-                        <InputLabel>Privilegios Mayor Beval</InputLabel>
-                        <Select
-                          name="selectPrivilegios_2"
-                          multiple
-                          value={privilegiosSelected_2}
-                          onChange={(e) =>
-                            handleChangePrivilege({
-                              target: {
-                                company: companias[1].id,
-                                value: e.target.value,
-                              },
-                            })
-                          }
-                          input={
-                            <OutlinedInput
-                              id="select-multiple-privilegios-2"
-                              label={"Privilegios Mayor Beval"}
-                            />
-                          }
-                          renderValue={(selected) => (
-                            <Box>
-                              {selected.map((value) => (
-                                <Chip
-                                  key={value}
-                                  label={privilegiosObjeto[value]}
-                                />
-                              ))}
-                            </Box>
-                          )}
-                        >
-                          {Object.keys(privilegiosObjeto).map((id) => (
-                            <MenuItem key={id} value={id}>
-                              {privilegiosObjeto[id]}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Paper>
-                  </Grid>
-
-                  <Grid item xs={12} sm={12} md={6} lg={6}>
-                    <Paper elevation={0}>
-                      <FormControl fullWidth>
-                        <InputLabel>Privilegios Sillaca</InputLabel>
-                        <Select
-                          name="selectPrivilegios_3"
-                          multiple
-                          value={privilegiosSelected_3}
-                          onChange={(e) =>
-                            handleChangePrivilege({
-                              target: {
-                                company: companias[2].id,
-                                value: e.target.value,
-                              },
-                            })
-                          }
-                          input={
-                            <OutlinedInput
-                              id="select-multiple-privilegios-3"
-                              label={"Privilegios Sillaca"}
-                            />
-                          }
-                          renderValue={(selected) => (
-                            <Box>
-                              {selected.map((value) => (
-                                <Chip
-                                  key={value}
-                                  label={privilegiosObjeto[value]}
-                                />
-                              ))}
-                            </Box>
-                          )}
-                        >
-                          {Object.keys(privilegiosObjeto).map((id) => (
-                            <MenuItem key={id} value={id}>
-                              {privilegiosObjeto[id]}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Paper>
-                  </Grid>
-
-                  <Grid item xs={12} sm={12} md={6} lg={6}>
-                    <Paper elevation={0}>
-                      <FormControl fullWidth>
-                        <InputLabel>Privilegios Prisma</InputLabel>
-                        <Select
-                          name="selectPrivilegios_4"
-                          multiple
-                          value={privilegiosSelected_4}
-                          onChange={(e) =>
-                            handleChangePrivilege({
-                              target: {
-                                company: companias[3].id,
-                                value: e.target.value,
-                              },
-                            })
-                          }
-                          input={
-                            <OutlinedInput
-                              id="select-multiple-privilegios-4"
-                              label={"Privilegios Prisma"}
-                            />
-                          }
-                          renderValue={(selected) => (
-                            <Box>
-                              {selected.map((value) => (
-                                <Chip
-                                  key={value}
-                                  label={privilegiosObjeto[value]}
-                                />
-                              ))}
-                            </Box>
-                          )}
-                        >
-                          {Object.keys(privilegiosObjeto).map((id) => (
-                            <MenuItem key={id} value={id}>
-                              {privilegiosObjeto[id]}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Paper>
-                  </Grid> */}
               </Box>
             </Stack>
           </Grid>

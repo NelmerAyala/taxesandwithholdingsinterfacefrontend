@@ -6,18 +6,18 @@ import { Box, MenuItem, Typography, Grid } from "../consts";
 const MenuItemFlotante = ({ ruta, name, children }) => {
   return (
     <Grid item xs={6}>
-      <MenuItem>
-        <Link className="nav-link-flotante" to={ruta}>
-          <div style={{ width: "100%" }}>
+      <Link className="nav-link-flotante" to={ruta}>
+        <MenuItem>
+          <Box style={{ width: "100%" }} sx={{ mx: 2 }}>
             <Box sx={{ justifyContent: "center" }}>
-              <Typography
+              <Box
                 sx={{
                   justifyContent: "center",
                   display: "flex",
                 }}
               >
                 {children}
-              </Typography>
+              </Box>
               <Typography
                 sx={{
                   justifyContent: "center",
@@ -27,9 +27,9 @@ const MenuItemFlotante = ({ ruta, name, children }) => {
                 {name}
               </Typography>
             </Box>
-          </div>
-        </Link>
-      </MenuItem>
+          </Box>
+        </MenuItem>
+      </Link>
     </Grid>
   );
 };

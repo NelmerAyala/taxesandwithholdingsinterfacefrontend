@@ -263,78 +263,93 @@ export default function ListUsuarios() {
         </Grid>
 
         {/* Tabla */}
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table" size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  component="th"
-                  className="text-center"
-                  align="center"
-                >
-                  <b>Nombre Completo</b>
-                </TableCell>
-                <TableCell
-                  component="th"
-                  className="text-center"
-                  align="center"
-                >
-                  <b>Correo</b>
-                </TableCell>
-                <TableCell
-                  component="th"
-                  className="text-center"
-                  align="center"
-                >
-                  <b>Empresa</b>
-                </TableCell>
-                {/* <TableCell align="center">Compras</TableCell>
+        <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+          <Box gridColumn="span 12">
+            <TableContainer sx={{ maxHeight: 440 }}>
+              <Table
+                sx={{ minWidth: 700 }}
+                stickyHeader
+                aria-label="sticky table"
+                size="small"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell
+                      component="th"
+                      className="text-center"
+                      align="center"
+                    >
+                      <b>Nombre Completo</b>
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      className="text-center"
+                      align="center"
+                    >
+                      <b>Correo</b>
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      className="text-center"
+                      align="center"
+                    >
+                      <b>Empresa</b>
+                    </TableCell>
+                    {/* <TableCell align="center">Compras</TableCell>
                                             <TableCell align="center">Ventas</TableCell>
                                             <TableCell align="center">Anular</TableCell>
                                             <TableCell align="center">Administrador</TableCell> */}
-                <TableCell
-                  component="th"
-                  className="text-center"
-                  align="center"
-                >
-                  <b>Editar</b>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {listusuarios.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    sx={{ p: 2 }}
-                    component="th"
-                    className="text-center"
-                    colSpan={4}
-                    align="center"
-                  >
-                    <MdPersonSearch size={35} />
-                    <Typography>No hay usuarios consultados</Typography>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                listusuarios
-              )}
-            </TableBody>
-          </Table>
-          {/* <TablePaginationComponent children={list} /> */}
-          {list.length > 0 ? (
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 50, 100]}
-              component="div"
-              count={list.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          ) : (
-            <></>
-          )}
-        </TableContainer>
+                    <TableCell
+                      component="th"
+                      className="text-center"
+                      align="center"
+                    >
+                      <b>Editar</b>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {listusuarios.length === 0 ? (
+                    <TableRow>
+                      <TableCell
+                        sx={{ p: 2 }}
+                        component="th"
+                        className="text-center"
+                        colSpan={4}
+                        align="center"
+                      >
+                        <MdPersonSearch size={35} />
+                        <Typography>No hay usuarios consultados</Typography>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    listusuarios
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {/* <TablePaginationComponent children={list} /> */}
+            {list.length > 0 ? (
+              <TablePagination
+                rowsPerPageOptions={[
+                  10,
+                  50,
+                  100,
+                  500,
+                  { value: -1, label: "Todas" },
+                ]}
+                component="div"
+                count={list.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            ) : (
+              <></>
+            )}
+          </Box>
+        </Box>
       </Paper>
     </LayoutSession>
   );

@@ -81,6 +81,11 @@ import {
   MdPersonSearch,
   MdOutlineCorporateFare,
   MdSync,
+  MdOutlineArrowDropUp,
+  MdOutlineArrowDropDown,
+  MdOutlineArrowUpward,
+  MdOutlineArrowDownward,
+  MdOutlineInfo,
 } from "react-icons/md";
 
 import TablePagination from "@mui/material/TablePagination";
@@ -163,4 +168,9 @@ export {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  MdOutlineArrowDropUp,
+  MdOutlineArrowDropDown,
+  MdOutlineArrowUpward,
+  MdOutlineArrowDownward,
+  MdOutlineInfo,
 };

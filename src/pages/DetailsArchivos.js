@@ -1,6 +1,6 @@
 // Nuevo
 import React, { useState, useEffect, useContext } from "react";
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Link, Navigate, useNavigate } from "react-router-dom";
 import Context from "../contexts/UserContext";
 
 // Estilos
@@ -55,12 +55,27 @@ export default function DetailsArchivos() {
   const [isCheck, setIsCheck] = useState([]);
   const { id } = useParams();
   const [archivos, setArchivos] = useState([]);
+  const [redirect, setRedirect] = useState(false);
   const { compra, venta } = useContext(Context);
+  // Navigate
+  let navigate = useNavigate();
+
+  // useEffect(() => {
+  //   for (let archivo of archivos) {
+  //     if (archivo.status === 2) {
+  //       <Navigate to={"/archivos"} replace />;
+  //     }
+  //   }
+  // }, [archivos]);
+
+  useEffect(() => {
+    if (redirect === true) navigate(`/archivos`);
+  }, [redirect]);
 
   useEffect(() => {
     const res = async () => {
       const resp = await listDetallesArchivoService(id);
-      setArchivos(resp.body);
+      setArchivos(resp.body.archivo_detalles);
     };
     res();
   }, [id]);
@@ -86,14 +101,28 @@ export default function DetailsArchivos() {
     const anulacion = value;
     if (isCheck.length > 0) {
       const res = async () => {
-        const resp = await anularTransaccionService(
-          { ids: isCheck },
-          id,
-          anulacion
-        );
-        setArchivos(resp.body);
-        setIsCheckAll(false);
-        return resp;
+        return new Promise((resolve, reject) => {
+          const respuesta = async () => {
+            const resp = await anularTransaccionService(
+              { ids: isCheck },
+              id,
+              anulacion
+            );
+
+            setIsCheckAll(false);
+            if (resp.body) {
+              if (!resp.body.archivo_detalles) {
+                setRedirect(true);
+              } else {
+                setArchivos(resp.body.archivo_detalles);
+              }
+              resolve(resp);
+            } else {
+              reject(resp);
+            }
+          };
+          respuesta();
+        });
       };
       toast.dismiss();
       toast.promise(res, {
@@ -115,10 +144,20 @@ export default function DetailsArchivos() {
             return msg;
           },
         },
-        error:
-          anulacion === "1"
-            ? "Error: Transacciones seleccionadas NO desvinculada.!!"
-            : "Error: Transacciones seleccionadas NO Eliminadas.!!",
+        error: {
+          render({ data }) {
+            let msg;
+            if (data.errors.msg) {
+              msg = data.errors.msg;
+            } else {
+              msg =
+                anulacion === "1"
+                  ? "Error: Transacciones seleccionadas NO desvinculada.!!"
+                  : "Error: Transacciones seleccionadas NO Eliminadas.!!";
+            }
+            return msg;
+          },
+        },
       });
     } else {
       toast.info("No ha seleccionado ninguna transacción.");
@@ -391,14 +430,18 @@ export default function DetailsArchivos() {
                         // Cabecera de Compras
                         <TableRow key={archivo.id}>
                           <TableCell align="center">
-                            <Checkbox
-                              color="primary"
-                              type="checkbox"
-                              name="selectAll"
-                              id="selectAll"
-                              handleClick={handleSelectAll}
-                              isChecked={isCheckAll}
-                            />
+                            <Tooltip followCursor title="Seleccionar todos">
+                              <span>
+                                <Checkbox
+                                  color="primary"
+                                  type="checkbox"
+                                  name="selectAll"
+                                  id="selectAll"
+                                  handleClick={handleSelectAll}
+                                  isChecked={isCheckAll}
+                                />
+                              </span>
+                            </Tooltip>
                           </TableCell>
                           <TableCell component="th" scope="row" align="center">
                             <b> Nº Doc.</b>
@@ -459,13 +502,17 @@ export default function DetailsArchivos() {
                                 align="center"
                               >
                                 {compra.status_compra === 0 ? (
-                                  <Checkbox
-                                    id={compra.id}
-                                    name={compra.numero_comprobante}
-                                    type="checkbox"
-                                    handleClick={handleClick}
-                                    isChecked={isCheck.includes(compra.id)}
-                                  />
+                                  <Tooltip followCursor title="Seleccionar">
+                                    <span>
+                                      <Checkbox
+                                        id={compra.id}
+                                        name={compra.numero_comprobante}
+                                        type="checkbox"
+                                        handleClick={handleClick}
+                                        isChecked={isCheck.includes(compra.id)}
+                                      />
+                                    </span>
+                                  </Tooltip>
                                 ) : compra.status_compra === 2 ? (
                                   <MdDeleteForever
                                     size={26}

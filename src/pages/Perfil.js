@@ -154,11 +154,9 @@ export default function Perfil() {
       pending: "Guardando actualizacion de contraseña..",
       success: {
         render({ data }) {
-          let msg;
+          let msg = "Actualizacion de contraseña exitoso.!!";
           if (data.body.msg) {
             msg = data.body.msg;
-          } else {
-            msg = "Actualizacion de contraseña Exitoso.!!";
             setPassword("");
             setPasswordNew("");
             setPasswordNewConfirmed("");
@@ -384,6 +382,7 @@ export default function Perfil() {
                               type={showPassword ? "text" : "password"}
                               value={password}
                               variant="outlined"
+                              autoComplete="false"
                               endAdornment={
                                 <InputAdornment position="end">
                                   <IconButton onClick={handleChange}>
@@ -418,6 +417,7 @@ export default function Perfil() {
                               type={showPasswordNew ? "text" : "password"}
                               value={passwordNew}
                               variant="outlined"
+                              autoComplete="false"
                               endAdornment={
                                 <InputAdornment position="end">
                                   <IconButton onClick={handleChange1}>
@@ -445,15 +445,16 @@ export default function Perfil() {
                       <Grid item xs={12} sm={12} md={3} lg={3}>
                         <Paper elevation={0}>
                           <FormControl required fullWidth>
-                            <InputLabel>Confirmar Contraseña Nueva</InputLabel>
+                            <InputLabel>Confirmar Contraseña</InputLabel>
                             <OutlinedInput
-                              label="Confirmar Contraseña Nueva"
+                              label="Confirmar Contraseña"
                               onChange={onChangeNewConfirmed}
                               type={
                                 showPasswordNewConfirmed ? "text" : "password"
                               }
                               value={passwordNewConfirmed}
                               variant="outlined"
+                              autoComplete="false"
                               endAdornment={
                                 <InputAdornment position="end">
                                   <IconButton onClick={handleChange2}>

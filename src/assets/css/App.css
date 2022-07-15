@@ -147,7 +147,7 @@ font-size: small;
 .nav-link-flotante {
   color: #807970!important;
   text-decoration: none;
-  padding: 10px;
+  /* padding: 10px; */
 }
 .MuiIcon-root	 {
   color: #20b2aa;

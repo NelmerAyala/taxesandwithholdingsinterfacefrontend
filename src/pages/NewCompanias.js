@@ -27,7 +27,25 @@ import {
   Typography,
   Stack,
   MdKeyboardBackspace,
+  Tooltip,
 } from "../consts";
+
+import FmdBadOutlinedIcon from "@mui/icons-material/FmdBadOutlined";
+import { styled } from "@mui/material/styles";
+import { tooltipClasses } from "@mui/material/Tooltip";
+
+const TooltipSugerencia = styled(({ className, ...props }) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: "#80cbc4",
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#80cbc4",
+    color: "rgba(0, 0, 0, 0.87)",
+    fontSize: 13,
+  },
+}));
 
 export default function NuevoUsuario() {
   // Constantes
@@ -130,7 +148,9 @@ export default function NuevoUsuario() {
               alignItems="center"
             >
               <Grid item sx={{ pt: 2, pl: 2 }}>
-                <Typography variant="subtitles">Registro de Empresa</Typography>
+                <Typography variant="subtitles">
+                  Registro de Compañia
+                </Typography>
               </Grid>
             </Grid>
             <Grid
@@ -139,9 +159,13 @@ export default function NuevoUsuario() {
               justifyContent="flex-end"
               alignItems="flex-end"
             >
-              <Link to={`../companias`}>
-                <MdKeyboardBackspace color="#75787B" size={35} />{" "}
-              </Link>
+              <Tooltip followCursor title="Regresar">
+                <span>
+                  <Link to={`../companias`}>
+                    <MdKeyboardBackspace color="#75787B" size={35} />
+                  </Link>
+                </span>
+              </Tooltip>
             </Grid>
           </Stack>
           <Divider variant="middle " />
@@ -173,12 +197,7 @@ export default function NuevoUsuario() {
 
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <Stack sx={{ mx: 2 }}>
-              <Box
-                // sx={{ "& > :not(style)": { m: 2 } }}
-                sx={{ flexGrow: 1, m: 2 }}
-                noValidate
-                autoComplete="off"
-              >
+              <Box sx={{ flexGrow: 1, m: 2 }} noValidate autoComplete="off">
                 <Grid align="center">
                   <Typography variant="subtitles">
                     Informacion de la Compañia
@@ -207,7 +226,12 @@ export default function NuevoUsuario() {
                         variant="outlined"
                         onChange={(e) => setCodigo_company(e.target.value)}
                         value={codigo_company}
-                        inputProps={{ maxLength: 3 }}
+                        inputProps={{
+                          maxLength: 3,
+                          inputMode: "numeric",
+                          pattern: "[0-9]*",
+                        }}
+                        helperText="1 a 3 números max."
                       />
                     </Paper>
                   </Grid>
@@ -218,14 +242,12 @@ export default function NuevoUsuario() {
                         fullWidth
                         label="Origen de la Compañia"
                         variant="outlined"
-                        onChange={(e) => setOrigen(e.target.value)}
+                        onChange={(e) =>
+                          setOrigen(e.target.value.toUpperCase())
+                        }
                         value={origen}
-                        inputProps={{
-                          style: {
-                            textTransform: "uppercase",
-                          },
-                          maxLength: 10,
-                        }}
+                        inputProps={{ maxLength: 10 }}
+                        helperText="1 a 10 caracteres max."
                       />
                     </Paper>
                   </Grid>
@@ -238,26 +260,52 @@ export default function NuevoUsuario() {
                 <Grid container spacing={{ xs: 1, md: 1 }} sx={{ pt: 1 }}>
                   <Grid item xs={12} sm={12} md={6} lg={6}>
                     <Paper elevation={0}>
-                      <TextField
-                        required
-                        fullWidth
-                        label="Ruta de archivos de Compra"
-                        variant="outlined"
-                        onChange={(e) => setRuta_archivo_compra(e.target.value)}
-                        value={ruta_archivo_compra}
-                      />
+                      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <TextField
+                          required
+                          fullWidth
+                          label="Ruta de archivos de Compra"
+                          variant="outlined"
+                          onChange={(e) =>
+                            setRuta_archivo_compra(e.target.value)
+                          }
+                          value={ruta_archivo_compra}
+                        />
+                        <TooltipSugerencia title="Sugerencia: Carpeta/Compras/Nombre de la Empresa ">
+                          <FmdBadOutlinedIcon
+                            sx={{
+                              color: "#ffc107",
+                              mr: 1,
+                              my: 2,
+                            }}
+                          />
+                        </TooltipSugerencia>
+                      </Box>
                     </Paper>
                   </Grid>
                   <Grid item xs={12} sm={12} md={6} lg={6}>
                     <Paper elevation={0}>
-                      <TextField
-                        required
-                        fullWidth
-                        label="Ruta de archivos de Venta"
-                        variant="outlined"
-                        onChange={(e) => setRuta_archivo_venta(e.target.value)}
-                        value={ruta_archivo_venta}
-                      />
+                      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <TextField
+                          required
+                          fullWidth
+                          label="Ruta de archivos de Venta"
+                          variant="outlined"
+                          onChange={(e) =>
+                            setRuta_archivo_venta(e.target.value)
+                          }
+                          value={ruta_archivo_venta}
+                        />
+                        <TooltipSugerencia title="Sugerencia: Carpeta/Ventas/Nombre de la Empresa ">
+                          <FmdBadOutlinedIcon
+                            sx={{
+                              color: "#ffc107",
+                              mr: 1,
+                              my: 2,
+                            }}
+                          />
+                        </TooltipSugerencia>
+                      </Box>
                     </Paper>
                   </Grid>
                 </Grid>

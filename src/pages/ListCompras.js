@@ -224,13 +224,17 @@ export default function ListCompras() {
         return (
           <TableRow key={compra.id}>
             <TableCell component="th" scope="row" align="center">
-              <Checkbox
-                id={compra.id}
-                name={compra.numero_rif}
-                type="checkbox"
-                handleClick={handleClick}
-                isChecked={isCheck.includes(compra.id)}
-              />
+              <Tooltip followCursor title="Seleccionar">
+                <span>
+                  <Checkbox
+                    id={compra.id}
+                    name={compra.numero_rif}
+                    type="checkbox"
+                    handleClick={handleClick}
+                    isChecked={isCheck.includes(compra.id)}
+                  />
+                </span>
+              </Tooltip>
             </TableCell>
             <TableCell component="th" scope="row" align="center">
               {compra.numero_doc}
@@ -406,85 +410,104 @@ export default function ListCompras() {
           </Box>
 
           {/* Tabla */}
-          <TableContainer sx={{ maxHeight: 440 }}>
-            <Table stickyHeader aria-label="sticky table" size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">
-                    <Checkbox
-                      color="primary"
-                      type="checkbox"
-                      name="selectAll"
-                      id="selectAll"
-                      handleClick={handleSelectAll}
-                      isChecked={isCheckAll}
-                    />
-                  </TableCell>
-                  <TableCell component="th" align="center">
-                    <b>N° Doc</b>
-                  </TableCell>
-                  <TableCell component="th" align="center">
-                    <b>N° Control</b>
-                  </TableCell>
-                  <TableCell component="th" align="center">
-                    <b>Tipoc Doc.</b>
-                  </TableCell>
-                  <TableCell component="th" align="center">
-                    <b>Fecha emisión</b>
-                  </TableCell>
-                  <TableCell component="th" align="center">
-                    <b>Rif</b>
-                  </TableCell>
-                  <TableCell component="th" align="center">
-                    <b>Proveedor</b>
-                  </TableCell>
-                  <TableCell component="th" align="center">
-                    <b>Subtotal</b>
-                  </TableCell>
-                  <TableCell component="th" align="center">
-                    <b>Impuesto</b>
-                  </TableCell>
-                  <TableCell component="th" align="center">
-                    <b>Total</b>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
+          <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+            <Box gridColumn="span 12">
+              <TableContainer sx={{ maxHeight: 440 }}>
+                <Table
+                  sx={{ minWidth: 700 }}
+                  stickyHeader
+                  aria-label="sticky table"
+                  size="small"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">
+                        <Tooltip followCursor title="Seleccionar todos">
+                          <span>
+                            <Checkbox
+                              color="primary"
+                              type="checkbox"
+                              name="selectAll"
+                              id="selectAll"
+                              handleClick={handleSelectAll}
+                              isChecked={isCheckAll}
+                            />
+                          </span>
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell component="th" align="center">
+                        <b>N° Doc</b>
+                      </TableCell>
+                      <TableCell component="th" align="center">
+                        <b>N° Control</b>
+                      </TableCell>
+                      <TableCell component="th" align="center">
+                        <b>Tipoc Doc.</b>
+                      </TableCell>
+                      <TableCell component="th" align="center">
+                        <b>Fecha emisión</b>
+                      </TableCell>
+                      <TableCell component="th" align="center">
+                        <b>Rif</b>
+                      </TableCell>
+                      <TableCell component="th" align="center">
+                        <b>Proveedor</b>
+                      </TableCell>
+                      <TableCell component="th" align="center">
+                        <b>Subtotal</b>
+                      </TableCell>
+                      <TableCell component="th" align="center">
+                        <b>Impuesto</b>
+                      </TableCell>
+                      <TableCell component="th" align="center">
+                        <b>Total</b>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
 
-              <TableBody>
-                {compras.length === 0 ? (
-                  <TableRow>
-                    <TableCell
-                      sx={{ p: 2 }}
-                      component="th"
-                      className="text-center"
-                      colSpan={10}
-                      align="center"
-                    >
-                      <MdOutlineTextSnippet size={35} />
-                      <Typography>
-                        No hay resultado de transacciones de compras.
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  compras
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {list.length > 0 ? (
-            <TablePagination
-              rowsPerPageOptions={[10, 50, 100, 500]}
-              component="div"
-              count={list.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          ) : (
-            <></>
-          )}
+                  <TableBody>
+                    {compras.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          sx={{ p: 2 }}
+                          component="th"
+                          className="text-center"
+                          colSpan={10}
+                          align="center"
+                        >
+                          <MdOutlineTextSnippet size={35} />
+                          <Typography>
+                            No hay resultado de transacciones de compras.
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      compras
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {list.length > 0 ? (
+                <TablePagination
+                  rowsPerPageOptions={[
+                    10,
+                    50,
+                    100,
+                    500,
+                    { value: -1, label: "Todas" },
+                  ]}
+                  component="div"
+                  count={list.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              ) : (
+                <></>
+              )}
+            </Box>
+          </Box>
         </Paper>
       </form>
     </LayoutSession>

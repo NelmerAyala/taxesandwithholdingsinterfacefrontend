@@ -15,7 +15,6 @@ import listCompaniasService from "../services/listCompaniasService";
 
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import { styled } from "@mui/material/styles";
 
 // External components
 import {
@@ -110,8 +109,6 @@ export default function ListArchivos() {
             const resp = await listArchivosService(selectedCompany);
             if (resp.body) {
               setList(resp.body.archivos);
-              table_sortbyID();
-              TableSort();
               resolve(resp);
             } else {
               setList([]);
@@ -151,8 +148,9 @@ export default function ListArchivos() {
       if (selectedCompany === "DEFAULT") {
         setList([]);
       }
+      table_sortbyID();
+      TableSort();
     }
-
   }, [selectedCompany]);
 
   // Consulta de Compañía
@@ -211,22 +209,22 @@ export default function ListArchivos() {
                 </Typography>
               </TableCell>
             ) : (
-                <TableCell component="th" scope="row" align="center">
-                  <Typography variant="h7" color="#F9A719">
-                    Anulado
+              <TableCell component="th" scope="row" align="center">
+                <Typography variant="h7" color="#F9A719">
+                  Anulado
                 </Typography>
-                </TableCell>
-              )}
+              </TableCell>
+            )}
 
             {archivo.automatico === true ? (
               <TableCell component="th" scope="row" align="center">
                 <span className="msjGenerado"> Automática </span>
               </TableCell>
             ) : (
-                <TableCell component="th" scope="row" align="center">
-                  Manual
+              <TableCell component="th" scope="row" align="center">
+                Manual
               </TableCell>
-              )}
+            )}
             {archivo.status === 1 ? (
               <TableCell component="th" scope="row" align="center">
                 <Link to={`./detalles/${archivo.id}`}>
@@ -238,14 +236,14 @@ export default function ListArchivos() {
                 </Link>
               </TableCell>
             ) : (
-                <TableCell component="th" scope="row" align="center">
-                  <Tooltip followCursor title="Archivo Anulado.">
-                    <span>
-                      <MdListAlt size={25} color="#9D9D9C" />
-                    </span>
-                  </Tooltip>
-                </TableCell>
-              )}
+              <TableCell component="th" scope="row" align="center">
+                <Tooltip followCursor title="Archivo Anulado.">
+                  <span>
+                    <MdListAlt size={25} color="#9D9D9C" />
+                  </span>
+                </Tooltip>
+              </TableCell>
+            )}
             <TableCell scope="row" component="th" align="center">
               <Grid container spacing={0}>
                 <Grid item xs={10}>
@@ -262,18 +260,18 @@ export default function ListArchivos() {
                       }}
                     />
                   ) : (
-                      <TextField
-                        size="small"
-                        id="path_archivo"
-                        label="Ruta de archivo"
-                        defaultValue={
-                          archivo.UserCompany.Company.ruta_archivo_venta
-                        }
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                    )}
+                    <TextField
+                      size="small"
+                      id="path_archivo"
+                      label="Ruta de archivo"
+                      defaultValue={
+                        archivo.UserCompany.Company.ruta_archivo_venta
+                      }
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  )}
                 </Grid>
                 <Grid item xs={1}>
                   <Tooltip followCursor title="Copiar Direccion">
@@ -298,14 +296,6 @@ export default function ListArchivos() {
         );
       });
   }
-
-  const Item = styled(Container)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  }));
 
   return (
     <LayoutSession titleModule="Archivos">
@@ -334,10 +324,9 @@ export default function ListArchivos() {
       >
         {/* Titulo */}
         <Grid item sx={{ pt: 2, pl: 2 }}>
-          <Typography variant="subtitles">Transacciones de Archivos</Typography>
+          <Typography variant="subtitles">Lista de Archivos</Typography>
         </Grid>
         <Divider variant="middle " />
-        {/* <Box sx={{ p: 2 }}></Box> */}
 
         {/* Select Company */}
         <Box sx={{ p: 2 }}>
@@ -367,10 +356,10 @@ export default function ListArchivos() {
                         {comp.nombre_company}
                       </MenuItem>
                     ) : (
-                        <MenuItem key={comp.id} value={comp.id}>
-                          {comp.nombre_company}
-                        </MenuItem>
-                      );
+                      <MenuItem key={comp.id} value={comp.id}>
+                        {comp.nombre_company}
+                      </MenuItem>
+                    );
                   })}
                 </Select>
               </FormControl>
@@ -379,91 +368,94 @@ export default function ListArchivos() {
         </Box>
 
         {/* Tabla */}
-
-        <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2} >
+        <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
           <Box gridColumn="span 12">
-            <Item>
-              <TableContainer sx={{ maxHeight: 440 }}>
-                <Table stickyHeader aria-label="sticky table" size="small">
-                  <TableHead>
+            <TableContainer sx={{ maxHeight: 440 }}>
+              <Table
+                sx={{ minWidth: 700 }}
+                stickyHeader
+                aria-label="sticky table"
+                size="small"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell component="th" align="center" className="order">
+                      <b>Codigo</b>
+                    </TableCell>
+                    <TableCell component="th" align="center">
+                      <b>Nombre archivo</b>
+                    </TableCell>
+                    <TableCell component="th" align="center" className="sort">
+                      <b>Tipo archivo</b>
+                    </TableCell>
+                    <TableCell component="th" align="center" className="sort">
+                      <b>Fecha</b>
+                    </TableCell>
+                    <TableCell component="th" align="center" className="sort">
+                      <b>Usuario</b>
+                    </TableCell>
+                    <TableCell component="th" align="center">
+                      <b>Compañia</b>
+                    </TableCell>
+                    <TableCell component="th" align="center" className="sort">
+                      <b>Estado</b>
+                    </TableCell>
+                    <TableCell component="th" align="center" className="sort">
+                      <b>Creación</b>
+                    </TableCell>
+                    <TableCell component="th" align="center">
+                      <b>Detalle</b>
+                    </TableCell>
+                    <TableCell component="th" align="center">
+                      <b>Ruta Doc.</b>
+                    </TableCell>
+                    <TableCell component="th" align="center"></TableCell>
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  {archivos.length === 0 ? (
                     <TableRow>
                       <TableCell
+                        sx={{ p: 2 }}
                         component="th"
+                        className="text-center"
+                        colSpan={11}
                         align="center"
-                        className="order"
                       >
-                        <b>Codigo</b>
+                        <MdOutlineTextSnippet size={35} />
+                        <Typography>
+                          No hay resultado de transacciones de archivos.
+                        </Typography>
                       </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>Nombre archivo</b>
-                      </TableCell>
-                      <TableCell component="th" align="center" className="sort">
-                        <b>Tipo archivo</b>
-                      </TableCell>
-                      <TableCell component="th" align="center" className="sort">
-                        <b>Fecha</b>
-                      </TableCell>
-                      <TableCell component="th" align="center" className="sort">
-                        <b>Usuario</b>
-                      </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>Compañia</b>
-                      </TableCell>
-                      <TableCell component="th" align="center" className="sort">
-                        <b>Estado</b>
-                      </TableCell>
-                      <TableCell component="th" align="center" className="sort">
-                        <b>Creación</b>
-                      </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>Detalle</b>
-                      </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>Ruta Doc.</b>
-                      </TableCell>
-                      <TableCell component="th" align="center"></TableCell>
                     </TableRow>
-                  </TableHead>
+                  ) : (
+                    archivos
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
-                  <TableBody>
-                    {archivos.length === 0 ? (
-                      <TableRow>
-                        <TableCell
-                          sx={{ p: 2 }}
-                          component="th"
-                          className="text-center"
-                          colSpan={11}
-                          align="center"
-                        >
-                          <MdOutlineTextSnippet size={25} />
-                          <Typography>
-                            No hay resultado de transacciones de archivos.
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                        archivos
-                      )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-
-              {/* <TablePaginationComponent children={archivos} /> */}
-              {list.length > 0 ? (
-                <TablePagination
-                  rowsPerPageOptions={[10, 50, 100, 500]}
-                  component="div"
-                  count={list.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-
-              ) : (
-                  <></>
-                )}
-            </Item>
+            {/* <TablePaginationComponent children={archivos} /> */}
+            {list.length > 0 ? (
+              <TablePagination
+                rowsPerPageOptions={[
+                  10,
+                  50,
+                  100,
+                  500,
+                  { value: -1, label: "Todas" },
+                ]}
+                component="div"
+                count={list.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            ) : (
+              <></>
+            )}
           </Box>
         </Box>
       </Paper>

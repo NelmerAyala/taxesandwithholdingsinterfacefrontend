@@ -1,4 +1,4 @@
-// Funcion para ordenar por id
+// Funcion para ordenar por Codigo
 function table_sortbyID() {
   const styleSheet = document.createElement("style");
   styleSheet.innerHTML = `

@@ -59,19 +59,7 @@ export default function Configuraciones() {
     const res = async () => {
       const resp = await listAdministradoresService();
       setAdministradores(resp.body);
-    };
-    res();
-  }, []);
 
-  // Al cambiar el valor del select de Companys
-  const handleChange = (e) => {
-    const { value } = e.target;
-    setSelectedAdministradores(value);
-  };
-
-  // Consultar Configuraciones
-  useEffect(() => {
-    const res = async () => {
       const res = await configuracionesService();
       setSelectedAdministradores(res.body.UserId);
       setTipoArchivoCompras(res.body.tipo_archivo_compras);
@@ -88,6 +76,12 @@ export default function Configuraciones() {
     };
     res();
   }, []);
+
+  // Al cambiar el valor del select de Companys
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setSelectedAdministradores(value);
+  };
 
   // Submit Actualizar Usuario
   const hadleSubmit = (e) => {
@@ -123,17 +117,14 @@ export default function Configuraciones() {
             setUsernameDb(configuracion.username_db);
             setPasswordUsernameDb(configuracion.password_username_db);
             setRutaPrincipalEndpoints(configuracion.ruta_principal_endpoints);
-
             resolve(res);
           } else {
             reject(res);
           }
         };
-
         respuesta();
       });
     };
-
     toast.dismiss();
     toast.promise(res, {
       pending: "Guardando configuración..",
@@ -266,13 +257,11 @@ export default function Configuraciones() {
                     {administradores.map((admin, index) => {
                       return index === 0 ? (
                         <MenuItem key={admin.id} value={admin.id}>
-                          {admin.username} - {admin.firstname}
-                          {admin.lastname}
+                          {admin.username} - {admin.firstname} {admin.lastname}
                         </MenuItem>
                       ) : (
                         <MenuItem key={admin.id} value={admin.id}>
-                          {admin.username} - {admin.firstname}
-                          {admin.lastname}
+                          {admin.username} - {admin.firstname} {admin.lastname}
                         </MenuItem>
                       );
                     })}
@@ -343,6 +332,7 @@ export default function Configuraciones() {
                       onChange={onChange}
                       type={shown ? "text" : "password"}
                       value={passwordUsernameDb}
+                      autoComplete="false"
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton onClick={switchShown}>

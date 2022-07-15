@@ -50,6 +50,10 @@ import CurrencyFormat from "react-currency-format";
 // format date
 import moment from "moment";
 
+// sort table
+import table_sortbyID from "../components/TableSortByID";
+import TableSort from "../components/TableSort";
+
 export default function ListVentas() {
   // Constantes
   const [isCheckAll, setIsCheckAll] = useState(false);
@@ -84,6 +88,8 @@ export default function ListVentas() {
 
             if (resp.body) {
               setList(resp.body.ventas);
+              table_sortbyID();
+              TableSort();
               resolve(resp);
             } else {
               setList([]);
@@ -217,13 +223,17 @@ export default function ListVentas() {
         return (
           <TableRow key={venta.id}>
             <TableCell component="th" scope="row" align="center">
-              <Checkbox
-                id={venta.id}
-                name={venta.numero_comprobante}
-                type="checkbox"
-                handleClick={handleClick}
-                isChecked={isCheck.includes(venta.id)}
-              />
+              <Tooltip followCursor title="Seleccionar">
+                <span>
+                  <Checkbox
+                    id={venta.id}
+                    name={venta.numero_comprobante}
+                    type="checkbox"
+                    handleClick={handleClick}
+                    isChecked={isCheck.includes(venta.id)}
+                  />
+                </span>
+              </Tooltip>
             </TableCell>
             <TableCell component="th" scope="row" align="center">
               {venta.numero_doc}
@@ -349,10 +359,10 @@ export default function ListVentas() {
                           {comp.nombre_company}
                         </MenuItem>
                       ) : (
-                          <MenuItem key={comp.id} value={comp.id}>
-                            {comp.nombre_company}
-                          </MenuItem>
-                        );
+                        <MenuItem key={comp.id} value={comp.id}>
+                          {comp.nombre_company}
+                        </MenuItem>
+                      );
                     })}
                   </Select>
                 </FormControl>
@@ -382,107 +392,125 @@ export default function ListVentas() {
                     </span>
                   </Tooltip>
                 ) : (
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      sx={{
-                        px: 5,
-                        borderRadius: "1rem",
-                        color: "white.main",
-                        textTransform: "none",
-                      }}
-                    >
-                      Generar Archivo
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      px: 5,
+                      borderRadius: "1rem",
+                      color: "white.main",
+                      textTransform: "none",
+                    }}
+                  >
+                    Generar Archivo
                   </Button>
-                  )}
+                )}
               </Grid>
             </Stack>
           </Box>
 
           {/* Tabla */}
-          <TableContainer sx={{ maxHeight: 440 }}>
-            <Table stickyHeader aria-label="sticky table" size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">
-                    <Checkbox
-                      color="primary"
-                      type="checkbox"
-                      name="selectAll"
-                      id="selectAll"
-                      handleClick={handleSelectAll}
-                      isChecked={isCheckAll}
-                    />
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>N° Doc</b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>N° Control</b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>N° Comprobante</b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>Tipoc Doc.</b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>Fecha emisión</b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>Rif</b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>Cliente</b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>Subtotal</b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>Impuesto</b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>Total</b>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
+          <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+            <Box gridColumn="span 12">
+              <TableContainer sx={{ maxHeight: 440 }}>
+                <Table
+                  sx={{ minWidth: 700 }}
+                  stickyHeader
+                  aria-label="sticky table"
+                  size="small"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">
+                        <Tooltip followCursor title="Seleccionar todos">
+                          <span>
+                            <Checkbox
+                              color="primary"
+                              type="checkbox"
+                              name="selectAll"
+                              id="selectAll"
+                              handleClick={handleSelectAll}
+                              isChecked={isCheckAll}
+                            />
+                          </span>
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell align="center">
+                        <b>N° Doc</b>
+                      </TableCell>
+                      <TableCell align="center">
+                        <b>N° Control</b>
+                      </TableCell>
+                      <TableCell align="center">
+                        <b>N° Comprobante</b>
+                      </TableCell>
+                      <TableCell align="center">
+                        <b>Tipoc Doc.</b>
+                      </TableCell>
+                      <TableCell align="center">
+                        <b>Fecha emisión</b>
+                      </TableCell>
+                      <TableCell align="center">
+                        <b>Rif</b>
+                      </TableCell>
+                      <TableCell align="center">
+                        <b>Cliente</b>
+                      </TableCell>
+                      <TableCell align="center">
+                        <b>Subtotal</b>
+                      </TableCell>
+                      <TableCell align="center">
+                        <b>Impuesto</b>
+                      </TableCell>
+                      <TableCell align="center">
+                        <b>Total</b>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
 
-              <TableBody>
-                {ventas.length === 0 ? (
-                  <TableRow>
-                    <TableCell
-                      sx={{ p: 2 }}
-                      component="th"
-                      className="text-center"
-                      colSpan={11}
-                      align="center"
-                    >
-                      <MdOutlineTextSnippet size={35} />
-                      <Typography>
-                        No hay resultado de transacciones de ventas.
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                    ventas
-                  )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          {list.length > 0 ? (
-            <TablePagination
-              rowsPerPageOptions={[10, 50, 100, 500]}
-              component="div"
-              count={list.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          ) : (
-              <></>
-            )}
+                  <TableBody>
+                    {ventas.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          sx={{ p: 2 }}
+                          component="th"
+                          className="text-center"
+                          colSpan={11}
+                          align="center"
+                        >
+                          <MdOutlineTextSnippet size={35} />
+                          <Typography>
+                            No hay resultado de transacciones de ventas.
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      ventas
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {list.length > 0 ? (
+                <TablePagination
+                  rowsPerPageOptions={[
+                    10,
+                    50,
+                    100,
+                    500,
+                    { value: -1, label: "Todas" },
+                  ]}
+                  component="div"
+                  count={list.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              ) : (
+                <></>
+              )}
+            </Box>
+          </Box>
         </Paper>
       </form>
     </LayoutSession>

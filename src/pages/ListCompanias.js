@@ -1,7 +1,7 @@
 // Nuevo
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Services
 import listCompaniasService from "../services/listCompaniasService";
@@ -17,8 +17,6 @@ import {
   Grid,
   Divider,
   Typography,
-  // Stack,
-  // Button,
   Tooltip,
   Table,
   TableBody,
@@ -26,15 +24,21 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  // MdOutlineAdd,
+  MdOutlineAdd,
+  Stack,
+  Button,
   MdOutlineModeEditOutline,
-  MdSync,
+  TablePagination,
 } from "../consts";
 
 export default function Configuraciones() {
   // Constantes
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [list, setList] = useState([]);
+
+  //Paginación
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Consulta de Compañía
   useEffect(() => {
@@ -48,13 +52,24 @@ export default function Configuraciones() {
   // Variables
   let listcompany = [];
 
+  // Handle cambiar pagina
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  // Handle cambiar fila por pagina
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
   // Comprobando si hubo error list.msg
   if (!list.msg) {
     listcompany = list.map((companias) => {
       return (
         <TableRow key={companias.id}>
           <TableCell component="th" scope="row" align="center">
-            <Typography sx={{ textTransform: "uppercase" }}>
+            <Typography>
               <b>{companias.nombre_company}</b>
             </Typography>
           </TableCell>
@@ -109,10 +124,10 @@ export default function Configuraciones() {
             </Typography>
           </Grid>
           <Divider variant="middle " />
+          <Box sx={{ p: 1 }} />
 
-          <Box sx={{ p: 2 }} />
           {/*  Boton */}
-          {/* <Box sx={{ p: 2 }}>
+          <Box sx={{ p: 2 }}>
             <Stack direction={{ xs: "column", sm: "row" }}>
               <Grid
                 container
@@ -131,82 +146,111 @@ export default function Configuraciones() {
                   variant="contained"
                   startIcon={<MdOutlineAdd />}
                 >
-                  Nuevo Compañia
+                  Registrar Compañia
                 </Button>
               </Grid>
             </Stack>
-          </Box> */}
+          </Box>
           {/* Tabla */}
-          <TableContainer sx={{ maxHeight: 440 }}>
-            <Table stickyHeader aria-label="sticky table" size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell
-                    component="th"
-                    className="text-center"
-                    align="center"
-                  >
-                    <b>Compañia</b>
-                  </TableCell>
-                  <TableCell
-                    component="th"
-                    className="text-center"
-                    align="center"
-                  >
-                    <b>Nomenclatura del TXT</b>
-                  </TableCell>
-                  <TableCell
-                    component="th"
-                    className="text-center"
-                    align="center"
-                  >
-                    <b>Codigo</b>
-                  </TableCell>
-                  <TableCell
-                    component="th"
-                    className="text-center"
-                    align="center"
-                  >
-                    <b>Ruta de Archivos Compra</b>
-                  </TableCell>
-                  <TableCell
-                    component="th"
-                    className="text-center"
-                    align="center"
-                  >
-                    <b>Ruta de Archivos Venta</b>
-                  </TableCell>
-                  <TableCell
-                    component="th"
-                    className="text-center"
-                    align="center"
-                  >
-                    <b>Editar</b>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {listcompany.length === 0 ? (
-                  <TableRow>
-                    <TableCell
-                      sx={{ p: 2 }}
-                      component="th"
-                      className="text-center"
-                      colSpan={6}
-                      align="center"
-                    >
-                      <MdSync size={35} />
-                      <br />
-                      <LinearProgress />
-                      <Typography>Cargando Compañias ... </Typography>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  listcompany
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+            <Box gridColumn="span 12">
+              <TableContainer sx={{ maxHeight: 440 }}>
+                <Table
+                  sx={{ minWidth: 700 }}
+                  stickyHeader
+                  aria-label="sticky table"
+                  size="small"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell
+                        component="th"
+                        className="text-center"
+                        align="center"
+                      >
+                        <b>Compañia</b>
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        className="text-center"
+                        align="center"
+                      >
+                        <b>Nomenclatura del TXT</b>
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        className="text-center"
+                        align="center"
+                      >
+                        <b>Codigo</b>
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        className="text-center"
+                        align="center"
+                      >
+                        <b>Ruta de Archivos Compra</b>
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        className="text-center"
+                        align="center"
+                      >
+                        <b>Ruta de Archivos Venta</b>
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        className="text-center"
+                        align="center"
+                      >
+                        <b>Editar</b>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {listcompany.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          sx={{ p: 2 }}
+                          component="th"
+                          className="text-center"
+                          colSpan={6}
+                          align="center"
+                        >
+                          <Box sx={{ m: 3, pt: 2 }}>
+                            <Typography>Cargando Compañias ... </Typography>
+                            <Box sx={{ p: 2 }} />
+                            <LinearProgress />
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      listcompany
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {list.length > 0 ? (
+                <TablePagination
+                  rowsPerPageOptions={[
+                    5,
+                    10,
+                    50,
+                    100,
+                    { value: -1, label: "All" },
+                  ]}
+                  component="div"
+                  count={list.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              ) : (
+                <></>
+              )}
+            </Box>
+          </Box>
         </Paper>
       </form>
     </LayoutSession>

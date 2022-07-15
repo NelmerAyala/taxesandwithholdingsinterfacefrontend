@@ -154,6 +154,13 @@ const LayoutSession = ({ children, titleModule }) => {
   // }, [userGet]);
 
   const location = useLocation();
+
+  var locationstr = location.pathname;
+  //slice locacion de archivos/ & usuarios/
+  var location_archivos_usuarios = locationstr.slice(0, 10);
+  //slice locacion de companias/
+  var location_companias = locationstr.slice(0, 11);
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -219,6 +226,7 @@ const LayoutSession = ({ children, titleModule }) => {
                         overflow: "visible",
                         filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                         mt: 1.5,
+                        py: 2,
                         "& .MuiAvatar-root": {
                           width: 20,
                           height: 20,
@@ -287,7 +295,8 @@ const LayoutSession = ({ children, titleModule }) => {
                         </MenuItemFlotante>
                         <MenuItemFlotante ruta="/archivos" name="Archivos">
                           <ListItemIcon>
-                            {"/archivos" === location.pathname ? (
+                            {"/archivos" === location.pathname ||
+                            "/archivos/" === location_archivos_usuarios ? (
                               <MdInsertDriveFile
                                 size="40"
                                 style={{ color: "#00BFB3" }}
@@ -306,7 +315,8 @@ const LayoutSession = ({ children, titleModule }) => {
                           <>
                             <MenuItemFlotante ruta="/usuarios" name="Perfiles">
                               <ListItemIcon>
-                                {"/usuarios" === location.pathname ? (
+                                {"/usuarios" === location.pathname ||
+                                "/usuarios/" === location_archivos_usuarios ? (
                                   <MdGroups
                                     size="40"
                                     style={{ color: "#00BFB3" }}
@@ -327,7 +337,8 @@ const LayoutSession = ({ children, titleModule }) => {
                               name="Companias"
                             >
                               <ListItemIcon>
-                                {"/companias" === location.pathname ? (
+                                {"/companias" === location.pathname ||
+                                "/companias/" === location_companias ? (
                                   <MdOutlineCorporateFare
                                     size="40"
                                     style={{ color: "#00BFB3" }}
@@ -617,13 +628,15 @@ const LayoutSession = ({ children, titleModule }) => {
                     justifyContent: "center",
                   }}
                 >
-                  {"/archivos" === location.pathname ? (
+                  {"/archivos" === location.pathname ||
+                  "/archivos/" === location_archivos_usuarios ? (
                     <MdInsertDriveFile size="25" style={{ color: "#00BFB3" }} />
                   ) : (
                     <MdInsertDriveFile size="25" />
                   )}
                 </ListItemIcon>
-                {"/archivos" === location.pathname ? (
+                {"/archivos" === location.pathname ||
+                "/archivos/" === location_archivos_usuarios ? (
                   <ListItemText
                     primary="Archivos TXT"
                     sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
@@ -659,13 +672,15 @@ const LayoutSession = ({ children, titleModule }) => {
                         justifyContent: "center",
                       }}
                     >
-                      {"/usuarios" === location.pathname ? (
+                      {"/usuarios" === location.pathname ||
+                      "/usuarios/" === location_archivos_usuarios ? (
                         <MdGroups size="25" style={{ color: "#00BFB3" }} />
                       ) : (
                         <MdGroups size="25" />
                       )}
                     </ListItemIcon>
-                    {"/usuarios" === location.pathname ? (
+                    {"/usuarios" === location.pathname ||
+                    "/usuarios/" === location_archivos_usuarios ? (
                       <ListItemText
                         primary="Perfiles"
                         sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
@@ -705,7 +720,8 @@ const LayoutSession = ({ children, titleModule }) => {
                         justifyContent: "center",
                       }}
                     >
-                      {"/companias" === location.pathname ? (
+                      {"/companias" === location.pathname ||
+                      "/companias/" === location_companias ? (
                         <MdOutlineCorporateFare
                           size="25"
                           style={{ color: "#00BFB3" }}
@@ -714,7 +730,8 @@ const LayoutSession = ({ children, titleModule }) => {
                         <MdOutlineCorporateFare size="25" />
                       )}
                     </ListItemIcon>
-                    {"/companias" === location.pathname ? (
+                    {"/companias" === location.pathname ||
+                    "/companias/" === location_companias ? (
                       <ListItemText
                         primary="Compañias"
                         sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
