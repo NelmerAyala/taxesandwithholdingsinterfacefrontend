@@ -51,7 +51,7 @@ import CurrencyFormat from "react-currency-format";
 import moment from "moment";
 
 // sort table
-import table_sortbyID from "../components/TableSortByID";
+import TableOrder from "../components/TableOrder";
 import TableSort from "../components/TableSort";
 
 export default function ListVentas() {
@@ -85,12 +85,11 @@ export default function ListVentas() {
         return new Promise((resolve, reject) => {
           const respuesta = async () => {
             const resp = await listVentasService(selectedCompany);
-
             if (resp.body) {
               setList(resp.body.ventas);
-              table_sortbyID();
-              TableSort();
               resolve(resp);
+              TableOrder();
+              TableSort();
             } else {
               setList([]);
               reject(resp);
@@ -126,6 +125,7 @@ export default function ListVentas() {
       if (selectedCompany === "DEFAULT") {
         setList([]);
       }
+
     }
   }, [selectedCompany]);
 
@@ -248,7 +248,7 @@ export default function ListVentas() {
               {venta.TipoDocumento.tipo_doc}
             </TableCell>
             <TableCell component="th" scope="row" align="center">
-              {moment(venta.fecha_doc).format("DD-MM-YYYY")}
+              {moment(venta.fecha_archivo).format("YYYY-MM-DD")}
             </TableCell>
             <TableCell component="th" scope="row" align="center">
               {venta.numero_rif}
@@ -359,10 +359,10 @@ export default function ListVentas() {
                           {comp.nombre_company}
                         </MenuItem>
                       ) : (
-                        <MenuItem key={comp.id} value={comp.id}>
-                          {comp.nombre_company}
-                        </MenuItem>
-                      );
+                          <MenuItem key={comp.id} value={comp.id}>
+                            {comp.nombre_company}
+                          </MenuItem>
+                        );
                     })}
                   </Select>
                 </FormControl>
@@ -392,19 +392,19 @@ export default function ListVentas() {
                     </span>
                   </Tooltip>
                 ) : (
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{
-                      px: 5,
-                      borderRadius: "1rem",
-                      color: "white.main",
-                      textTransform: "none",
-                    }}
-                  >
-                    Generar Archivo
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{
+                        px: 5,
+                        borderRadius: "1rem",
+                        color: "white.main",
+                        textTransform: "none",
+                      }}
+                    >
+                      Generar Archivo
                   </Button>
-                )}
+                  )}
               </Grid>
             </Stack>
           </Box>
@@ -435,35 +435,71 @@ export default function ListVentas() {
                           </span>
                         </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        <b>N° Doc</b>
+                      <TableCell align="center" className="order">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>N° Doc</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        <b>N° Control</b>
+                      <TableCell align="center" className="order">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>N° Control</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        <b>N° Comprobante</b>
+                      <TableCell align="center" className="order">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>N° Comprobante</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        <b>Tipoc Doc.</b>
+                      <TableCell align="center" className="sort">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Tipoc Doc.</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        <b>Fecha emisión</b>
+                      <TableCell align="center" className="sort">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Fecha emisión</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        <b>Rif</b>
+                      <TableCell align="center" className="order">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Rif</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
                       <TableCell align="center">
                         <b>Cliente</b>
                       </TableCell>
-                      <TableCell align="center">
-                        <b>Subtotal</b>
+                      <TableCell align="center" className="order">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Subtotal</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        <b>Impuesto</b>
+                      <TableCell align="center" className="order">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Impuesto</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        <b>Total</b>
+                      <TableCell align="center" className="order">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Total</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -485,8 +521,8 @@ export default function ListVentas() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      ventas
-                    )}
+                        ventas
+                      )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -507,8 +543,8 @@ export default function ListVentas() {
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               ) : (
-                <></>
-              )}
+                  <></>
+                )}
             </Box>
           </Box>
         </Paper>

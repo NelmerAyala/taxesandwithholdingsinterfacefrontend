@@ -52,7 +52,7 @@ import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 
 // sort table
-import table_sortbyID from "../components/TableSortByID";
+import TableOrder from "../components/TableOrder";
 import TableSort from "../components/TableSort";
 
 export default function ListArchivos() {
@@ -148,7 +148,7 @@ export default function ListArchivos() {
       if (selectedCompany === "DEFAULT") {
         setList([]);
       }
-      table_sortbyID();
+      TableOrder();
       TableSort();
     }
   }, [selectedCompany]);
@@ -209,22 +209,22 @@ export default function ListArchivos() {
                 </Typography>
               </TableCell>
             ) : (
-              <TableCell component="th" scope="row" align="center">
-                <Typography variant="h7" color="#F9A719">
-                  Anulado
+                <TableCell component="th" scope="row" align="center">
+                  <Typography variant="h7" color="#F9A719">
+                    Anulado
                 </Typography>
-              </TableCell>
-            )}
+                </TableCell>
+              )}
 
             {archivo.automatico === true ? (
               <TableCell component="th" scope="row" align="center">
                 <span className="msjGenerado"> Automática </span>
               </TableCell>
             ) : (
-              <TableCell component="th" scope="row" align="center">
-                Manual
+                <TableCell component="th" scope="row" align="center">
+                  Manual
               </TableCell>
-            )}
+              )}
             {archivo.status === 1 ? (
               <TableCell component="th" scope="row" align="center">
                 <Link to={`./detalles/${archivo.id}`}>
@@ -236,14 +236,14 @@ export default function ListArchivos() {
                 </Link>
               </TableCell>
             ) : (
-              <TableCell component="th" scope="row" align="center">
-                <Tooltip followCursor title="Archivo Anulado.">
-                  <span>
-                    <MdListAlt size={25} color="#9D9D9C" />
-                  </span>
-                </Tooltip>
-              </TableCell>
-            )}
+                <TableCell component="th" scope="row" align="center">
+                  <Tooltip followCursor title="Archivo Anulado.">
+                    <span>
+                      <MdListAlt size={25} color="#9D9D9C" />
+                    </span>
+                  </Tooltip>
+                </TableCell>
+              )}
             <TableCell scope="row" component="th" align="center">
               <Grid container spacing={0}>
                 <Grid item xs={10}>
@@ -260,18 +260,18 @@ export default function ListArchivos() {
                       }}
                     />
                   ) : (
-                    <TextField
-                      size="small"
-                      id="path_archivo"
-                      label="Ruta de archivo"
-                      defaultValue={
-                        archivo.UserCompany.Company.ruta_archivo_venta
-                      }
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  )}
+                      <TextField
+                        size="small"
+                        id="path_archivo"
+                        label="Ruta de archivo"
+                        defaultValue={
+                          archivo.UserCompany.Company.ruta_archivo_venta
+                        }
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    )}
                 </Grid>
                 <Grid item xs={1}>
                   <Tooltip followCursor title="Copiar Direccion">
@@ -356,10 +356,10 @@ export default function ListArchivos() {
                         {comp.nombre_company}
                       </MenuItem>
                     ) : (
-                      <MenuItem key={comp.id} value={comp.id}>
-                        {comp.nombre_company}
-                      </MenuItem>
-                    );
+                        <MenuItem key={comp.id} value={comp.id}>
+                          {comp.nombre_company}
+                        </MenuItem>
+                      );
                   })}
                 </Select>
               </FormControl>
@@ -380,28 +380,52 @@ export default function ListArchivos() {
                 <TableHead>
                   <TableRow>
                     <TableCell component="th" align="center" className="order">
-                      <b>Codigo</b>
+                      <Tooltip followCursor title="Ordenar">
+                        <span>
+                          <b>Codigo</b>
+                        </span>
+                      </Tooltip>
                     </TableCell>
                     <TableCell component="th" align="center">
                       <b>Nombre archivo</b>
                     </TableCell>
                     <TableCell component="th" align="center" className="sort">
-                      <b>Tipo archivo</b>
+                      <Tooltip followCursor title="Ordenar">
+                        <span>
+                          <b>Tipo archivo</b>
+                        </span>
+                      </Tooltip>
                     </TableCell>
                     <TableCell component="th" align="center" className="sort">
-                      <b>Fecha</b>
+                      <Tooltip followCursor title="Ordenar">
+                        <span>
+                          <b>Fecha</b>
+                        </span>
+                      </Tooltip>
                     </TableCell>
                     <TableCell component="th" align="center" className="sort">
-                      <b>Usuario</b>
+                      <Tooltip followCursor title="Ordenar">
+                        <span>
+                          <b>Usuario</b>
+                        </span>
+                      </Tooltip>
                     </TableCell>
                     <TableCell component="th" align="center">
                       <b>Compañia</b>
                     </TableCell>
                     <TableCell component="th" align="center" className="sort">
-                      <b>Estado</b>
+                      <Tooltip followCursor title="Ordenar">
+                        <span>
+                          <b>Estado</b>
+                        </span>
+                      </Tooltip>
                     </TableCell>
                     <TableCell component="th" align="center" className="sort">
-                      <b>Creación</b>
+                      <Tooltip followCursor title="Ordenar">
+                        <span>
+                          <b>Creación</b>
+                        </span>
+                      </Tooltip>
                     </TableCell>
                     <TableCell component="th" align="center">
                       <b>Detalle</b>
@@ -430,8 +454,8 @@ export default function ListArchivos() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    archivos
-                  )}
+                      archivos
+                    )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -454,8 +478,8 @@ export default function ListArchivos() {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             ) : (
-              <></>
-            )}
+                <></>
+              )}
           </Box>
         </Box>
       </Paper>

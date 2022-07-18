@@ -50,6 +50,10 @@ import CurrencyFormat from "react-currency-format";
 // format date
 import moment from "moment";
 
+// sort table
+import TableOrder from "../components/TableOrder";
+import TableSort from "../components/TableSort";
+
 export default function ListCompras() {
   // Constantes
   const [isCheckAll, setIsCheckAll] = useState(false);
@@ -82,10 +86,11 @@ export default function ListCompras() {
         return new Promise((resolve, reject) => {
           const respuesta = async () => {
             const resp = await listComprasService(selectedCompany);
-
             if (resp.body) {
               setList(resp.body.compras);
               resolve(resp);
+              TableOrder();
+              TableSort();
             } else {
               setList([]);
               reject(resp);
@@ -124,7 +129,9 @@ export default function ListCompras() {
       if (selectedCompany === "DEFAULT") {
         setList([]);
       }
+
     }
+
   }, [selectedCompany]);
 
   // Submit Generar Archivo
@@ -246,7 +253,7 @@ export default function ListCompras() {
               {compra.TipoDocumento.tipo_doc}
             </TableCell>
             <TableCell component="th" scope="row" align="center">
-              {moment(compra.fecha_doc).format("DD-MM-YYYY")}
+              {moment(compra.fecha_archivo).format("YYYY-MM-DD")}
             </TableCell>
             <TableCell component="th" scope="row" align="center">
               {compra.numero_rif}
@@ -359,10 +366,10 @@ export default function ListCompras() {
                           {comp.nombre_company}
                         </MenuItem>
                       ) : (
-                        <MenuItem key={comp.id} value={comp.id}>
-                          {comp.nombre_company}
-                        </MenuItem>
-                      );
+                          <MenuItem key={comp.id} value={comp.id}>
+                            {comp.nombre_company}
+                          </MenuItem>
+                        );
                     })}
                   </Select>
                 </FormControl>
@@ -392,19 +399,19 @@ export default function ListCompras() {
                     </span>
                   </Tooltip>
                 ) : (
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{
-                      px: 5,
-                      borderRadius: "1rem",
-                      color: "white.main",
-                      textTransform: "none",
-                    }}
-                  >
-                    Generar Archivo
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{
+                        px: 5,
+                        borderRadius: "1rem",
+                        color: "white.main",
+                        textTransform: "none",
+                      }}
+                    >
+                      Generar Archivo
                   </Button>
-                )}
+                  )}
               </Grid>
             </Stack>
           </Box>
@@ -435,32 +442,90 @@ export default function ListCompras() {
                           </span>
                         </Tooltip>
                       </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>N° Doc</b>
+
+                      <TableCell
+                        component="th"
+                        align="center"
+                        className="order"
+                      >
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>N° Doc</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>N° Control</b>
+
+                      <TableCell
+                        component="th"
+                        align="center"
+                        className="order"
+                      >
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>N° Control</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>Tipoc Doc.</b>
+                      <TableCell component="th" align="center" className="sort">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Tipoc Doc.</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>Fecha emisión</b>
+                      <TableCell component="th" align="center" className="sort">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Fecha emisión</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>Rif</b>
+                      <TableCell
+                        component="th"
+                        align="center"
+                        className="order"
+                      >
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Rif</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
                       <TableCell component="th" align="center">
                         <b>Proveedor</b>
                       </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>Subtotal</b>
+                      <TableCell
+                        component="th"
+                        align="center"
+                        className="order"
+                      >
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Subtotal</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>Impuesto</b>
+                      <TableCell
+                        component="th"
+                        align="center"
+                        className="order"
+                      >
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Impuesto</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell component="th" align="center">
-                        <b>Total</b>
+                      <TableCell
+                        component="th"
+                        align="center"
+                        className="order"
+                      >
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Total</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -482,8 +547,8 @@ export default function ListCompras() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      compras
-                    )}
+                        compras
+                      )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -504,8 +569,8 @@ export default function ListCompras() {
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               ) : (
-                <></>
-              )}
+                  <></>
+                )}
             </Box>
           </Box>
         </Paper>

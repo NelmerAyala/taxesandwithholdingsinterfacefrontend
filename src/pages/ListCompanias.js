@@ -10,6 +10,10 @@ import listCompaniasService from "../services/listCompaniasService";
 import LayoutSession from "../layout/LayoutSession";
 import LinearProgress from "@mui/material/LinearProgress";
 
+// sort table
+import TableOrder from "../components/TableOrder";
+import TableSort from "../components/TableSort";
+
 // External components
 import {
   Paper,
@@ -46,6 +50,8 @@ export default function Configuraciones() {
       const resp = await listCompaniasService();
       setList(resp.body.companias);
     };
+    TableOrder();
+    TableSort();
     res();
   }, []);
 
@@ -65,7 +71,7 @@ export default function Configuraciones() {
 
   // Comprobando si hubo error list.msg
   if (!list.msg) {
-    listcompany = list.map((companias) => {
+    listcompany = list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((companias) => {
       return (
         <TableRow key={companias.id}>
           <TableCell component="th" scope="row" align="center">
@@ -163,46 +169,34 @@ export default function Configuraciones() {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell
-                        component="th"
-                        className="text-center"
-                        align="center"
-                      >
-                        <b>Compañia</b>
+                      <TableCell component="th" align="center" className="sort">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Compañia</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell
-                        component="th"
-                        className="text-center"
-                        align="center"
-                      >
-                        <b>Nomenclatura del TXT</b>
+                      <TableCell component="th" className="sort" align="center">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Nomenclatura del TXT</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell
-                        component="th"
-                        className="text-center"
-                        align="center"
-                      >
-                        <b>Codigo</b>
+                      <TableCell component="th" className="sort" align="center">
+                        <Tooltip followCursor title="Ordenar">
+                          <span>
+                            <b>Codigo</b>
+                          </span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell
-                        component="th"
-                        className="text-center"
-                        align="center"
-                      >
+                      <TableCell component="th" align="center">
                         <b>Ruta de Archivos Compra</b>
                       </TableCell>
-                      <TableCell
-                        component="th"
-                        className="text-center"
-                        align="center"
-                      >
+                      <TableCell component="th" align="center">
                         <b>Ruta de Archivos Venta</b>
                       </TableCell>
-                      <TableCell
-                        component="th"
-                        className="text-center"
-                        align="center"
-                      >
+                      <TableCell component="th" align="center">
                         <b>Editar</b>
                       </TableCell>
                     </TableRow>
@@ -213,7 +207,6 @@ export default function Configuraciones() {
                         <TableCell
                           sx={{ p: 2 }}
                           component="th"
-                          className="text-center"
                           colSpan={6}
                           align="center"
                         >
@@ -225,18 +218,18 @@ export default function Configuraciones() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      listcompany
-                    )}
+                        listcompany
+                      )}
                   </TableBody>
                 </Table>
               </TableContainer>
               {list.length > 0 ? (
                 <TablePagination
                   rowsPerPageOptions={[
-                    5,
                     10,
                     50,
                     100,
+                    500,
                     { value: -1, label: "All" },
                   ]}
                   component="div"
@@ -247,8 +240,8 @@ export default function Configuraciones() {
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               ) : (
-                <></>
-              )}
+                  <></>
+                )}
             </Box>
           </Box>
         </Paper>

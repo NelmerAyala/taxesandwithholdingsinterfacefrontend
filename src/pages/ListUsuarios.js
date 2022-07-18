@@ -13,6 +13,10 @@ import "react-toastify/dist/ReactToastify.css";
 // Layout
 import LayoutSession from "../layout/LayoutSession";
 
+// sort table
+import TableOrder from "../components/TableOrder";
+import TableSort from "../components/TableSort";
+
 // External components
 import {
   Box,
@@ -58,6 +62,8 @@ export default function ListUsuarios() {
         return new Promise((resolve, reject) => {
           const respuesta = async () => {
             const resp = await listUsuariosService(selectedCompany);
+            TableOrder();
+            TableSort();
             if (resp.body) {
               setList(resp.body.users);
               resolve(resp);
@@ -99,6 +105,7 @@ export default function ListUsuarios() {
       if (selectedCompany === "DEFAULT") {
         setList([]);
       }
+
     }
   }, [selectedCompany]);
 
@@ -229,10 +236,10 @@ export default function ListUsuarios() {
                         {comp.nombre_company}
                       </MenuItem>
                     ) : (
-                      <MenuItem key={comp.id} value={comp.id}>
-                        {comp.nombre_company}
-                      </MenuItem>
-                    );
+                        <MenuItem key={comp.id} value={comp.id}>
+                          {comp.nombre_company}
+                        </MenuItem>
+                      );
                   })}
                 </Select>
               </FormControl>
@@ -274,36 +281,20 @@ export default function ListUsuarios() {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell
-                      component="th"
-                      className="text-center"
-                      align="center"
-                    >
-                      <b>Nombre Completo</b>
+                    <TableCell component="th" className="sort" align="center">
+                      <Tooltip followCursor title="Ordenar">
+                        <span>
+                          <b>Nombre Completo</b>
+                        </span>
+                      </Tooltip>
                     </TableCell>
-                    <TableCell
-                      component="th"
-                      className="text-center"
-                      align="center"
-                    >
+                    <TableCell component="th" align="center">
                       <b>Correo</b>
                     </TableCell>
-                    <TableCell
-                      component="th"
-                      className="text-center"
-                      align="center"
-                    >
+                    <TableCell component="th" align="center">
                       <b>Empresa</b>
                     </TableCell>
-                    {/* <TableCell align="center">Compras</TableCell>
-                                            <TableCell align="center">Ventas</TableCell>
-                                            <TableCell align="center">Anular</TableCell>
-                                            <TableCell align="center">Administrador</TableCell> */}
-                    <TableCell
-                      component="th"
-                      className="text-center"
-                      align="center"
-                    >
+                    <TableCell component="th" align="center">
                       <b>Editar</b>
                     </TableCell>
                   </TableRow>
@@ -314,7 +305,6 @@ export default function ListUsuarios() {
                       <TableCell
                         sx={{ p: 2 }}
                         component="th"
-                        className="text-center"
                         colSpan={4}
                         align="center"
                       >
@@ -323,8 +313,8 @@ export default function ListUsuarios() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    listusuarios
-                  )}
+                      listusuarios
+                    )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -346,8 +336,8 @@ export default function ListUsuarios() {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             ) : (
-              <></>
-            )}
+                <></>
+              )}
           </Box>
         </Box>
       </Paper>

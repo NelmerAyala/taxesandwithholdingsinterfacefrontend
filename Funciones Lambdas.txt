@@ -95,10 +95,16 @@
     #3. Funcion: generateTxtVentasAll (Automatico)
         mave-msventas-lbda-generateTxtVentasAll-app-gir
 
----------- GENERAR TXT S3 ----------
+---------- GENERAR/ELIMINAR TXT S3 ----------
 
         mave-mstxt-lbda-addObjectBucket-app-gir
 
+        mave-mstxt-lbda-deleteObjectBucket-app-
+        
+---------- OTROS CREDITOS ----------
+
+    mave-msotroscreditos-lbda-getOtrosCreditos-app-gir
+    
 ---------- BUCKET S3 ----------
 
         mave-bucket-s3-txt-app-gir
@@ -111,10 +117,11 @@ Evento:
     mave-mstxtautomatico-evt-generateTxtAll-app-gir
         
 Apigateway Procesos automaticos:
+
     Compras: https://xddr3e2ar9.execute-api.us-east-1.amazonaws.com/api-app-gir/compras/generartxt/automatico
     Ventas:  https://xddr3e2ar9.execute-api.us-east-1.amazonaws.com/api-app-gir/ventas/generartxt/automatico
 
 TOTAL: 
-    29  FUNCIONES LAMBDAS 
+    31  FUNCIONES LAMBDAS 
     1   BUCKET
     1   EVENTO

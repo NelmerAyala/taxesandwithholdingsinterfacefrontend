@@ -514,11 +514,15 @@ export default function DetailsArchivos() {
                                     </span>
                                   </Tooltip>
                                 ) : compra.status_compra === 2 ? (
-                                  <MdDeleteForever
-                                    size={26}
-                                    color="#E20613"
-                                    name={"Eliminado"}
-                                  />
+                                  <Tooltip title="Documento Anulado en Softland">
+                                    <span>
+                                      <MdDeleteForever
+                                        size={26}
+                                        color="#E20613"
+                                        name={"Eliminado"}
+                                      />
+                                    </span>
+                                  </Tooltip>
                                 ) : (
                                   "Estatus desconocido"
                                 )}
