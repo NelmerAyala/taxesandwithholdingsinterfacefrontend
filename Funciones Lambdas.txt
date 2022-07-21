@@ -1,117 +1,120 @@
 ---------- ARCHIVOS ----------
 
-    #1. Funcion: getArchivos  
+    #1. Funcion: getArchivos  / Tiempo de Ejecucion: 6seg
         mave-msarchivos-lbda-getArchivos-app-gir
 
-    #2. Funcion: getDetallesArchivoById   
+    #2. Funcion: getDetallesArchivoById / Tiempo de Ejecucion: 6seg
         mave-msarchivos-lbda-getDetallesArchivoById-app-gir
 
-    #3. Funcion: anularTransaccionById 
-        mave-msarchivos-lbda-anularTransaccionById-app-gir
+    #3. Funcion: anularTransaccionById / Tiempo de Ejecucion: 10seg
+        mave-msarchivos-lbda-anularTransaccionById-app-gir      
 
-    #4. Funcion: createArchivoInGenerate 
+    #4. Funcion: createArchivoInGenerate / Tiempo de Ejecucion: 2seg
         mave-msarchivos-lbda-createArchivoInGenerate-app-gir      
 
 ---------- AUTENTICACION ----------
 
-    #1. Funcion: getAuthState 
+    #1. Funcion: getAuthState / Tiempo de Ejecucion: 6seg
         mave-msautenticacion-lbda-getAuthState-app-gir
 
-    #2. Funcion: Login  
+    #2. Funcion: Login / Tiempo de Ejecucion: 6seg
         mave-msautenticacion-lbda-login-app-gir        
         
 ---------- COMPAÑIAS ----------
 
-    #1. Funcion: getCompaniaById
+    #1. Funcion: getCompaniaById / Tiempo de Ejecucion: 6seg
         mave-mscompanias-lbda-getCompaniaById-app-gir
 
-    #2. Funcion: getCompanias
+    #2. Funcion: getCompanias / Tiempo de Ejecucion: 6seg
         mave-mscompanias-lbda-getCompanias-app-gir
 
-    #3. Funcion: updateCompaniasbyID 
+    #3. Funcion: updateCompaniasbyID / Tiempo de Ejecucion: 6seg
         mave-mscompanias-lbda-updateCompaniasbyID-app-gir
 
-    #4. Funcion: createCompania 
+    #4. Funcion: createCompania / Tiempo de Ejecucion: 6seg
         mave-mscompanias-lbda-createCompania-app-gir
 
 ---------- COMPRAS ----------
         
-    #1. Funcion: getCompras
+    #1. Funcion: getCompras / Tiempo de Ejecucion: 6seg
         mave-mscompras-lbda-getCompras-app-gir
 
-    #2. Funcion: generateTxtCompras (Asistido)
+    #2. Funcion: generateTxtCompras (Asistido) / Tiempo de Ejecucion: 10seg
         mave-mscompras-lbda-generateTxtCompras-app-gir
 
-    #3. Funcion: generateTxtComprasAll (Automatico)
+    #3. Funcion: generateTxtComprasAll (Automatico) / Tiempo de Ejecucion: 10seg
         mave-mscompras-lbda-generateTxtComprasAll-app-gir
         
 ---------- CONFIGURACIONES ----------
 
-    #1. Funcion: getConfiguraciones 
+    #1. Funcion: getConfiguraciones / Tiempo de Ejecucion: 6seg
         mave-msconfiguraciones-lbda-getConfiguraciones-app-gir
         
-    #2. Funcion: updateConfiguracion 
+    #2. Funcion: updateConfiguracion / Tiempo de Ejecucion: 6seg
         mave-msconfiguraciones-lbda-updateConfiguracion-app-gir
+
+---------- OTROS CREDITOS ----------
+
+    #1. Funcion: OtrosCreditos /Tiempo de Ejecucion: 3seg
+        mave-msotroscreditos-lbda-getOtrosCreditos-app-gir
 
 ---------- PRIVILEGIOS ----------
 
-    #1. Funcion: getPrivilegios 
+    #1. Funcion: getPrivilegios / Tiempo de Ejecucion: 5seg
         mave-msprivilegios-lbda-getPrivilegios-app-gir 
 
+---------- GENERAR/ELIMINAR TXT S3 ----------
+
+    Tiempo de Ejecucion: 2seg
+        mave-mstxt-lbda-addObjectBucket-app-gir
+
+    Tiempo de Ejecucion: 3seg
+        mave-mstxt-lbda-deleteObjectBucket-app-
+
+---------- LLAMAR LAMBDAS AUTOMATICAS ----------
+
+    Tiempo de Ejecucion: 6seg
+        mave-mstxtautomatico-lbda-generateTxtAll-app-gir
+  
 ---------- USUARIOS ----------
 
-    #1. Funcion: createUser (Admin)
+    #1. Funcion: createUser (Admin) / Tiempo de Ejecucion: 7seg
         mave-msusuarios-lbda-createUser-app-gir
 
-    #2. Funcion: getAdministradores (SuperAdmin)
+    #2. Funcion: getAdministradores (SuperAdmin) / Tiempo de Ejecucion: 6seg
         mave-msusuarios-lbda-getAdministradores-app-gir
 
-    #3. Funcion: getUser (Perfil)
+    #3. Funcion: getUser (Perfil) / Tiempo de Ejecucion: 6seg
         mave-msusuarios-lbda-getUser-app-gir
 
-    #4. Funcion: updateUser (Perfil)
+    #4. Funcion: updateUser (Perfil) / Tiempo de Ejecucion: 6seg
         mave-msusuarios-lbda-updateUser-app-gir
 
-    #5. Funcion: updateUserPassword (Perfil)
+    #5. Funcion: updateUserPassword (Perfil) / Tiempo de Ejecucion: 6seg
         mave-msusuarios-lbda-updateUserPassword-app-gir
 
-    #6. Funcion: getUsersAdmin (Admin) 
+    #6. Funcion: getUsersAdmin (Admin) / Tiempo de Ejecucion: 6seg
         mave-msusuarios-lbda-getUsersAdmin-app-gir  
 
-    #7. Funcion: getUserByIdAdmin (Admin)
+    #7. Funcion: getUserByIdAdmin (Admin) / Tiempo de Ejecucion: 6seg
         mave-msusuarios-lbda-getUserByIdAdmin-app-gir
 
-    #8. Funcion: updateUserAdmin (Admin)
+    #8. Funcion: updateUserAdmin (Admin) / Tiempo de Ejecucion: 6seg
         mave-msusuarios-lbda-updateUserAdmin-app-gir
 
 ---------- VENTAS ----------
 
-    #1. Funcion: getVentas
+    #1. Funcion: getVentas / Tiempo de Ejecucion: 6seg
         mave-msventas-lbda-getVentas-app-gir
 
-    #2. Funcion: generateTxtVentas (Asistido)
+    #2. Funcion: generateTxtVentas (Asistido) / Tiempo de Ejecucion: 10seg
         mave-msventas-lbda-generateTxtVentas-app-gir
 
-    #3. Funcion: generateTxtVentasAll (Automatico)
+    #3. Funcion: generateTxtVentasAll (Automatico) / Tiempo de Ejecucion: 10seg
         mave-msventas-lbda-generateTxtVentasAll-app-gir
-
----------- GENERAR/ELIMINAR TXT S3 ----------
-
-        mave-mstxt-lbda-addObjectBucket-app-gir
-
-        mave-mstxt-lbda-deleteObjectBucket-app-
-        
----------- OTROS CREDITOS ----------
-
-    mave-msotroscreditos-lbda-getOtrosCreditos-app-gir
-    
----------- BUCKET S3 ----------
-
+   
+BUCKET S3:
         mave-bucket-s3-txt-app-gir
-
----------- LLAMAR LAMBDAS AUTOMATICAS ----------
-
-        mave-mstxtautomatico-lbda-generateTxtAll-app-gir
 
 Evento:
     mave-mstxtautomatico-evt-generateTxtAll-app-gir

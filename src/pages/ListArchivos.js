@@ -13,9 +13,6 @@ import LayoutSession from "../layout/LayoutSession";
 import listArchivosService from "../services/listArchivosService";
 import listCompaniasService from "../services/listCompaniasService";
 
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
 // External components
 import {
   Box,
@@ -42,6 +39,8 @@ import {
   Select,
   MenuItem,
   Tooltip,
+  Snackbar,
+  MuiAlert,
 } from "../consts";
 
 // Notificaciones
@@ -123,22 +122,18 @@ export default function ListArchivos() {
         pending: "Consultando Archivos..",
         success: {
           render({ data }) {
-            let msg;
+            let msg = "Consulta Archivos exitosa..!!";
             if (data.body.msg) {
               msg = data.body.msg;
-            } else {
-              msg = "Consulta Archivos exitosa..!!";
             }
             return msg;
           },
         },
         error: {
           render({ data }) {
-            let msg;
+            let msg = "Error: Consulta de Archivos NO Realizada.!!";
             if (data.errors.msg) {
               msg = `Error: ` + data.errors.msg;
-            } else {
-              msg = "Error: Consulta de Archivos NO realizada.";
             }
             return msg;
           },
@@ -470,7 +465,6 @@ export default function ListArchivos() {
               </Table>
             </TableContainer>
 
-            {/* <TablePaginationComponent children={archivos} /> */}
             {list.length > 0 ? (
               <TablePagination
                 rowsPerPageOptions={[

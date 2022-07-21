@@ -103,10 +103,10 @@ export default function Login() {
             <Grid container component="main">
               <Grid
                 item
-                xs={5}
                 sm={5}
                 md={5}
                 sx={{
+                  display: { xs: "none", sm: "block" },
                   backgroundImage: "url(" + portadaLogin + ")",
                   backgroundRepeat: "no-repeat",
                   backgroundColor: (t) =>
@@ -119,7 +119,7 @@ export default function Login() {
               />
               <Grid
                 item
-                xs={7}
+                xs={12}
                 sm={7}
                 md={7}
                 component={Paper}
@@ -230,10 +230,6 @@ export default function Login() {
                       >
                         Ingresar
                       </Button>
-                      {/* <Grid container sx={{ mt: 5 }}>
-                      <Grid item xs>
-                      </Grid>
-                    </Grid> */}
                     </Box>
                   )}
                   {hasLoginError && (
@@ -244,7 +240,7 @@ export default function Login() {
                     >
                       <Divider />
                       <strong className="text-primary">
-                        Usuario o contraseña invalida
+                        Usuario o Contraseña Incorrectos
                       </strong>
                     </Box>
                   )}

@@ -162,22 +162,18 @@ export default function DetailsUser() {
       pending: "Guardando actualizacion de usuario..",
       success: {
         render({ data }) {
-          let msg;
+          let msg = "Actualización de Usuario Exitosa..!!";
           if (data.body.msg) {
             msg = data.body.msg;
-          } else {
-            msg = "Actualización de usuario exitosa..!!";
           }
           return msg;
         },
       },
       error: {
         render({ data }) {
-          let msg;
+          let msg = "Error: En la actualizacion de usuario.";
           if (data.errors.msg) {
             msg = `Error: ` + data.errors.msg;
-          } else {
-            msg = "Error: En la actualizacion de usuario.";
           }
           return msg;
         },

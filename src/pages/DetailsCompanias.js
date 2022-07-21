@@ -110,25 +110,21 @@ export default function DetailsUser() {
     };
     toast.dismiss();
     toast.promise(res, {
-      pending: "Guardando actualizacion de Compañia..",
+      pending: "Guardando Actualizacion de Compañia..",
       success: {
         render({ data }) {
-          let msg;
+          let msg = "Actualizacion de compañia Exitosa..!!";
           if (data.body.msg) {
             msg = data.body.msg;
-          } else {
-            msg = "Actualizacion de compañia Exitosa..!!";
           }
           return msg;
         },
       },
       error: {
         render({ data }) {
-          let msg;
+          let msg = "Error: En la actualizacion de la compañia.!!";
           if (data.errors.msg) {
             msg = `Error: ` + data.errors.msg;
-          } else {
-            msg = "Error: En la actualizacion de la compañia.";
           }
           return msg;
         },

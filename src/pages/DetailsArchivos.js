@@ -55,22 +55,14 @@ export default function DetailsArchivos() {
   const [isCheck, setIsCheck] = useState([]);
   const { id } = useParams();
   const [archivos, setArchivos] = useState([]);
-  const [redirect, setRedirect] = useState(false);
+  const [redireccionar, setRedireccionar] = useState(false);
   const { compra, venta } = useContext(Context);
   // Navigate
   let navigate = useNavigate();
 
-  // useEffect(() => {
-  //   for (let archivo of archivos) {
-  //     if (archivo.status === 2) {
-  //       <Navigate to={"/archivos"} replace />;
-  //     }
-  //   }
-  // }, [archivos]);
-
   useEffect(() => {
-    if (redirect === true) navigate(`/archivos`);
-  }, [redirect]);
+    if (redireccionar === true) navigate(`/archivos`);
+  }, [redireccionar, navigate]);
 
   useEffect(() => {
     const res = async () => {
@@ -79,21 +71,6 @@ export default function DetailsArchivos() {
     };
     res();
   }, [id]);
-
-  // // //Submit anular
-  // const hadleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const res = async () => {
-  //     const resp = await anularTransaccionService(id);
-  //     setArchivos(resp.body.archivo_detalles);
-  //   };
-  //   toast.dismiss();
-  //   toast.promise(res, {
-  //     pending: "Anulando Archivo..",
-  //     success: "Archivo Anulado de manera Exitosa!",
-  //     error: "Error: Archivo NO Anulado.",
-  //   });
-  // };
 
   // Anular Seleccionado
   const hadleSubmit = (e) => {
@@ -112,7 +89,7 @@ export default function DetailsArchivos() {
             setIsCheckAll(false);
             if (resp.body) {
               if (!resp.body.archivo_detalles) {
-                setRedirect(true);
+                setRedireccionar(true);
               } else {
                 setArchivos(resp.body.archivo_detalles);
               }

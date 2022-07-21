@@ -151,24 +151,20 @@ export default function NuevoUsuario() {
       pending: "Creando usuario..",
       success: {
         render({ data }) {
-          let msg;
+          let msg = "Creación de Usuario Exitosa.!!";
           if (data.body) {
             msg = data.body.msg;
-          } else {
-            msg = "Creación de usuario exitosa.";
           }
           return msg;
         },
       },
       error: {
         render({ data }) {
-          let msg;
+          let msg = "Error: Configuración de usuario No Exitosa.!!";
           if (data.errors.msg) {
             msg = `Error: ` + data.errors.msg;
           } else if (data.errors.errors) {
             msg = `Error: ` + data.errors.errors[0].msg;
-          } else {
-            msg = "Error: Configuración de usuario No Exitosa.";
           }
           return msg;
         },

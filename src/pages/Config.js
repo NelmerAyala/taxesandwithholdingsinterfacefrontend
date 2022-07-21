@@ -1,8 +1,6 @@
 // Nuevo
 import React, { useState, useEffect } from "react";
 
-// Services
-
 // Layout
 import LayoutSession from "../layout/LayoutSession";
 import configuracionesService from "../services/configuracionesService";

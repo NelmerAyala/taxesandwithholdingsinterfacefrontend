@@ -113,7 +113,7 @@ export default function ListVentas() {
         error: {
           render({ data }) {
             let msg =
-              "Error: Consulta de Transacciones de Ventas NO realizada.";
+              "Error: Consulta de Transacciones de Ventas NO Realizada.!!";
             if (data.errors.msg) {
               msg = `Error: ` + data.errors.msg;
             }
@@ -125,7 +125,6 @@ export default function ListVentas() {
       if (selectedCompany === "DEFAULT") {
         setList([]);
       }
-
     }
   }, [selectedCompany]);
 
@@ -359,10 +358,10 @@ export default function ListVentas() {
                           {comp.nombre_company}
                         </MenuItem>
                       ) : (
-                          <MenuItem key={comp.id} value={comp.id}>
-                            {comp.nombre_company}
-                          </MenuItem>
-                        );
+                        <MenuItem key={comp.id} value={comp.id}>
+                          {comp.nombre_company}
+                        </MenuItem>
+                      );
                     })}
                   </Select>
                 </FormControl>
@@ -392,19 +391,19 @@ export default function ListVentas() {
                     </span>
                   </Tooltip>
                 ) : (
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      sx={{
-                        px: 5,
-                        borderRadius: "1rem",
-                        color: "white.main",
-                        textTransform: "none",
-                      }}
-                    >
-                      Generar Archivo
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      px: 5,
+                      borderRadius: "1rem",
+                      color: "white.main",
+                      textTransform: "none",
+                    }}
+                  >
+                    Generar Archivo
                   </Button>
-                  )}
+                )}
               </Grid>
             </Stack>
           </Box>
@@ -521,8 +520,8 @@ export default function ListVentas() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                        ventas
-                      )}
+                      ventas
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -543,8 +542,8 @@ export default function ListVentas() {
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               ) : (
-                  <></>
-                )}
+                <></>
+              )}
             </Box>
           </Box>
         </Paper>

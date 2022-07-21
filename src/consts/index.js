@@ -59,6 +59,8 @@ import DialogContent from "@mui/material/DialogContent";
 
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 // Iconos
 import {
@@ -173,4 +175,6 @@ export {
   MdOutlineArrowUpward,
   MdOutlineArrowDownward,
   MdOutlineInfo,
+  Snackbar,
+  MuiAlert,
 };

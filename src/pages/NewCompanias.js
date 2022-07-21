@@ -86,24 +86,20 @@ export default function NuevoUsuario() {
       pending: "Registrando compañia..",
       success: {
         render({ data }) {
-          let msg;
+          let msg = "Registro de Compañia Exitosa..!!";
           if (data.body) {
             msg = data.body.msg;
-          } else {
-            msg = "Registro de compañia exitosa..!!";
           }
           return msg;
         },
       },
       error: {
         render({ data }) {
-          let msg;
+          let msg = "Error: Registro de compañia NO Exitoso.!!";
           if (data.errors.msg) {
             msg = `Error: ` + data.errors.msg;
           } else if (data.errors.errors) {
             msg = `Error: ` + data.errors.errors[0].msg;
-          } else {
-            msg = "Error: Registro de compañia NO Exitoso.";
           }
           return msg;
         },

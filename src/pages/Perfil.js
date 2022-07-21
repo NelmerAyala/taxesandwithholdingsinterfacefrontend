@@ -97,22 +97,18 @@ export default function Perfil() {
       pending: "Guardando actualizacion de perfil..",
       success: {
         render({ data }) {
-          let msg;
+          let msg = "Actualizacion de Perfil Exitosa.!!";
           if (data.body.msg) {
             msg = data.body.msg;
-          } else {
-            msg = "Actualizacion de perfil exitosa.!!";
           }
           return msg;
         },
       },
       error: {
         render({ data }) {
-          let msg;
+          let msg = "Error: En la actualizacion del perfil.!!";
           if (data.errors.msg) {
             msg = `Error: ` + data.errors.msg;
-          } else {
-            msg = "Error: En la actualizacion del perfil.";
           }
           return msg;
         },
@@ -166,11 +162,9 @@ export default function Perfil() {
       },
       error: {
         render({ data }) {
-          let msg;
+          let msg = "Error: En la actualizacion de contraseña.!!";
           if (data.errors.msg) {
             msg = `Error: ` + data.errors.msg;
-          } else {
-            msg = "Error: En la actualizacion de contraseña.";
           }
           return msg;
         },

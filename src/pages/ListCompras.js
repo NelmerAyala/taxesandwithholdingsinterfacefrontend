@@ -115,11 +115,10 @@ export default function ListCompras() {
         // error: "Error: Consulta de Transacciones de Compras No realizada.",
         error: {
           render({ data }) {
-            let msg;
+            let msg =
+              "Error: Consulta de Transacciones de Compras NO Realizada.!!";
             if (data.errors.msg) {
               msg = `Error: ` + data.errors.msg;
-            } else {
-              msg = "Error: Consulta de Transacciones de Compras NO realizada.";
             }
             return msg;
           },
@@ -129,9 +128,7 @@ export default function ListCompras() {
       if (selectedCompany === "DEFAULT") {
         setList([]);
       }
-
     }
-
   }, [selectedCompany]);
 
   // Submit Generar Archivo
@@ -153,22 +150,18 @@ export default function ListCompras() {
         pending: "Generando Archivo de Compras..",
         success: {
           render({ data }) {
-            let msg;
+            let msg = "Archivo de Compras Generado Exitosamente..!!";
             if (data.body.msg) {
               msg = data.body.msg;
-            } else {
-              msg = "Archivo de Compras Generado Exitosamente..!!";
             }
             return msg;
           },
         },
         error: {
           render({ data }) {
-            let msg;
+            let msg = "Error: Archivo de Compras NO Generado.!!";
             if (data.errors.msg) {
               msg = `Error: ` + data.errors.msg;
-            } else {
-              msg = "Error: Archivo de Compras NO Generado.";
             }
             return msg;
           },
@@ -366,10 +359,10 @@ export default function ListCompras() {
                           {comp.nombre_company}
                         </MenuItem>
                       ) : (
-                          <MenuItem key={comp.id} value={comp.id}>
-                            {comp.nombre_company}
-                          </MenuItem>
-                        );
+                        <MenuItem key={comp.id} value={comp.id}>
+                          {comp.nombre_company}
+                        </MenuItem>
+                      );
                     })}
                   </Select>
                 </FormControl>
@@ -399,19 +392,19 @@ export default function ListCompras() {
                     </span>
                   </Tooltip>
                 ) : (
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      sx={{
-                        px: 5,
-                        borderRadius: "1rem",
-                        color: "white.main",
-                        textTransform: "none",
-                      }}
-                    >
-                      Generar Archivo
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      px: 5,
+                      borderRadius: "1rem",
+                      color: "white.main",
+                      textTransform: "none",
+                    }}
+                  >
+                    Generar Archivo
                   </Button>
-                  )}
+                )}
               </Grid>
             </Stack>
           </Box>
@@ -547,8 +540,8 @@ export default function ListCompras() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                        compras
-                      )}
+                      compras
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -569,8 +562,8 @@ export default function ListCompras() {
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               ) : (
-                  <></>
-                )}
+                <></>
+              )}
             </Box>
           </Box>
         </Paper>

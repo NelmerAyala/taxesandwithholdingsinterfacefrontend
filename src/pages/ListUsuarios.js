@@ -80,22 +80,18 @@ export default function ListUsuarios() {
         pending: "Consultando Usuarios..",
         success: {
           render({ data }) {
-            let msg;
+            let msg = "Consulta de Usuarios Exitosa..!!";
             if (data.body.msg) {
               msg = data.body.msg;
-            } else {
-              msg = "Consulta de Usuarios Exitosa..!!";
             }
             return msg;
           },
         },
         error: {
           render({ data }) {
-            let msg;
+            let msg = "Error: Consulta de Usuarios NO Realizada.!!";
             if (data.errors.msg) {
               msg = `Error: ` + data.errors.msg;
-            } else {
-              msg = "Error: Consulta de Usuarios NO realizada.";
             }
             return msg;
           },
@@ -105,7 +101,6 @@ export default function ListUsuarios() {
       if (selectedCompany === "DEFAULT") {
         setList([]);
       }
-
     }
   }, [selectedCompany]);
 
@@ -236,10 +231,10 @@ export default function ListUsuarios() {
                         {comp.nombre_company}
                       </MenuItem>
                     ) : (
-                        <MenuItem key={comp.id} value={comp.id}>
-                          {comp.nombre_company}
-                        </MenuItem>
-                      );
+                      <MenuItem key={comp.id} value={comp.id}>
+                        {comp.nombre_company}
+                      </MenuItem>
+                    );
                   })}
                 </Select>
               </FormControl>
@@ -313,8 +308,8 @@ export default function ListUsuarios() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                      listusuarios
-                    )}
+                    listusuarios
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -336,8 +331,8 @@ export default function ListUsuarios() {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             ) : (
-                <></>
-              )}
+              <></>
+            )}
           </Box>
         </Box>
       </Paper>

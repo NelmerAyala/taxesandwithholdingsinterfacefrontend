@@ -13,6 +13,9 @@ import Footer from "../components/Footer";
 // Estilos
 import LogoIntelix from "../assets/images/logo_intelix.png";
 import IsotipoIntelix from "../assets/images/ISOTIPO - INTELIX-01.png";
+import Drawer from "@mui/material/Drawer";
+import Toolbar from "@mui/material/Toolbar";
+import AppBar from "@mui/material/AppBar";
 
 // External Components
 import {
@@ -20,7 +23,6 @@ import {
   Box,
   Grid,
   CssBaseline,
-  Toolbar,
   List,
   Stack,
   Menu,
@@ -29,8 +31,6 @@ import {
   Settings,
   Logout,
   ListItemIcon,
-  MuiDrawer,
-  MuiAppBar,
   ListItemButton,
   ListItemText,
   styled,
@@ -46,30 +46,9 @@ import {
   MdOutlineCorporateFare,
   MenuItem,
 } from "../consts";
-
+import PropTypes from "prop-types";
 // Constantes
 const drawerWidth = 240;
-
-const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
-
-const closedMixin = (theme) => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -80,52 +59,12 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
-
-const LayoutSession = ({ children, titleModule }) => {
+const LayoutSession = ({ children, titleModule }, props) => {
   const { user } = useContext(Context);
   //Constantes
-  const [open, setOpen] = useState(true);
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const open = Boolean(true);
   const openMenu = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -143,15 +82,6 @@ const LayoutSession = ({ children, titleModule }) => {
   };
 
   const { logout } = useUser();
-  // const [user, serUser] = useState([]);
-
-  // useEffect(() => {
-  //   const res = async () => {
-  //     const resp = await userGet();
-  //     serUser(resp);
-  //   };
-  //   res();
-  // }, [userGet]);
 
   const location = useLocation();
 
@@ -161,6 +91,16 @@ const LayoutSession = ({ children, titleModule }) => {
   //slice locacion de companias/
   var location_companias = locationstr.slice(0, 11);
 
+  const { window } = props;
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -169,20 +109,20 @@ const LayoutSession = ({ children, titleModule }) => {
         {/* <Header /> */}
         <AppBar
           position="fixed"
-          open={open}
           elevation={0}
-          sx={{ backgroundColor: "white.main" }}
+          sx={{
+            backgroundColor: "white.main",
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px` },
+          }}
         >
           <Toolbar>
             <IconButton
               color="inherit"
               aria-label="open drawer"
-              onClick={handleDrawerOpen}
               edge="start"
-              sx={{
-                marginRight: 5,
-                ...(open && { display: "none" }),
-              }}
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
             >
               <Box
                 component="img"
@@ -194,8 +134,8 @@ const LayoutSession = ({ children, titleModule }) => {
               />
             </IconButton>
 
-            <React.Fragment>
-              <div style={{ width: "100%" }}>
+            <Grid container justifyContent="flex-end">
+              <React.Fragment>
                 <Box
                   sx={{
                     display: "flex",
@@ -448,14 +388,13 @@ const LayoutSession = ({ children, titleModule }) => {
                     </MenuItem>
                   </Menu>
                 </Box>
-              </div>
-            </React.Fragment>
+              </React.Fragment>
+            </Grid>
           </Toolbar>
         </AppBar>
 
         <AppBar
           position="fixed"
-          open={open}
           elevation={0}
           sx={{
             top: "auto",
@@ -465,343 +404,724 @@ const LayoutSession = ({ children, titleModule }) => {
             pt: 1,
             pl: 2,
             backgroundColor: "white.main",
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px` },
           }}
         >
           <Footer />
         </AppBar>
 
         {/* SideBar */}
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader
+        <Box
+          component="nav"
+          sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+          aria-label="mailbox folders"
+        >
+          <Drawer
+            container={container}
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
             sx={{
-              justifyContent: "center",
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
             }}
           >
-            <Box
-              component="img"
+            <DrawerHeader
               sx={{
-                width: 200,
-                maxHeight: { xs: 233, md: 167 },
-                maxWidth: { xs: 350, md: 250 },
+                justifyContent: "center",
               }}
-              alt="Logo Intelix"
-              src={LogoIntelix}
-              onClick={handleDrawerClose}
-            />
-          </DrawerHeader>
-          <Box sx={{ overflow: "auto" }}></Box>
-          <List>
-            {/* <ListItemMenu ruta="/perfil" name="Perfil">
+            >
+              <Box
+                component="img"
+                sx={{
+                  width: 200,
+                  maxHeight: { xs: 233, md: 167 },
+                  maxWidth: { xs: 350, md: 250 },
+                }}
+                alt="Logo Intelix"
+                src={LogoIntelix}
+                // onClick={handleDrawerClose}
+              />
+            </DrawerHeader>
+            {/* <Box sx={{ overflow: "auto" }}></Box> */}
+            <List>
+              {/* <ListItemMenu ruta="/perfil" name="Perfil">
               <Settings size="35" />
             </ListItemMenu> */}
-            <Link to="/" style={{ textDecoration: "none", color: "#9D9D9C" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  borderBottom: 1,
-                  borderColor: "secondary.light",
-                }}
-              >
-                <ListItemIcon
+              <Link to="/" style={{ textDecoration: "none", color: "#9D9D9C" }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                    borderBottom: 1,
+                    borderColor: "secondary.light",
                   }}
                 >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {"/" === location.pathname ? (
+                      <MdOutlineHome size="25" style={{ color: "#00BFB3" }} />
+                    ) : (
+                      <MdOutlineHome size="25" />
+                    )}
+                  </ListItemIcon>
                   {"/" === location.pathname ? (
-                    <MdOutlineHome size="25" style={{ color: "#00BFB3" }} />
+                    <ListItemText
+                      primary="Inicio"
+                      sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                    />
                   ) : (
-                    <MdOutlineHome size="25" />
+                    <ListItemText
+                      primary="Inicio"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
                   )}
-                </ListItemIcon>
-                {"/" === location.pathname ? (
-                  <ListItemText
-                    primary="Inicio"
-                    sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
-                  />
-                ) : (
-                  <ListItemText
-                    primary="Inicio"
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                )}
-              </ListItemButton>
-            </Link>
-            <Link
-              to="/compras"
-              style={{ textDecoration: "none", color: "#9D9D9C" }}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  borderBottom: 1,
-                  borderColor: "secondary.light",
-                }}
+                </ListItemButton>
+              </Link>
+              <Link
+                to="/compras"
+                style={{ textDecoration: "none", color: "#9D9D9C" }}
               >
-                <ListItemIcon
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                    borderBottom: 1,
+                    borderColor: "secondary.light",
                   }}
                 >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {"/compras" === location.pathname ? (
+                      <MdAddShoppingCart
+                        size="25"
+                        style={{ color: "#00BFB3" }}
+                      />
+                    ) : (
+                      <MdAddShoppingCart size="25" />
+                    )}
+                  </ListItemIcon>
                   {"/compras" === location.pathname ? (
-                    <MdAddShoppingCart size="25" style={{ color: "#00BFB3" }} />
+                    <ListItemText
+                      primary="Compras"
+                      sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                    />
                   ) : (
-                    <MdAddShoppingCart size="25" />
+                    <ListItemText
+                      primary="Compras"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
                   )}
-                </ListItemIcon>
-                {"/compras" === location.pathname ? (
-                  <ListItemText
-                    primary="Compras"
-                    sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
-                  />
-                ) : (
-                  <ListItemText
-                    primary="Compras"
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                )}
-              </ListItemButton>
-            </Link>
-            <Link
-              to="/ventas"
-              style={{ textDecoration: "none", color: "#9D9D9C" }}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  borderBottom: 1,
-                  borderColor: "secondary.light",
-                }}
+                </ListItemButton>
+              </Link>
+              <Link
+                to="/ventas"
+                style={{ textDecoration: "none", color: "#9D9D9C" }}
               >
-                <ListItemIcon
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                    borderBottom: 1,
+                    borderColor: "secondary.light",
                   }}
                 >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {"/ventas" === location.pathname ? (
+                      <MdPointOfSale size="25" style={{ color: "#00BFB3" }} />
+                    ) : (
+                      <MdPointOfSale size="25" />
+                    )}
+                  </ListItemIcon>
                   {"/ventas" === location.pathname ? (
-                    <MdPointOfSale size="25" style={{ color: "#00BFB3" }} />
+                    <ListItemText
+                      primary="Ventas"
+                      sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                    />
                   ) : (
-                    <MdPointOfSale size="25" />
+                    <ListItemText
+                      primary="Ventas"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
                   )}
-                </ListItemIcon>
-                {"/ventas" === location.pathname ? (
-                  <ListItemText
-                    primary="Ventas"
-                    sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
-                  />
-                ) : (
-                  <ListItemText
-                    primary="Ventas"
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                )}
-              </ListItemButton>
-            </Link>
-            <Link
-              to="/archivos"
-              style={{ textDecoration: "none", color: "#9D9D9C" }}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  borderBottom: 1,
-                  borderColor: "secondary.light",
-                }}
+                </ListItemButton>
+              </Link>
+              <Link
+                to="/archivos"
+                style={{ textDecoration: "none", color: "#9D9D9C" }}
               >
-                <ListItemIcon
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                    borderBottom: 1,
+                    borderColor: "secondary.light",
                   }}
                 >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {"/archivos" === location.pathname ||
+                    "/archivos/" === location_archivos_usuarios ? (
+                      <MdInsertDriveFile
+                        size="25"
+                        style={{ color: "#00BFB3" }}
+                      />
+                    ) : (
+                      <MdInsertDriveFile size="25" />
+                    )}
+                  </ListItemIcon>
                   {"/archivos" === location.pathname ||
                   "/archivos/" === location_archivos_usuarios ? (
-                    <MdInsertDriveFile size="25" style={{ color: "#00BFB3" }} />
+                    <ListItemText
+                      primary="Archivos TXT"
+                      sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                    />
                   ) : (
-                    <MdInsertDriveFile size="25" />
+                    <ListItemText
+                      primary="Archivos TXT"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
                   )}
-                </ListItemIcon>
-                {"/archivos" === location.pathname ||
-                "/archivos/" === location_archivos_usuarios ? (
-                  <ListItemText
-                    primary="Archivos TXT"
-                    sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
-                  />
-                ) : (
-                  <ListItemText
-                    primary="Archivos TXT"
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                )}
-              </ListItemButton>
-            </Link>
+                </ListItemButton>
+              </Link>
 
-            {user.es_administrador === true ? (
-              <>
-                <Link
-                  to="/usuarios"
-                  style={{ textDecoration: "none", color: "#9D9D9C" }}
-                >
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5,
-                      borderBottom: 1,
-                      borderColor: "secondary.light",
-                    }}
+              {user.es_administrador === true ? (
+                <>
+                  <Link
+                    to="/usuarios"
+                    style={{ textDecoration: "none", color: "#9D9D9C" }}
                   >
-                    <ListItemIcon
+                    <ListItemButton
                       sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                        borderBottom: 1,
+                        borderColor: "secondary.light",
                       }}
                     >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {"/usuarios" === location.pathname ||
+                        "/usuarios/" === location_archivos_usuarios ? (
+                          <MdGroups size="25" style={{ color: "#00BFB3" }} />
+                        ) : (
+                          <MdGroups size="25" />
+                        )}
+                      </ListItemIcon>
                       {"/usuarios" === location.pathname ||
                       "/usuarios/" === location_archivos_usuarios ? (
-                        <MdGroups size="25" style={{ color: "#00BFB3" }} />
+                        <ListItemText
+                          primary="Perfiles"
+                          sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                        />
                       ) : (
-                        <MdGroups size="25" />
+                        <ListItemText
+                          primary="Perfiles"
+                          sx={{ opacity: open ? 1 : 0 }}
+                        />
                       )}
-                    </ListItemIcon>
-                    {"/usuarios" === location.pathname ||
-                    "/usuarios/" === location_archivos_usuarios ? (
-                      <ListItemText
-                        primary="Perfiles"
-                        sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
-                      />
-                    ) : (
-                      <ListItemText
-                        primary="Perfiles"
-                        sx={{ opacity: open ? 1 : 0 }}
-                      />
-                    )}
-                  </ListItemButton>
-                </Link>
-              </>
-            ) : (
-              <></>
-            )}
+                    </ListItemButton>
+                  </Link>
+                </>
+              ) : (
+                <></>
+              )}
 
-            {user.es_administrador === true ? (
-              <>
-                <Link
-                  to="/companias"
-                  style={{ textDecoration: "none", color: "#9D9D9C" }}
-                >
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5,
-                      borderBottom: 1,
-                      borderColor: "secondary.light",
-                    }}
+              {user.es_administrador === true ? (
+                <>
+                  <Link
+                    to="/companias"
+                    style={{ textDecoration: "none", color: "#9D9D9C" }}
                   >
-                    <ListItemIcon
+                    <ListItemButton
                       sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                        borderBottom: 1,
+                        borderColor: "secondary.light",
                       }}
                     >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {"/companias" === location.pathname ||
+                        "/companias/" === location_companias ? (
+                          <MdOutlineCorporateFare
+                            size="25"
+                            style={{ color: "#00BFB3" }}
+                          />
+                        ) : (
+                          <MdOutlineCorporateFare size="25" />
+                        )}
+                      </ListItemIcon>
                       {"/companias" === location.pathname ||
                       "/companias/" === location_companias ? (
-                        <MdOutlineCorporateFare
-                          size="25"
-                          style={{ color: "#00BFB3" }}
+                        <ListItemText
+                          primary="Compañias"
+                          sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
                         />
                       ) : (
-                        <MdOutlineCorporateFare size="25" />
+                        <ListItemText
+                          primary="Compañias"
+                          sx={{ opacity: open ? 1 : 0 }}
+                        />
                       )}
-                    </ListItemIcon>
-                    {"/companias" === location.pathname ||
-                    "/companias/" === location_companias ? (
-                      <ListItemText
-                        primary="Compañias"
-                        sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
-                      />
-                    ) : (
-                      <ListItemText
-                        primary="Compañias"
-                        sx={{ opacity: open ? 1 : 0 }}
-                      />
-                    )}
-                  </ListItemButton>
-                </Link>
-              </>
-            ) : (
-              <></>
-            )}
+                    </ListItemButton>
+                  </Link>
+                </>
+              ) : (
+                <></>
+              )}
 
-            {user.es_superadministrador === true ? (
-              <>
-                <Link
-                  to="/Configuraciones"
-                  style={{ textDecoration: "none", color: "#9D9D9C" }}
-                >
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5,
-                      borderBottom: 1,
-                      borderColor: "secondary.light",
-                    }}
+              {user.es_superadministrador === true ? (
+                <>
+                  <Link
+                    to="/Configuraciones"
+                    style={{ textDecoration: "none", color: "#9D9D9C" }}
                   >
-                    <ListItemIcon
+                    <ListItemButton
                       sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                        borderBottom: 1,
+                        borderColor: "secondary.light",
                       }}
                     >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {"/Configuraciones" === location.pathname ? (
+                          <MdManageAccounts
+                            size="25"
+                            style={{ color: "#00BFB3" }}
+                          />
+                        ) : (
+                          <MdManageAccounts size="25" />
+                        )}
+                      </ListItemIcon>
                       {"/Configuraciones" === location.pathname ? (
-                        <MdManageAccounts
-                          size="25"
-                          style={{ color: "#00BFB3" }}
+                        <ListItemText
+                          primary="Configuraciones"
+                          sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
                         />
                       ) : (
-                        <MdManageAccounts size="25" />
+                        <ListItemText
+                          primary="Configuraciones"
+                          sx={{ opacity: open ? 1 : 0 }}
+                        />
                       )}
-                    </ListItemIcon>
-                    {"/Configuraciones" === location.pathname ? (
-                      <ListItemText
-                        primary="Configuraciones"
-                        sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                    </ListItemButton>
+                  </Link>
+                </>
+              ) : (
+                <></>
+              )}
+            </List>
+          </Drawer>
+          <Drawer
+            // variant="permanent"
+            open={open}
+            variant="permanent"
+            sx={{
+              display: { xs: "none", sm: "block" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
+          >
+            <DrawerHeader
+              sx={{
+                justifyContent: "center",
+              }}
+            >
+              <Box
+                component="img"
+                sx={{
+                  width: 200,
+                  maxHeight: { xs: 233, md: 167 },
+                  maxWidth: { xs: 350, md: 250 },
+                }}
+                alt="Logo Intelix"
+                src={LogoIntelix}
+                // onClick={handleDrawerClose}
+              />
+            </DrawerHeader>
+            {/* <Box sx={{ overflow: "auto" }}></Box> */}
+            <List>
+              {/* <ListItemMenu ruta="/perfil" name="Perfil">
+              <Settings size="35" />
+            </ListItemMenu> */}
+              <Link to="/" style={{ textDecoration: "none", color: "#9D9D9C" }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                    borderBottom: 1,
+                    borderColor: "secondary.light",
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {"/" === location.pathname ? (
+                      <MdOutlineHome size="25" style={{ color: "#00BFB3" }} />
+                    ) : (
+                      <MdOutlineHome size="25" />
+                    )}
+                  </ListItemIcon>
+                  {"/" === location.pathname ? (
+                    <ListItemText
+                      primary="Inicio"
+                      sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                    />
+                  ) : (
+                    <ListItemText
+                      primary="Inicio"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  )}
+                </ListItemButton>
+              </Link>
+              <Link
+                to="/compras"
+                style={{ textDecoration: "none", color: "#9D9D9C" }}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                    borderBottom: 1,
+                    borderColor: "secondary.light",
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {"/compras" === location.pathname ? (
+                      <MdAddShoppingCart
+                        size="25"
+                        style={{ color: "#00BFB3" }}
                       />
                     ) : (
-                      <ListItemText
-                        primary="Configuraciones"
-                        sx={{ opacity: open ? 1 : 0 }}
-                      />
+                      <MdAddShoppingCart size="25" />
                     )}
-                  </ListItemButton>
-                </Link>
-              </>
-            ) : (
-              <></>
-            )}
-          </List>
-        </Drawer>
+                  </ListItemIcon>
+                  {"/compras" === location.pathname ? (
+                    <ListItemText
+                      primary="Compras"
+                      sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                    />
+                  ) : (
+                    <ListItemText
+                      primary="Compras"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  )}
+                </ListItemButton>
+              </Link>
+              <Link
+                to="/ventas"
+                style={{ textDecoration: "none", color: "#9D9D9C" }}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                    borderBottom: 1,
+                    borderColor: "secondary.light",
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {"/ventas" === location.pathname ? (
+                      <MdPointOfSale size="25" style={{ color: "#00BFB3" }} />
+                    ) : (
+                      <MdPointOfSale size="25" />
+                    )}
+                  </ListItemIcon>
+                  {"/ventas" === location.pathname ? (
+                    <ListItemText
+                      primary="Ventas"
+                      sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                    />
+                  ) : (
+                    <ListItemText
+                      primary="Ventas"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  )}
+                </ListItemButton>
+              </Link>
+              <Link
+                to="/archivos"
+                style={{ textDecoration: "none", color: "#9D9D9C" }}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                    borderBottom: 1,
+                    borderColor: "secondary.light",
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {"/archivos" === location.pathname ||
+                    "/archivos/" === location_archivos_usuarios ? (
+                      <MdInsertDriveFile
+                        size="25"
+                        style={{ color: "#00BFB3" }}
+                      />
+                    ) : (
+                      <MdInsertDriveFile size="25" />
+                    )}
+                  </ListItemIcon>
+                  {"/archivos" === location.pathname ||
+                  "/archivos/" === location_archivos_usuarios ? (
+                    <ListItemText
+                      primary="Archivos TXT"
+                      sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                    />
+                  ) : (
+                    <ListItemText
+                      primary="Archivos TXT"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  )}
+                </ListItemButton>
+              </Link>
 
-        <Box component="main" sx={{ flexGrow: 1 }}>
-          <DrawerHeader />
+              {user.es_administrador === true ? (
+                <>
+                  <Link
+                    to="/usuarios"
+                    style={{ textDecoration: "none", color: "#9D9D9C" }}
+                  >
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                        borderBottom: 1,
+                        borderColor: "secondary.light",
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {"/usuarios" === location.pathname ||
+                        "/usuarios/" === location_archivos_usuarios ? (
+                          <MdGroups size="25" style={{ color: "#00BFB3" }} />
+                        ) : (
+                          <MdGroups size="25" />
+                        )}
+                      </ListItemIcon>
+                      {"/usuarios" === location.pathname ||
+                      "/usuarios/" === location_archivos_usuarios ? (
+                        <ListItemText
+                          primary="Perfiles"
+                          sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                        />
+                      ) : (
+                        <ListItemText
+                          primary="Perfiles"
+                          sx={{ opacity: open ? 1 : 0 }}
+                        />
+                      )}
+                    </ListItemButton>
+                  </Link>
+                </>
+              ) : (
+                <></>
+              )}
+
+              {user.es_administrador === true ? (
+                <>
+                  <Link
+                    to="/companias"
+                    style={{ textDecoration: "none", color: "#9D9D9C" }}
+                  >
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                        borderBottom: 1,
+                        borderColor: "secondary.light",
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {"/companias" === location.pathname ||
+                        "/companias/" === location_companias ? (
+                          <MdOutlineCorporateFare
+                            size="25"
+                            style={{ color: "#00BFB3" }}
+                          />
+                        ) : (
+                          <MdOutlineCorporateFare size="25" />
+                        )}
+                      </ListItemIcon>
+                      {"/companias" === location.pathname ||
+                      "/companias/" === location_companias ? (
+                        <ListItemText
+                          primary="Compañias"
+                          sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                        />
+                      ) : (
+                        <ListItemText
+                          primary="Compañias"
+                          sx={{ opacity: open ? 1 : 0 }}
+                        />
+                      )}
+                    </ListItemButton>
+                  </Link>
+                </>
+              ) : (
+                <></>
+              )}
+
+              {user.es_superadministrador === true ? (
+                <>
+                  <Link
+                    to="/Configuraciones"
+                    style={{ textDecoration: "none", color: "#9D9D9C" }}
+                  >
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                        borderBottom: 1,
+                        borderColor: "secondary.light",
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {"/Configuraciones" === location.pathname ? (
+                          <MdManageAccounts
+                            size="25"
+                            style={{ color: "#00BFB3" }}
+                          />
+                        ) : (
+                          <MdManageAccounts size="25" />
+                        )}
+                      </ListItemIcon>
+                      {"/Configuraciones" === location.pathname ? (
+                        <ListItemText
+                          primary="Configuraciones"
+                          sx={{ opacity: open ? 1 : 0, color: "primary.main" }}
+                        />
+                      ) : (
+                        <ListItemText
+                          primary="Configuraciones"
+                          sx={{ opacity: open ? 1 : 0 }}
+                        />
+                      )}
+                    </ListItemButton>
+                  </Link>
+                </>
+              ) : (
+                <></>
+              )}
+            </List>
+          </Drawer>
+        </Box>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+          }}
+        >
+          {/* <DrawerHeader /> */}
+          <Toolbar />
           <Box sx={{ overflow: "auto", backgroundColor: "secondary.main" }}>
             <Stack sx={{ mx: 5, my: 3, color: "white.main" }}>
               <Typography sx={{ color: "white.main" }} variant="titles">
@@ -817,4 +1137,11 @@ const LayoutSession = ({ children, titleModule }) => {
   );
 };
 
+LayoutSession.propTypes = {
+  /**
+   * Injected by the documentation to work in an iframe.
+   * You won't need it on your project.
+   */
+  window: PropTypes.func,
+};
 export default LayoutSession;
